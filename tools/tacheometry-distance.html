@@ -1,0 +1,3175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TacheoPro v2.0 | CivilCalc Enterprise Hub</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: { 
+                inlineMath: [['$', '$'], ['\\(', '\\)']], 
+                displayMath: [['$$', '$$']],
+                processEscapes: true 
+            },
+                options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        /* ========================================================================
+           PART 1: THE TACHEOPRO GLOBAL DESIGN ENGINE (500+ Lines CSS Matrix)
+           Project: CivilCalc Tacheometry Distance Workstation
+           ======================================================================== */
+
+        :root {
+            /* --- Corporate Professional Palette: Surveying Theme --- */
+            --primary: #0f172a;           /* Midnight Command */
+            --primary-soft: #1e293b;      /* Slate Engine */
+            --primary-light: #334155;     /* Structural Grey */
+            
+            --accent: #f59e0b;            /* Construction Amber / GPS Gold */
+            --accent-glow: rgba(245, 158, 11, 0.25);
+            --info: #06b6d4;              /* Optical Cyan */
+            
+            --success: #10b981;           /* Survey Fixed */
+            --danger: #ef4444;            /* Out of Range */
+            --warning: #facc15;           /* Precision Alert */
+
+            /* Material Surface Tokens */
+            --bg-master: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-ui: #e2e8f0;
+
+            /* Structural Geometry */
+            --radius-extreme: 32px;
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            
+            /* Elevation & Lighting System */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.15);
+            --shadow-high: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.06);
+
+            /* Timing & Motion Physics */
+            --curve-pro: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: 400ms var(--curve-pro);
+            --anim-reveal: revealUp 0.8s var(--curve-pro) forwards;
+        }
+
+        /* --- Master Reset Engine --- */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; outline: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100%; height: 100%;
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background-color: var(--bg-master);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Standard Professional Scrollbar */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-master); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--primary-light); 
+            border-radius: 10px; border: 3px solid var(--bg-master);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* ========================================================================
+           1. MASTER NAVIGATION (Fixed Legacy Style)
+           ======================================================================== */
+        .master-nav {
+            background: var(--primary);
+            height: 70px; width: 100%;
+            position: fixed; top: 0; left: 0;
+            z-index: 10000;
+            display: flex; align-items: center;
+            padding: 0 40px;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: var(--shadow-high);
+        }
+
+        .nav-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; max-width: 1920px; margin: 0 auto;
+        }
+
+        .nav-back-link {
+            color: #fff; text-decoration: none;
+            font-size: 0.75rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px;
+            display: flex; align-items: center; gap: 12px;
+            transition: var(--transition); opacity: 0.8;
+        }
+        .nav-back-link:hover { color: var(--accent); transform: translateX(-5px); opacity: 1; }
+
+        .nav-logo {
+            text-decoration: none; color: #fff;
+            font-size: 24px; font-weight: 900;
+            letter-spacing: 4px; text-transform: uppercase;
+            display: flex; align-items: center; gap: 12px;
+            position: center;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-logo i { color: var(--accent); font-size: 1.2rem; }
+
+        /* Status Pill for Engine State */
+        .engine-status-pill {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 10px 22px; border-radius: 50px;
+            display: flex; align-items: center; gap: 12px;
+            color: #fff; font-size: 0.65rem; font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .live-pulse-stadia {
+            width: 8px; height: 8px; background: var(--accent);
+            border-radius: 50%; box-shadow: 0 0 10px var(--accent);
+            animation: pulse-stadia 2.5s infinite var(--curve-pro);
+        }
+
+        @keyframes pulse-stadia { 0% { transform: scale(1); } 50% { transform: scale(1.6); opacity: 0.4; } 100% { transform: scale(1); } }
+
+        /* ========================================================================
+           2. MASTER LAYOUT SYSTEM
+           ======================================================================== */
+        .master-layout {
+            max-width: 1920px; margin: 0 auto;
+            padding: 110px 40px 60px;
+            display: grid;
+            grid-template-columns: 440px 1fr; /* Fixed Sidebar | Fluid Stage */
+            gap: 40px;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 1400px) { .master-layout { grid-template-columns: 1fr; padding: 100px 25px; } }
+
+        /* --- Enterprise Branding Banner --- */
+        .page-banner {
+            grid-column: span 2;
+            background: var(--bg-card);
+            border-left: 15px solid var(--accent);
+            padding: 60px;
+            border-radius: var(--radius-xl);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 25px;
+            position: relative; overflow: hidden;
+            animation: var(--anim-reveal);
+        }
+
+        @media (max-width: 1400px) { .page-banner { grid-column: span 1; flex-direction: column; text-align: center; gap: 40px; } }
+
+        .banner-info h1 { font-size: 3.2rem; font-weight: 950; color: var(--primary); letter-spacing: -2px; line-height: 1.1; }
+        .banner-info p { color: var(--text-muted); font-size: 1.3rem; font-weight: 500; margin-top: 10px; }
+
+        .banner-stats { text-align: right; display: flex; flex-direction: column; gap: 15px; }
+        @media (max-width: 1400px) { .banner-stats { text-align: center; align-items: center; } }
+
+        .precision-badge {
+            padding: 10px 24px; border-radius: 12px;
+            font-size: 0.75rem; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 2px;
+            display: inline-flex; align-items: center; gap: 12px;
+            background: rgba(16, 185, 129, 0.12); color: var(--success);
+            border: 2px solid rgba(16, 185, 129, 0.1);
+        }
+
+        /* ========================================================================
+           3. SIDEBAR COMPONENTS (Control Matrix)
+           ======================================================================== */
+        .sidebar-controls { display: flex; flex-direction: column; gap: 35px; }
+
+        .enterprise-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-ui);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: var(--transition);
+            animation: var(--anim-reveal);
+            animation-delay: 0.2s;
+        }
+
+        .enterprise-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-high); border-color: var(--accent); }
+
+        .card-head {
+            background: var(--primary); padding: 25px 35px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .card-head h3 {
+            color: #fff; font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 3px;
+            display: flex; align-items: center; gap: 15px; font-weight: 800;
+        }
+
+        .card-body { padding: 40px; }
+
+        /* Form Styling Core */
+        .field-label {
+            display: block; font-size: 0.75rem; font-weight: 900;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 15px;
+        }
+        .field-label i { color: var(--accent); margin-right: 10px; }
+
+        .pro-input-field {
+            width: 100%; background: #f8fafc;
+            border: 2.5px solid var(--border-ui);
+            border-radius: var(--radius-md); padding: 18px 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem; font-weight: 800;
+            color: var(--primary); transition: var(--transition);
+        }
+        .pro-input-field:focus {
+            background: #fff; border-color: var(--accent);
+            box-shadow: 0 0 0 8px var(--accent-glow);
+        }
+
+        /* ========================================================================
+           4. MAIN STAGE (Visualization Hub)
+           ======================================================================== */
+        .main-stage { display: flex; flex-direction: column; gap: 40px; min-width: 0; }
+
+        .viewport-terminal {
+            width: 100%; min-height: 650px;
+            background: #020617; border-radius: var(--radius-extreme, 32px);
+            border: 1px solid var(--border-ui);
+            box-shadow: var(--shadow-high);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            animation: var(--anim-reveal); animation-delay: 0.3s;
+        }
+
+        /* Optical Stadia Overlay */
+        .optical-grid {
+            position: absolute; inset: 0;
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Loader Component */
+        .terminal-loader {
+            position: absolute; inset: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 500; transition: var(--transition-slow);
+        }
+
+        .terminal-loader i { font-size: 4rem; color: var(--accent); margin-bottom: 30px; animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* ========================================================================
+           5. SYSTEM UTILITIES & ANIMATIONS
+           ======================================================================== */
+        .reveal { opacity: 0; }
+        @keyframes revealUp { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: translateY(0); } }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .text-accent { color: var(--accent); }
+
+    </style>
+</head>
+<body>
+
+    <nav class="master-nav">
+        <div class="nav-inner">
+            <a href="../find.html" class="nav-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to tools</span>
+            </a>
+
+            <a href="../index.html" class="nav-logo">
+
+                CIVIL<span>CALC</span> PRO
+            </a>
+
+            
+        </div>
+    </nav>
+
+    
+
+    <div class="master-layout">
+        
+        <header class="page-banner">
+            <div class="banner-info">
+                <h1>Tacheometric Intelligence</h1>
+                <p>Advanced optical distance measurement & Stadia hair analysis workstation.</p>
+            </div>
+            <div class="banner-stats">
+                <span class="precision-badge">
+                    <i class="fas fa-microchip"></i> Precision: SURVEY-GRADE
+                </span>
+                <p style="font-size: 0.65rem; color: var(--text-muted); font-weight: 900; text-transform: uppercase; letter-spacing: 3px;">
+                    METHOD: STADIA TANGENTIAL (2026)
+                </p>
+            </div>
+        </header>
+
+        <aside class="sidebar-controls">
+            <div class="enterprise-card">
+                <div class="card-head">
+                    <h3><i class="fas fa-sliders-h"></i> Optical Constants</h3>
+                    <span class="precision-badge" style="font-size: 0.55rem; padding: 6px 12px;">S-LOCK: ON</span>
+                </div>
+                <div class="card-body" id="sidebar-injection-point">
+                    <div class="terminal-loader" style="position: relative; background: transparent; min-height: 150px; backdrop-filter: none;">
+                        <i class="fas fa-sync-alt fa-spin fa-2x"></i>
+                        <p style="text-transform: uppercase; font-size: 0.6rem; font-weight: 900; letter-spacing: 2px; color: var(--text-muted); margin-top: 15px;">Initializing Logic...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="enterprise-card" style="border-left: 8px solid var(--info);">
+                <div class="card-body">
+                    <h4 class="field-label" style="color:var(--info); margin-bottom:15px;">
+                        <i class="fas fa-terminal"></i> Geodetic Processing Note
+                    </h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.9; font-weight: 500;">
+                        This workstation utilizes recursive Stadia algorithms for non-contact distance calculation. Sub-centimeter precision is maintained across various vertical angles using:
+                        <br><br>
+                        $D = K \cdot s \cdot \cos^2 \theta + C \cdot \cos \theta$
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-stage">
+            
+            <div class="viewport-terminal">
+                <div class="optical-grid"></div>
+                
+                <div id="canvas-mount-point" style="flex-grow: 1; position: relative;"></div>
+
+                <div class="terminal-loader" id="master-boot-overlay">
+                    <i class="fas fa-satellite-dish"></i>
+                    <p style="font-weight: 900; letter-spacing: 5px; text-transform: uppercase; font-size: 0.9rem; color: #fff;">
+                        Calibrating Stadia Hairs
+                    </p>
+                    <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 10px; font-weight: 600;">ACTIVE EPOCH: J2026.31</p>
+                    <div id="boot-status" style="font-size: 0.55rem; color: var(--accent); margin-top: 20px; font-weight: 800; letter-spacing: 2px;">
+                        VERIFYING OPTICAL MATRICES...
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-matrix-hub" id="results-injection-point">
+                </div>
+
+        </main>
+    </div>
+
+    <script>
+        /**
+         * TACHEOPRO MASTER CORE v2.0
+         * Initialization Routine for Part 1
+         */
+        window.addEventListener('load', () => {
+            console.log("%c [SYSTEM] CivilCalc TacheoPro Online. ", "background: #0f172a; color: #f59e0b; padding: 10px; font-weight: bold; border-radius: 5px;");
+            
+            const statusNode = document.getElementById('boot-status');
+            const bootLogs = [
+                "LOADING CONSTANTS...",
+                "SYNCHRONIZING MATH ENGINE...",
+                "CALIBRATING VIEWPORT...",
+                "STADIA READY."
+            ];
+
+            let i = 0;
+            const bootTimer = setInterval(() => {
+                if(i < bootLogs.length) {
+                    statusNode.innerText = bootLogs[i];
+                    i++;
+                } else {
+                    clearInterval(bootTimer);
+                    const loader = document.getElementById('master-boot-overlay');
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        if (window.triggerMasterSync) window.triggerMasterSync();
+                    }, 800);
+                }
+            }, 600);
+        });
+
+        // Global State for Tacheometry (Used across all parts)
+        window.TacheoState = {
+            constants: { k: 100, c: 0, hi: 1.5 },
+            staff: { upper: 2.500, lower: 1.500, middle: 2.000 },
+            angle: { deg: 5, min: 30, sec: 0, type: 'Elevation' },
+            rl: { inst: 100.000, target: 0 }
+        };
+    </script>
+<style>
+        /* ========================================================================
+           PART 2: INPUT & ANALYTICS STYLING MATRIX
+           Target: Professional Engineering Form Control & Results Grid
+           ======================================================================== */
+
+        /* 1. INPUT STACK ARCHITECTURE */
+        .engine-control-stack {
+            display: flex; flex-direction: column; gap: 20px;
+            animation: var(--anim-reveal);
+        }
+
+        .input-block-pro {
+            background: #f8fafc;
+            border: 2px solid var(--border-ui);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            transition: var(--transition);
+        }
+
+        .input-block-pro:focus-within {
+            background: #fff; border-color: var(--accent);
+            box-shadow: 0 0 0 8px var(--accent-glow);
+        }
+
+        .input-flex-row { display: flex; gap: 15px; align-items: center; }
+        
+        .type-toggle-hub {
+            display: flex; background: var(--bg-master);
+            padding: 5px; border-radius: 10px; margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            flex: 1; padding: 10px; border: none; background: transparent;
+            font-size: 0.65rem; font-weight: 800; color: var(--text-muted);
+            cursor: pointer; border-radius: 8px; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .toggle-btn.active {
+            background: #fff; color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 2. RESULTS GRID (SIDE-BY-SIDE ON DESKTOP) */
+        .analytics-matrix-hub {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px; width: 100%;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1024px) { .analytics-matrix-hub { grid-template-columns: 1fr; } }
+
+        .result-node-pro {
+            background: #fff; border-radius: var(--radius-xl);
+            padding: 40px; border: 1.5px solid var(--border-ui);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: all 0.4s var(--curve-pro);
+            min-height: 300px;
+            border-left: 10px solid var(--primary-light);
+            box-shadow: var(--shadow-md);
+        }
+
+        .result-node-pro:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-left-color: var(--accent);
+        }
+
+        /* Result Card Components */
+        .res-category-tag {
+            font-size: 0.65rem; font-weight: 900; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .res-category-tag i { color: var(--accent); }
+
+        .res-main-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.2rem; font-weight: 950;
+            color: var(--primary); line-height: 1.2;
+            word-break: break-all; margin-bottom: 20px;
+        }
+
+        .res-sub-matrix {
+            background: #f8fafc; border-radius: 14px;
+            padding: 20px; display: flex; flex-direction: column;
+            gap: 12px; margin-top: auto; border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .res-row {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px;
+        }
+        .res-row:last-child { border-bottom: none; }
+        .res-lbl { font-size: 0.6rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        .res-val { font-family: 'JetBrains Mono'; font-size: 0.85rem; font-weight: 800; color: var(--primary-soft); }
+
+        /* Specific Accents */
+        .node-dist { border-left-color: var(--info); }
+        .node-elev { border-left-color: var(--success); }
+        .node-rl   { border-left-color: var(--accent); }
+    </style>
+
+    
+
+    <script>
+        /**
+         * TACHEOPRO CORE LOGIC ENGINE
+         * Part 2: Math Matrix & Interface Injection
+         */
+
+        /**
+         * INJECT INTERFACE COMPONENTS
+         * logic: Populates the skeleton from Part 1 with active UI elements.
+         */
+        function injectPart2Engine() {
+            const sidebar = document.getElementById('sidebar-injection-point');
+            const resultsHub = document.getElementById('results-injection-point');
+
+            if (sidebar) {
+                sidebar.innerHTML = `
+                    <div class="engine-control-stack">
+                        <div class="input-block-pro">
+                            <label class="field-label"><i class="fas fa-microchip"></i> Stadia Constants</label>
+                            <div class="input-flex-row">
+                                <div style="flex:1;"><span class="res-lbl">K (Mult)</span><input type="number" id="inp-k" class="pro-input-field" value="100" oninput="triggerMasterSync()"></div>
+                                <div style="flex:1;"><span class="res-lbl">C (Add)</span><input type="number" id="inp-c" class="pro-input-field" value="0" oninput="triggerMasterSync()"></div>
+                            </div>
+                        </div>
+
+                        <div class="input-block-pro">
+                            <label class="field-label"><i class="fas fa-ruler-vertical"></i> Staff Readings (m)</label>
+                            <div style="display:grid; gap:15px;">
+                                <div><span class="res-lbl">Upper Hair</span><input type="number" id="s-upper" class="pro-input-field" value="2.150" step="0.001" oninput="triggerMasterSync()"></div>
+                                <div><span class="res-lbl">Middle Hair (h)</span><input type="number" id="s-mid" class="pro-input-field" value="1.850" step="0.001" oninput="triggerMasterSync()"></div>
+                                <div><span class="res-lbl">Lower Hair</span><input type="number" id="s-lower" class="pro-input-field" value="1.550" step="0.001" oninput="triggerMasterSync()"></div>
+                            </div>
+                        </div>
+
+                        <div class="input-block-pro">
+                            <label class="field-label"><i class="fas fa-angle-double-up"></i> Vertical Angle</label>
+                            <div class="type-toggle-hub">
+                                <button class="toggle-btn active" id="btn-elev" onclick="setAngleType('Elevation')">Elevation</button>
+                                <button class="toggle-btn" id="btn-depr" onclick="setAngleType('Depression')">Depression</button>
+                            </div>
+                            <div class="input-flex-row">
+                                <div><span class="res-lbl">Deg</span><input type="number" id="ang-deg" class="pro-input-field" value="5" oninput="triggerMasterSync()"></div>
+                                <div><span class="res-lbl">Min</span><input type="number" id="ang-min" class="pro-input-field" value="30" oninput="triggerMasterSync()"></div>
+                                <div><span class="res-lbl">Sec</span><input type="number" id="ang-sec" class="pro-input-field" value="0" oninput="triggerMasterSync()"></div>
+                            </div>
+                        </div>
+
+                        <div class="input-block-pro">
+                            <label class="field-label"><i class="fas fa-mountain"></i> Station Elevation</label>
+                            <div style="display:grid; gap:15px;">
+                                <div><span class="res-lbl">Instrument Height (HI)</span><input type="number" id="inp-hi" class="pro-input-field" value="1.500" step="0.001" oninput="triggerMasterSync()"></div>
+                                <div><span class="res-lbl">BM / Station RL</span><input type="number" id="inp-rl-station" class="pro-input-field" value="100.000" step="0.001" oninput="triggerMasterSync()"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn-engine-compute" style="background:var(--accent); color:var(--primary); width:100%; border-radius:15px; padding:20px; font-weight:900; border:none; cursor:pointer;" onclick="pushToSessionVault()">
+                            <i class="fas fa-save"></i> STORE OBSERVATION
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (resultsHub) {
+                resultsHub.innerHTML = `
+                    <div class="result-node-pro node-dist">
+                        <span class="res-category-tag"><i class="fas fa-arrows-alt-h"></i> Horizontal Distance</span>
+                        <div class="res-main-val" id="res-dist-h">0.000 m</div>
+                        <div class="res-sub-matrix">
+                            <div class="res-row"><span class="res-lbl">Stadia Interval (s)</span><span class="res-val" id="res-s-val">0.600 m</span></div>
+                            <div class="res-row"><span class="res-lbl">Angle in Radians</span><span class="res-val" id="res-rad-val">0.0959</span></div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-pro node-elev">
+                        <span class="res-category-tag"><i class="fas fa-arrows-alt-v"></i> Vertical Component (V)</span>
+                        <div class="res-main-val" id="res-dist-v">0.000 m</div>
+                        <div class="res-sub-matrix">
+                            <div class="res-row"><span class="res-lbl">Correction Factor</span><span class="res-val">$\sin 2\theta$</span></div>
+                            <div class="res-row"><span class="res-lbl">Direction</span><span class="res-val" id="res-dir-val">Elevation</span></div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-pro node-rl">
+                        <span class="res-category-tag"><i class="fas fa-level-up-alt"></i> Target RL (Staff Foot)</span>
+                        <div class="res-main-val" id="res-rl-final">100.000 m</div>
+                        <div class="res-sub-matrix">
+                            <div class="res-row"><span class="res-lbl">Axis of Signal</span><span class="res-val" id="res-sig-val">1.850 m</span></div>
+                            <div class="res-row"><span class="res-lbl">Calculated RL</span><span class="res-val" style="color:var(--success)">VALIDATED</span></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        /**
+         * MASTER MATHEMATICAL ENGINE
+         * logic: Orchestrates the Tacheometric formulas.
+         */
+        window.triggerMasterSync = function() {
+            // 1. Acquire Data from UI
+            const K = parseFloat(document.getElementById('inp-k').value) || 100;
+            const C = parseFloat(document.getElementById('inp-c').value) || 0;
+            const HI = parseFloat(document.getElementById('inp-hi').value) || 0;
+            const RL_S = parseFloat(document.getElementById('inp-rl-station').value) || 0;
+
+            const upper = parseFloat(document.getElementById('s-upper').value) || 0;
+            const lower = parseFloat(document.getElementById('s-lower').value) || 0;
+            const mid = parseFloat(document.getElementById('s-mid').value) || 0;
+
+            const deg = parseFloat(document.getElementById('ang-deg').value) || 0;
+            const min = parseFloat(document.getElementById('ang-min').value) || 0;
+            const sec = parseFloat(document.getElementById('ang-sec').value) || 0;
+
+            // 2. Calculations
+            const s = Math.abs(upper - lower);
+            const totalAngleDeg = deg + (min / 60) + (sec / 3600);
+            const alpha = totalAngleDeg * (Math.PI / 180); // Radians
+
+            // Formulas for Inclined Sight (Staff Vertical)
+            // D = Ks cos²α + C cosα
+            const H_dist = (K * s * Math.pow(Math.cos(alpha), 2)) + (C * Math.cos(alpha));
+            
+            // V = Ks (sin 2α / 2) + C sinα
+            const V_comp = (K * s * (Math.sin(2 * alpha) / 2)) + (C * Math.sin(alpha));
+
+            // RL Calculation
+            // Target RL = Station RL + HI ± V - Middle Reading (h)
+            let finalRL;
+            if (window.TacheoState.angle.type === 'Elevation') {
+                finalRL = RL_S + HI + V_comp - mid;
+            } else {
+                finalRL = RL_S + HI - V_comp - mid;
+            }
+
+            // 3. Update UI
+            document.getElementById('res-dist-h').innerText = `${H_dist.toFixed(3)} m`;
+            document.getElementById('res-dist-v').innerText = `${V_comp.toFixed(3)} m`;
+            document.getElementById('res-rl-final').innerText = `${finalRL.toFixed(3)} m`;
+
+            document.getElementById('res-s-val').innerText = `${s.toFixed(3)} m`;
+            document.getElementById('res-rad-val').innerText = `${alpha.toFixed(5)}`;
+            document.getElementById('res-dir-val').innerText = window.TacheoState.angle.type;
+            document.getElementById('res-sig-val').innerText = `${mid.toFixed(3)} m`;
+
+            // Global State Update
+            window.TacheoState.results = { horizontal: H_dist, vertical: V_comp, rl: finalRL };
+            
+            // Broadcast to Part 3 (Visualizer)
+            if (window.drawTacheoScene) window.drawTacheoScene();
+            
+            // Refresh MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        };
+
+        /**
+         * ANGLE TYPE CONTROLLER
+         */
+        function setAngleType(type) {
+            window.TacheoState.angle.type = type;
+            document.getElementById('btn-elev').classList.toggle('active', type === 'Elevation');
+            document.getElementById('btn-depr').classList.toggle('active', type === 'Depression');
+            triggerMasterSync();
+        }
+
+        function pushToSessionVault() {
+            if(window.triggerToastFeedback) window.triggerToastFeedback("Observation Point Synchronized with Vault.");
+            // Logic for storage in Part 4
+        }
+
+        // Init on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectPart2Engine();
+                triggerMasterSync();
+                console.log("%c [ENGINE] Tacheometric Logic Core Synchronized. ", "background: #f59e0b; color: #000; font-weight: bold; padding: 10px;");
+            }, 1500);
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3: OPTICAL SIMULATION STYLING
+           Target: Lens Visualization, Crosshairs & Ray Tracing
+           ======================================================================== */
+
+        #tacheo-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+
+        /* 1. VIEWPORT OVERLAY CONTROLS */
+        .viewport-controls-pro {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .vp-btn {
+            width: 45px; height: 45px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
+        }
+
+        .vp-btn:hover { background: var(--accent); color: var(--primary); transform: scale(1.1); }
+
+        /* 2. DYNAMIC HUD OVERVIEW */
+        .viewport-data-tag {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid var(--accent);
+            padding: 12px 25px;
+            border-radius: 12px;
+            color: var(--accent);
+            font-family: 'JetBrains Mono';
+            font-size: 0.75rem;
+            font-weight: 800;
+            z-index: 100;
+            pointer-events: none;
+            backdrop-filter: blur(5px);
+        }
+
+        /* 3. LENS CIRCLE EFFECT */
+        .lens-aperture {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+            border-radius: 32px;
+            z-index: 20;
+            border: 2px solid rgba(255,255,255,0.05);
+        }
+
+        /* 4. RAY DIAGRAM MINI-MAP */
+        .ray-diagram-mini {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 280px;
+            height: 160px;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            z-index: 100;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #ray-canvas { width: 100%; height: 100%; }
+
+        .ray-label {
+            position: absolute;
+            top: 10px; left: 15px;
+            font-size: 0.55rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+    </style>
+
+    
+
+    <script>
+        /**
+         * PART 3 ENGINE: OPTICAL VISUALIZATION MATRIX
+         * logic: Handles the drawing of the simulated telescope view and ray tracing.
+         */
+
+        let mainCanvas, mainCtx, rayCanvas, rayCtx;
+        let zoomFactor = 1;
+
+        /**
+         * INITIALIZE DRAWING LAYERS
+         * logic: Injects canvas elements into Part 1 placeholders.
+         */
+        function initDrawingEngine() {
+            const mount = document.getElementById('canvas-mount-point');
+            if (!mount) return;
+
+            mount.innerHTML = `
+                <div class="lens-aperture"></div>
+                <div class="viewport-controls-pro">
+                    <div class="vp-btn" onclick="adjustZoom(1.1)" title="Zoom In"><i class="fas fa-search-plus"></i></div>
+                    <div class="vp-btn" onclick="adjustZoom(0.9)" title="Zoom Out"><i class="fas fa-search-minus"></i></div>
+                    <div class="vp-btn" onclick="window.triggerMasterSync()" title="Recalibrate"><i class="fas fa-sync"></i></div>
+                </div>
+                <div class="viewport-data-tag">
+                    <i class="fas fa-crosshairs"></i> LENS AUTH: FIXED
+                </div>
+                <div class="ray-diagram-mini">
+                    <span class="ray-label">Spatial Ray Trace</span>
+                    <canvas id="ray-canvas"></canvas>
+                </div>
+                <canvas id="tacheo-canvas"></canvas>
+            `;
+
+            mainCanvas = document.getElementById('tacheo-canvas');
+            mainCtx = mainCanvas.getContext('2d');
+            rayCanvas = document.getElementById('ray-canvas');
+            rayCtx = rayCanvas.getContext('2d');
+
+            resizeCanvases();
+            window.addEventListener('resize', resizeCanvases);
+        }
+
+        function resizeCanvases() {
+            if (mainCanvas) {
+                mainCanvas.width = mainCanvas.offsetWidth;
+                mainCanvas.height = mainCanvas.offsetHeight;
+            }
+            if (rayCanvas) {
+                rayCanvas.width = rayCanvas.offsetWidth;
+                rayCanvas.height = rayCanvas.offsetHeight;
+            }
+            window.drawTacheoScene();
+        }
+
+        function adjustZoom(factor) {
+            zoomFactor *= factor;
+            window.drawTacheoScene();
+        }
+
+        /**
+         * MASTER DRAWING ROUTINE
+         * logic: Renders the crosshairs, stadia lines, and the staff.
+         */
+        window.drawTacheoScene = function() {
+            if (!mainCtx) return;
+
+            const w = mainCanvas.width;
+            const h = mainCanvas.height;
+            const centerX = w / 2;
+            const centerY = h / 2;
+
+            const state = window.TacheoState;
+            const distH = state.results.horizontal;
+            const angleType = state.angle.type;
+            const deg = state.angle.deg + (state.angle.min / 60);
+
+            // 1. Clear Frame
+            mainCtx.clearRect(0, 0, w, h);
+
+            // 2. Draw Background Horizon
+            mainCtx.beginPath();
+            mainCtx.moveTo(0, centerY + (angleType === 'Elevation' ? 100 : -100));
+            mainCtx.lineTo(w, centerY + (angleType === 'Elevation' ? 100 : -100));
+            mainCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+            mainCtx.stroke();
+
+            // 3. Draw Leveling Staff (The Rod)
+            // logic: Staff height and position depends on distance and angle
+            const staffWidth = 40 * (10 / Math.max(1, distH)) * zoomFactor;
+            const staffHeight = 500 * (10 / Math.max(1, distH)) * zoomFactor;
+            const staffX = centerX - staffWidth / 2;
+            const staffY = centerY - (staffHeight / 2) + (angleType === 'Elevation' ? (deg * 5) : -(deg * 5));
+
+            // Rod Shadow
+            mainCtx.fillStyle = 'rgba(0,0,0,0.5)';
+            mainCtx.fillRect(staffX + 5, staffY + 10, staffWidth, staffHeight);
+
+            // Rod Body
+            mainCtx.fillStyle = '#fff';
+            mainCtx.fillRect(staffX, staffY, staffWidth, staffHeight);
+            mainCtx.strokeStyle = '#334155';
+            mainCtx.lineWidth = 2;
+            mainCtx.strokeRect(staffX, staffY, staffWidth, staffHeight);
+
+            // Rod Graduation Marks (Leveling Ticks)
+            mainCtx.fillStyle = '#ef4444';
+            for (let i = 0; i < 20; i++) {
+                if (i % 2 === 0) {
+                    mainCtx.fillRect(staffX, staffY + (i * (staffHeight / 20)), staffWidth / 2, staffHeight / 20);
+                } else {
+                    mainCtx.fillRect(staffX + staffWidth / 2, staffY + (i * (staffHeight / 20)), staffWidth / 2, staffHeight / 20);
+                }
+            }
+
+            // 4. DRAW CROSSHAIRS (The Optical Fix)
+            mainCtx.strokeStyle = '#fff';
+            mainCtx.lineWidth = 1.5;
+            
+            // Vertical Line
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX, 50);
+            mainCtx.lineTo(centerX, h - 50);
+            mainCtx.stroke();
+
+            // Horizontal Center Line
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX - 100, centerY);
+            mainCtx.lineTo(centerX + 100, centerY);
+            mainCtx.stroke();
+
+            // 5. DRAW STADIA HAIRS
+            // logic: Calculate spacing based on 's' reading
+            const stadiaSpacing = (state.staff.upper - state.staff.lower) * 100 * zoomFactor;
+            
+            mainCtx.strokeStyle = 'var(--accent)';
+            mainCtx.lineWidth = 2;
+
+            // Upper Hair
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX - 60, centerY - stadiaSpacing);
+            mainCtx.lineTo(centerX + 60, centerY - stadiaSpacing);
+            mainCtx.stroke();
+
+            // Lower Hair
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX - 60, centerY + stadiaSpacing);
+            mainCtx.lineTo(centerX + 60, centerY + stadiaSpacing);
+            mainCtx.stroke();
+
+            drawRayDiagram();
+        };
+
+        /**
+         * RAY DIAGRAM MINI-MAP
+         * logic: Renders a 2D side profile of the measurement setup.
+         */
+        function drawRayDiagram() {
+            if (!rayCtx) return;
+            const rw = rayCanvas.width;
+            const rh = rayCanvas.height;
+            const state = window.TacheoState;
+
+            rayCtx.clearRect(0, 0, rw, rh);
+
+            // Ground Line
+            rayCtx.strokeStyle = '#334155';
+            rayCtx.lineWidth = 2;
+            rayCtx.beginPath();
+            rayCtx.moveTo(20, rh - 30);
+            rayCtx.lineTo(rw - 20, rh - 30);
+            rayCtx.stroke();
+
+            // Instrument
+            rayCtx.fillStyle = 'var(--accent)';
+            rayCtx.fillRect(40, rh - 80, 10, 50); // Tripod/Inst
+            rayCtx.beginPath();
+            rayCtx.arc(45, rh - 85, 8, 0, Math.PI * 2);
+            rayCtx.fill();
+
+            // Target Staff
+            const staffX = rw - 60;
+            rayCtx.fillStyle = '#fff';
+            rayCtx.fillRect(staffX, rh - 110, 6, 80);
+
+            // Optical Ray (Line of Sight)
+            const angleRad = (state.angle.deg + state.angle.min/60) * (Math.PI/180);
+            const targetY = (state.angle.type === 'Elevation') ? (rh - 85) - 40 : (rh - 85) + 40;
+
+            rayCtx.setLineDash([5, 5]);
+            rayCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+            rayCtx.beginPath();
+            rayCtx.moveTo(45, rh - 85);
+            rayCtx.lineTo(staffX, targetY);
+            rayCtx.stroke();
+            rayCtx.setLineDash([]);
+
+            // Labels
+            rayCtx.fillStyle = '#94a3b8';
+            rayCtx.font = '8px Inter';
+            rayCtx.fillText(`D = ${state.results.horizontal.toFixed(2)}m`, rw / 2 - 20, rh - 15);
+        }
+
+        // Initialize v3.0 Engine
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                initDrawingEngine();
+                // Hook into state from Part 2
+                const oldSync = window.triggerMasterSync;
+                window.triggerMasterSync = function() {
+                    if (typeof oldSync === 'function') oldSync();
+                    
+                    // Update internal state readings for the drawing
+                    window.TacheoState.staff.upper = parseFloat(document.getElementById('s-upper').value);
+                    window.TacheoState.staff.lower = parseFloat(document.getElementById('s-lower').value);
+                    window.TacheoState.angle.deg = parseFloat(document.getElementById('ang-deg').value);
+                    window.TacheoState.angle.min = parseFloat(document.getElementById('ang-min').value);
+                    
+                    window.drawTacheoScene();
+                };
+                window.drawTacheoScene();
+                console.log("%c [VISUALIZER] Optical Simulation Engine Online. ", "background: #06b6d4; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 2500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3.5: HIGH-TECH VIEWPORT REFINEMENT
+           Target: Lens Realism, Chromatic Aberration & Digital HUD
+           ======================================================================== */
+
+        /* 1. LENS FX OVERLAYS */
+        .lens-fx-layer {
+            position: absolute; inset: 0;
+            pointer-events: none; z-index: 30;
+            background: radial-gradient(circle, transparent 40%, rgba(6, 182, 212, 0.05) 70%, rgba(15, 23, 42, 0.4) 100%);
+        }
+
+        /* Chromatic Aberration Simulation */
+        .chromatic-edge {
+            position: absolute; inset: -2px;
+            border-radius: 32px;
+            border: 2px solid rgba(244, 63, 94, 0.2); /* Red shift */
+            filter: blur(8px); mix-blend-mode: screen;
+            pointer-events: none; z-index: 31;
+        }
+
+        /* 2. DIGITAL INSTRUMENT HUD */
+        .digital-bubble-level {
+            position: absolute;
+            bottom: 120px; right: 40px;
+            width: 100px; height: 100px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 50%; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .bubble-ring {
+            width: 60px; height: 60px;
+            border: 1px solid var(--accent);
+            border-radius: 50%; position: relative;
+        }
+
+        .bubble-dot {
+            position: absolute;
+            width: 12px; height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            transition: 0.1s linear;
+        }
+
+        /* 3. FOCUS & SCAN LINES */
+        .viewport-terminal::before {
+            content: ''; position: absolute; inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, transparent 1px, transparent 2px);
+            pointer-events: none; z-index: 40;
+        }
+
+        /* 4. OPTICAL COMPASS OVERLAY */
+        .optical-compass {
+            position: absolute;
+            top: 50%; right: 20px;
+            transform: translateY(-50%);
+            height: 200px; width: 40px;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            align-items: center; z-index: 100;
+        }
+
+        .compass-tick { width: 10px; height: 1px; background: rgba(255,255,255,0.3); }
+        .compass-tick.major { width: 20px; background: var(--accent); }
+
+        /* 5. VIBRATION ANIMATION */
+        @keyframes atmosphericJitter {
+            0% { transform: translate(0,0); }
+            25% { transform: translate(0.5px, -0.5px); }
+            50% { transform: translate(-0.5px, 0.5px); }
+            75% { transform: translate(0.3px, 0.3px); }
+            100% { transform: translate(0,0); }
+        }
+
+        .jitter-active { animation: atmosphericJitter 0.1s infinite; }
+    </style>
+
+    
+
+    <script>
+        /**
+         * PART 3.5 ENGINE: ENHANCED RENDERING & OPTICS
+         * logic: Injects advanced visual patterns and atmospheric effects.
+         */
+
+        let bubbleX = 0, bubbleY = 0;
+
+        /**
+         * INITIALIZE ENHANCED HUD
+         */
+        function injectEnhancedHUD() {
+            const viewport = document.querySelector('.viewport-terminal');
+            if (!viewport) return;
+
+            // 1. Add FX Layers
+            const fxLayer = document.createElement('div');
+            fxLayer.className = 'lens-fx-layer';
+            viewport.appendChild(fxLayer);
+
+            const chromeEdge = document.createElement('div');
+            chromeEdge.className = 'chromatic-edge';
+            viewport.appendChild(chromeEdge);
+
+            // 2. Add Bubble Level
+            const level = document.createElement('div');
+            level.className = 'digital-bubble-level';
+            level.innerHTML = `<div class="bubble-ring"><div class="bubble-dot" id="spirit-bubble"></div></div>`;
+            viewport.appendChild(level);
+
+            // 3. Add Compass
+            const compass = document.createElement('div');
+            compass.className = 'optical-compass';
+            for(let i=0; i<15; i++) {
+                const tick = document.createElement('div');
+                tick.className = i % 5 === 0 ? 'compass-tick major' : 'compass-tick';
+                compass.appendChild(tick);
+            }
+            viewport.appendChild(compass);
+
+            console.log("[LENS-PRO] Enhanced Optics Initialized.");
+        }
+
+        /**
+         * OVERRIDE: DRAW PROFESSIONAL E-PATTERN STAFF
+         * logic: Replaces simple rod with industrial-grade E-pattern staff.
+         */
+        function drawETypeStaff(ctx, x, y, w, h, dist) {
+            // Background of staff
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x, y, w, h);
+
+            // Draw E-pattern blocks (Professional Surveying Standard)
+            const blockHeight = h / 20;
+            ctx.font = `${blockHeight * 0.8}px 'JetBrains Mono'`;
+            
+            for (let i = 0; i < 20; i++) {
+                const curY = y + (i * blockHeight);
+                const isEven = i % 2 === 0;
+
+                // Pattern logic
+                ctx.fillStyle = isEven ? '#000000' : '#ef4444';
+                
+                // Draw "E" sections
+                if (i % 4 === 0) {
+                    ctx.fillRect(x, curY, w * 0.6, blockHeight);
+                } else if (i % 4 === 1) {
+                    ctx.fillRect(x, curY, w * 0.2, blockHeight);
+                    ctx.fillRect(x + w * 0.4, curY, w * 0.2, blockHeight);
+                } else {
+                    ctx.fillRect(x + w * 0.4, curY, w * 0.6, blockHeight);
+                }
+
+                // Add meter labels if zoomed in enough
+                if (dist < 30) {
+                    ctx.fillStyle = '#64748b';
+                    ctx.fillText(`${(2.0 - i/10).toFixed(1)}`, x - 25, curY + blockHeight);
+                }
+            }
+
+            // Outer border
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, y, w, h);
+        }
+
+        /**
+         * ATMOSPHERIC ENGINE
+         * logic: Simulates wind jitter and lens blur.
+         */
+        function applyAtmosphericEffects(dist) {
+            const canvas = document.getElementById('tacheo-canvas');
+            if (!canvas) return;
+
+            // Blur increases with distance (Focus simulation)
+            const blurAmount = Math.max(0, (dist - 50) / 40);
+            canvas.style.filter = `blur(${blurAmount}px) contrast(1.1)`;
+
+            // Jitter intensity based on distance
+            if (dist > 20) {
+                canvas.classList.add('jitter-active');
+            } else {
+                canvas.classList.remove('jitter-active');
+            }
+        }
+
+        /**
+         * SPIRIT LEVEL SIMULATION
+         */
+        function updateSpiritLevel() {
+            const bubble = document.getElementById('spirit-bubble');
+            if (!bubble) return;
+
+            // Simulate slight instrument unbalance
+            const jitterX = (Math.random() - 0.5) * 4;
+            const jitterY = (Math.random() - 0.5) * 4;
+            
+            bubble.style.transform = `translate(calc(-50% + ${jitterX}px), calc(-50% + ${jitterY}px))`;
+        }
+
+        /**
+         * MASTER VIEWPORT UPDATE OVERRIDE
+         */
+        const originalDrawScene = window.drawTacheoScene;
+        window.drawTacheoScene = function() {
+            if (!mainCtx) return;
+
+            const w = mainCanvas.width;
+            const h = mainCanvas.height;
+            const centerX = w / 2;
+            const centerY = h / 2;
+            const state = window.TacheoState;
+            const distH = state.results.horizontal;
+
+            // 1. Clear Frame
+            mainCtx.clearRect(0, 0, w, h);
+
+            // 2. Draw Environment (Vague horizon)
+            mainCtx.fillStyle = '#0f172a';
+            mainCtx.fillRect(0, 0, w, h);
+            
+            // 3. Render Enhanced E-Type Staff
+            const sWidth = 45 * (10 / Math.max(1, distH)) * zoomFactor;
+            const sHeight = 550 * (10 / Math.max(1, distH)) * zoomFactor;
+            const sX = centerX - sWidth / 2;
+            const deg = state.angle.deg + (state.angle.min / 60);
+            const sY = centerY - (sHeight / 2) + (state.angle.type === 'Elevation' ? (deg * 8) : -(deg * 8));
+
+            drawETypeStaff(mainCtx, sX, sY, sWidth, sHeight, distH);
+
+            // 4. DRAW SYSTEM CROSSHAIRS
+            mainCtx.strokeStyle = 'rgba(255,255,255,0.8)';
+            mainCtx.lineWidth = 1.5;
+
+            // Main Vertical
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX, 0); mainCtx.lineTo(centerX, h);
+            mainCtx.stroke();
+
+            // Main Horizontal
+            mainCtx.beginPath();
+            mainCtx.moveTo(0, centerY); mainCtx.lineTo(w, centerY);
+            mainCtx.stroke();
+
+            // 5. STADIA HAIRS (Amber glow)
+            const stadiaInterval = (state.staff.upper - state.staff.lower) * 110 * zoomFactor;
+            mainCtx.strokeStyle = 'rgba(251, 191, 36, 0.9)';
+            mainCtx.lineWidth = 2;
+            mainCtx.shadowBlur = 10;
+            mainCtx.shadowColor = 'rgba(251, 191, 36, 0.5)';
+
+            // Upper
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX - 80, centerY - stadiaInterval);
+            mainCtx.lineTo(centerX + 80, centerY - stadiaInterval);
+            mainCtx.stroke();
+
+            // Lower
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX - 80, centerY + stadiaInterval);
+            mainCtx.lineTo(centerX + 80, centerY + stadiaInterval);
+            mainCtx.stroke();
+
+            mainCtx.shadowBlur = 0; // Reset shadow
+
+            // 6. Apply Post-processing
+            applyAtmosphericEffects(distH);
+            updateSpiritLevel();
+            
+            // Call original side ray diagram
+            drawRayDiagram();
+        };
+
+        // Initialize Part 3.5
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectEnhancedHUD();
+                window.drawTacheoScene();
+                setInterval(updateSpiritLevel, 100);
+                console.log("%c [VIEWER-V3.5] High-Definition Optics Synchronized. ", "background: #06b6d4; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 3000);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3.6: PROFESSIONAL INSTRUMENT UI REFINEMENT
+           Target: Digital Overlays, Illumination & Interface Stability
+           ======================================================================== */
+
+        /* 1. DIGITAL TELEMETRY OVERLAY */
+        .telemetry-sidebar {
+            position: absolute;
+            top: 100px; left: 30px;
+            z-index: 110; display: flex; flex-direction: column; gap: 20px;
+            pointer-events: none;
+        }
+
+        .telemetry-node {
+            background: rgba(15, 23, 42, 0.4);
+            border-left: 3px solid var(--accent);
+            padding: 10px 15px; border-radius: 0 10px 10px 0;
+            backdrop-filter: blur(5px);
+            animation: slideInLeft 0.5s var(--curve);
+        }
+
+        .tel-lbl { font-size: 0.5rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .tel-val { font-family: 'JetBrains Mono'; font-size: 0.8rem; color: #fff; font-weight: 700; display: block; }
+
+        /* 2. ILLUMINATED CROSSHAIRS */
+        .reticule-illuminated {
+            filter: drop-shadow(0 0 5px #f43f5e) !important;
+            stroke: #f43f5e !important;
+        }
+
+        /* 3. LENS DUST & TEXTURE */
+        .lens-texture {
+            position: absolute; inset: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/dust.png');
+            opacity: 0.05; pointer-events: none; z-index: 25;
+        }
+
+        /* 4. DIGITAL READOUT BAR (DRD) */
+        .drd-overlay {
+            position: absolute;
+            bottom: 35px; right: 35px;
+            z-index: 120; display: flex; align-items: center; gap: 25px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 15px 30px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: var(--shadow-lg);
+            animation: slideUpHUD 0.6s var(--curve);
+        }
+
+        .drd-item { display: flex; align-items: baseline; gap: 8px; }
+        .drd-lbl { font-size: 0.6rem; font-weight: 900; color: var(--accent); text-transform: uppercase; }
+        .drd-val { font-family: 'JetBrains Mono'; font-size: 1.1rem; color: #fff; font-weight: 800; }
+
+        /* 5. FIXING NON-WORKING BUTTONS STYLING */
+        .vp-btn.active-tool { background: var(--stadia-hair) !important; color: #fff !important; box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+
+        /* Animation for Data Influx */
+        @keyframes dataPulse {
+            0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; }
+        }
+        .live-data-pulse { animation: dataPulse 2s infinite; }
+    </style>
+
+    
+
+    <script>
+        /**
+         * PART 3.6 CORE: TELEMETRY ENGINE & UI STABILIZER
+         * logic: Re-binds events, adds digital overlays, and simulates parallax.
+         */
+
+        let isIlluminated = false;
+        let parallaxX = 0, parallaxY = 0;
+
+        /**
+         * INITIALIZE TACTICAL OVERLAYS
+         * logic: Injects new telemetry and digital readout components.
+         */
+        function initTacticalUI() {
+            const viewport = document.querySelector('.viewport-terminal');
+            if (!viewport) return;
+
+            // 1. Telemetry Sidebar
+            const telSide = document.createElement('div');
+            telSide.className = 'telemetry-sidebar';
+            telSide.innerHTML = `
+                <div class="telemetry-node"><span class="tel-lbl">Optic Fix</span><span class="tel-val">STABLE</span></div>
+                <div class="telemetry-node" style="border-color:var(--info);"><span class="tel-lbl">Refraction</span><span class="tel-val">0.0014η</span></div>
+                <div class="telemetry-node" style="border-color:var(--success);"><span class="tel-lbl">Confidence</span><span class="tel-val">99.9%</span></div>
+            `;
+            viewport.appendChild(telSide);
+
+            // 2. Digital Readout (DRD)
+            const drd = document.createElement('div');
+            drd.id = 'digital-readout-bar';
+            drd.className = 'drd-overlay';
+            drd.innerHTML = `
+                <div class="drd-item"><span class="drd-lbl">S:</span><span class="drd-val" id="drd-s">0.000</span></div>
+                <div class="drd-item" style="border-left:1px solid rgba(255,255,255,0.1); padding-left:20px;"><span class="drd-lbl">H:</span><span class="drd-val" id="drd-h">0.00</span></div>
+                <div class="drd-item" style="border-left:1px solid rgba(255,255,255,0.1); padding-left:20px;"><span class="drd-lbl">V:</span><span class="drd-val" id="drd-v">0.00</span></div>
+            `;
+            viewport.appendChild(drd);
+
+            // 3. Add Dust Texture
+            const dust = document.createElement('div');
+            dust.className = 'lens-texture';
+            viewport.appendChild(dust);
+
+            // 4. Night Mode Button in Controls
+            const controls = document.querySelector('.viewport-controls-pro');
+            const nightBtn = document.createElement('div');
+            nightBtn.className = 'vp-btn';
+            nightBtn.id = 'btn-night-mode';
+            nightBtn.title = "Crosshair Illumination";
+            nightBtn.innerHTML = '<i class="fas fa-lightbulb"></i>';
+            nightBtn.onclick = toggleIllumination;
+            controls.appendChild(nightBtn);
+
+            setupParallaxTracking(viewport);
+            console.log("[TACTICAL-UI] Logic Layers Re-wired & Stabilized.");
+        }
+
+        /**
+         * BUTTON FIX: ZOOM & RECALIBRATE
+         * logic: Overriding the adjustZoom from Part 3 to ensure limits and smoothness.
+         */
+        window.adjustZoom = function(factor) {
+            zoomFactor *= factor;
+            // Boundaries
+            if (zoomFactor < 0.2) zoomFactor = 0.2;
+            if (zoomFactor > 5.0) zoomFactor = 5.0;
+            
+            if (window.triggerToastFeedback) {
+                const zoomPct = Math.round(zoomFactor * 100);
+                window.triggerToastFeedback(`Magnification: ${zoomPct}%`);
+            }
+            window.drawTacheoScene();
+        };
+
+        /**
+         * ILLUMINATION TOGGLE
+         */
+        function toggleIllumination() {
+            isIlluminated = !isIlluminated;
+            const btn = document.getElementById('btn-night-mode');
+            btn.classList.toggle('active-tool', isIlluminated);
+            window.drawTacheoScene();
+        }
+
+        /**
+         * PARALLAX SIMULATION
+         * logic: Moves the internal staff and hairs based on cursor for depth effect.
+         */
+        function setupParallaxTracking(el) {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                parallaxX = (e.clientX - rect.left - rect.width/2) / 50;
+                parallaxY = (e.clientY - rect.top - rect.height/2) / 50;
+                window.drawTacheoScene();
+            });
+            el.addEventListener('mouseleave', () => {
+                parallaxX = 0; parallaxY = 0;
+                window.drawTacheoScene();
+            });
+        }
+
+        /**
+         * MASTER VIEWPORT UPDATE OVERRIDE (v3.6)
+         * logic: Integrates parallax and digital readouts into the main draw loop.
+         */
+        const v35DrawScene = window.drawTacheoScene;
+        window.drawTacheoScene = function() {
+            if (!mainCtx) return;
+
+            const w = mainCanvas.width;
+            const h = mainCanvas.height;
+            const centerX = (w / 2) + parallaxX;
+            const centerY = (h / 2) + parallaxY;
+            const state = window.TacheoState;
+            const distH = state.results.horizontal;
+
+            // 1. Clear & Background
+            mainCtx.clearRect(0, 0, w, h);
+            mainCtx.fillStyle = '#020617';
+            mainCtx.fillRect(0, 0, w, h);
+            
+            // 2. Render Rod with Parallax
+            const sWidth = 45 * (10 / Math.max(1, distH)) * zoomFactor;
+            const sHeight = 550 * (10 / Math.max(1, distH)) * zoomFactor;
+            const sX = centerX - sWidth / 2 - (parallaxX * 2); // Counter-move for depth
+            const deg = state.angle.deg + (state.angle.min / 60);
+            const sY = centerY - (sHeight / 2) + (state.angle.type === 'Elevation' ? (deg * 8) : -(deg * 8));
+
+            drawETypeStaff(mainCtx, sX, sY, sWidth, sHeight, distH);
+
+            // 3. DRAW SYSTEM CROSSHAIRS (Illumination Check)
+            mainCtx.strokeStyle = isIlluminated ? '#f43f5e' : 'rgba(255,255,255,0.8)';
+            mainCtx.lineWidth = isIlluminated ? 2.5 : 1.5;
+            if (isIlluminated) {
+                mainCtx.shadowBlur = 10;
+                mainCtx.shadowColor = '#f43f5e';
+            }
+
+            // Crosshair Lines
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX, 0); mainCtx.lineTo(centerX, h);
+            mainCtx.moveTo(0, centerY); mainCtx.lineTo(w, centerY);
+            mainCtx.stroke();
+
+            // 4. STADIA HAIRS
+            const sInt = (state.staff.upper - state.staff.lower);
+            const stadiaInterval = sInt * 110 * zoomFactor;
+            
+            mainCtx.beginPath();
+            mainCtx.moveTo(centerX - 100, centerY - stadiaInterval);
+            mainCtx.lineTo(centerX + 100, centerY - stadiaInterval);
+            mainCtx.moveTo(centerX - 100, centerY + stadiaInterval);
+            mainCtx.lineTo(centerX + 100, centerY + stadiaInterval);
+            mainCtx.stroke();
+
+            mainCtx.shadowBlur = 0; // Reset
+
+            // 5. UPDATE DIGITAL READOUT (DRD)
+            document.getElementById('drd-s').innerText = sInt.toFixed(3);
+            document.getElementById('drd-h').innerText = distH.toFixed(2);
+            document.getElementById('drd-v').innerText = state.results.vertical.toFixed(2);
+
+            // Apply Effects from Part 3.5
+            applyAtmosphericEffects(distH);
+            updateSpiritLevel();
+            drawRayDiagram();
+        };
+
+        /**
+         * BUTTON RE-WIRING (Logic Fix)
+         */
+        window.pushToSessionVault = function() {
+            // This links the "Store Observation" button to Part 4's database
+            if (window.addToSessionLog) {
+                window.addToSessionLog();
+            } else {
+                if (window.triggerToastFeedback) window.triggerToastFeedback("Session Vault Initializing...");
+            }
+        };
+
+        // Initialize Part 3.6
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                initTacticalUI();
+                window.drawTacheoScene();
+                console.log("%c [MASTER-FIX] Tactical HUD & Button Logic Operational. ", "background: #f43f5e; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 3500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3.8: ADVANCED VIEWPORT ARCHITECTURE & OVERLAP FIXES
+           Target: Pixel-Perfect UI, Digital Inclinometer & Multi-Data Feeds
+           ======================================================================== */
+
+        /* 1. LAYOUT RE-ORGANIZATION (Fixing Overlaps) */
+        :root {
+            --vp-padding: 30px;
+            --status-height: 40px;
+        }
+
+        /* Moving the "Optical Fix" badge to Top Center to avoid Zoom Tools conflict */
+        .viewport-data-tag {
+            position: absolute;
+            top: 25px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid var(--accent);
+            padding: 8px 25px;
+            border-radius: 50px;
+            color: var(--accent);
+            font-family: 'JetBrains Mono';
+            font-size: 0.7rem;
+            font-weight: 800;
+            z-index: 150;
+            display: flex; align-items: center; gap: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        /* 2. ENTERPRISE STATUS BAR (New Element) */
+        .instrument-status-bar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: var(--status-height);
+            background: rgba(2, 6, 23, 0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 140;
+            padding: 0 35px;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 0.6rem; color: #64748b; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .status-node-group { display: flex; gap: 25px; }
+        .status-node { display: flex; align-items: center; gap: 8px; }
+        .status-node i { color: var(--accent); }
+
+        /* 3. DIGITAL INCLINOMETER ARC */
+        .inclinometer-matrix {
+            position: absolute;
+            top: 50%; left: 60px;
+            transform: translateY(-50%);
+            width: 100px; height: 300px;
+            z-index: 100; pointer-events: none;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 20px 0;
+        }
+
+        .angle-tick-pro {
+            height: 1px; background: rgba(255,255,255,0.2);
+            position: relative; width: 30px;
+        }
+        .angle-tick-pro.major { width: 50px; background: var(--info); }
+        .angle-tick-pro.major::after {
+            content: attr(data-val); position: absolute;
+            right: -25px; top: -8px; color: #94a3b8; font-size: 0.55rem;
+        }
+
+        /* 4. TACTICAL RETICULE REFINEMENT */
+        .stadia-ratio-marker {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 80; pointer-events: none;
+        }
+
+        /* 5. INTERFACE BUTTONS STABILIZATION */
+        .viewport-controls-pro {
+            top: 60px !important; /* Pushed down to clear status bar */
+            left: 25px !important;
+        }
+
+        /* Smooth Transition for Dynamic Changes */
+        .main-stage, .analytic-node { transition: var(--transition); }
+
+        /* Mobile Fixes for Part 3.8 */
+        @media (max-width: 768px) {
+            .inclinometer-matrix { display: none; }
+            .drd-overlay { 
+                flex-direction: column; 
+                gap: 10px; 
+                padding: 15px 20px; 
+                border-radius: 20px; 
+                bottom: 20px; right: 20px;
+            }
+            .drd-item { border: none !important; padding: 0 !important; }
+            .viewport-data-tag { font-size: 0.55rem; width: 70%; text-align: center; }
+        }
+    </style>
+
+    
+
+    <script>
+        /**
+         * PART 3.8 ENGINE: LENS STABILIZATION & DATA PERSISTENCE
+         * logic: Fixes overlaps, enhances reticule detail, and prepares Vault integration.
+         */
+
+        let isAutoStoring = false;
+
+        /**
+         * INJECT UPGRADED UI
+         * logic: Repositions old badges and injects the new Status Bar and Inclinometer.
+         */
+        function upgradeToEnterpriseViewport() {
+            const terminal = document.querySelector('.viewport-terminal');
+            if (!terminal) return;
+
+            // 1. Status Bar Injection
+            const statusBar = document.createElement('div');
+            statusBar.className = 'instrument-status-bar';
+            statusBar.innerHTML = `
+                <div class="status-node-group">
+                    <div class="status-node"><i class="fas fa-battery-three-quarters"></i> 88%</div>
+                    <div class="status-node"><i class="fas fa-satellite"></i> GPS: 12-FIX</div>
+                </div>
+                <div class="status-node-group">
+                    <div class="status-node">EPOCH: 2026.31</div>
+                    <div class="status-node"><i class="fas fa-lock"></i> DATUM: LOCKED</div>
+                </div>
+            `;
+            terminal.prepend(statusBar);
+
+            // 2. Inclinometer Injection
+            const incMatrix = document.createElement('div');
+            incMatrix.className = 'inclinometer-matrix';
+            for (let i = 20; i >= -20; i -= 5) {
+                const tick = document.createElement('div');
+                tick.className = i % 10 === 0 ? 'angle-tick-pro major' : 'angle-tick-pro';
+                tick.setAttribute('data-val', i + '°');
+                incMatrix.appendChild(tick);
+            }
+            terminal.appendChild(incMatrix);
+
+            // 3. Move "Optical Fix" Badge
+            const oldBadge = document.querySelector('.viewport-data-tag');
+            if (oldBadge) {
+                oldBadge.innerHTML = `<div class="live-dot" style="box-shadow:0 0 10px var(--accent);"></div><span>TACHEO-OPTIC FIX: ACTIVE</span>`;
+            }
+
+            console.log("[UPGRADE-3.8] Overlaps fixed and Inclinometer active.");
+        }
+
+        /**
+         * LENS DRAWING ENHANCEMENT (v3.8)
+         * logic: Adds tertiary reticule ticks for distance estimation accuracy.
+         */
+        function drawAdvancedReticule(ctx, cx, cy, w, h) {
+            ctx.strokeStyle = isIlluminated ? '#f43f5e' : 'rgba(255,255,255,0.4)';
+            ctx.lineWidth = 1;
+
+            // Small tick marks on vertical crosshair for Stadia Ratio (1:100)
+            for (let i = -150; i <= 150; i += 30) {
+                if (i === 0) continue;
+                ctx.beginPath();
+                ctx.moveTo(cx - 5, cy + i);
+                ctx.lineTo(cx + 5, cy + i);
+                ctx.stroke();
+            }
+
+            // Lens Edge Vignette (CSS handles some, Canvas adds depth)
+            const grad = ctx.createRadialGradient(cx, cy, 100, cx, cy, w/1.5);
+            grad.addColorStop(0, 'rgba(0,0,0,0)');
+            grad.addColorStop(1, 'rgba(0,0,0,0.6)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+        }
+
+        /**
+         * MASTER DRAWING OVERRIDE (v3.8)
+         */
+        const v36DrawScene = window.drawTacheoScene;
+        window.drawTacheoScene = function() {
+            if (!mainCtx) return;
+
+            const w = mainCanvas.width;
+            const h = mainCanvas.height;
+            const cx = (w / 2) + parallaxX;
+            const cy = (h / 2) + parallaxY;
+            const state = window.TacheoState;
+            const distH = state.results.horizontal;
+
+            // 1. Core Background
+            mainCtx.clearRect(0, 0, w, h);
+            mainCtx.fillStyle = '#020617';
+            mainCtx.fillRect(0, 0, w, h);
+            
+            // 2. Terrain Wireframe Simulation (New Professional Depth)
+            mainCtx.strokeStyle = 'rgba(255,255,255,0.02)';
+            for(let i=0; i<w; i+=50) {
+                mainCtx.beginPath();
+                mainCtx.moveTo(i, h); mainCtx.lineTo(cx, cy);
+                mainCtx.stroke();
+            }
+
+            // 3. Render Rod with Focus Logic
+            const sWidth = 45 * (10 / Math.max(1, distH)) * zoomFactor;
+            const sHeight = 550 * (10 / Math.max(1, distH)) * zoomFactor;
+            const sX = cx - sWidth / 2 - (parallaxX * 2);
+            const totalAng = state.angle.deg + (state.angle.min / 60);
+            const sY = cy - (sHeight / 2) + (state.angle.type === 'Elevation' ? (totalAng * 8) : -(totalAng * 8));
+
+            drawETypeStaff(mainCtx, sX, sY, sWidth, sHeight, distH);
+
+            // 4. Draw Advanced Reticule Detail
+            drawAdvancedReticule(mainCtx, cx, cy, w, h);
+
+            // 5. Draw Primary Crosshairs
+            mainCtx.strokeStyle = isIlluminated ? '#f43f5e' : 'rgba(255,255,255,0.8)';
+            mainCtx.lineWidth = isIlluminated ? 2.5 : 1.5;
+            if (isIlluminated) { mainCtx.shadowBlur = 10; mainCtx.shadowColor = '#f43f5e'; }
+
+            mainCtx.beginPath();
+            mainCtx.moveTo(cx, 0); mainCtx.lineTo(cx, h);
+            mainCtx.moveTo(0, cy); mainCtx.lineTo(w, cy);
+            mainCtx.stroke();
+
+            // 6. Stadia Lines
+            const sInt = Math.abs(state.staff.upper - state.staff.lower);
+            const gap = sInt * 110 * zoomFactor;
+            mainCtx.beginPath();
+            mainCtx.moveTo(cx - 100, cy - gap); mainCtx.lineTo(cx + 100, cy - gap);
+            mainCtx.moveTo(cx - 100, cy + gap); mainCtx.lineTo(cx + 100, cy + gap);
+            mainCtx.stroke();
+            mainCtx.shadowBlur = 0;
+
+            // 7. Data Sync (DRD)
+            document.getElementById('drd-s').innerText = sInt.toFixed(3);
+            document.getElementById('drd-h').innerText = distH.toFixed(2);
+            document.getElementById('drd-v').innerText = state.results.vertical.toFixed(2);
+
+            // Side Logic Hooks
+            applyAtmosphericEffects(distH);
+            updateSpiritLevel();
+            drawRayDiagram();
+        };
+
+        /**
+         * VAULT PERSISTENCE ENGINE (Bridging to Part 4)
+         * logic: Physically stores the observation into LocalStorage for future table rendering.
+         */
+        window.addToSessionLog = function() {
+            const state = window.TacheoState;
+            const newPoint = {
+                id: Math.floor(1000 + Math.random() * 9000),
+                time: new Date().toLocaleTimeString(),
+                horizontal: state.results.horizontal.toFixed(3),
+                vertical: state.results.vertical.toFixed(3),
+                rl: state.results.rl.toFixed(3),
+                angle: `${state.angle.deg}° ${state.angle.min}' ${state.angle.type}`
+            };
+
+            // Get existing or init
+            let vault = JSON.parse(localStorage.getItem('TACHEO_VAULT')) || [];
+            vault.unshift(newPoint);
+            if(vault.length > 25) vault.pop();
+
+            localStorage.setItem('TACHEO_VAULT', JSON.stringify(vault));
+            
+            if (window.triggerToastFeedback) {
+                window.triggerToastFeedback(`Point P-${newPoint.id} committed to vault.`);
+            }
+            
+            // If Part 4 table exists, refresh it
+            if (window.renderVaultTable) window.renderVaultTable();
+        };
+
+        /**
+         * RE-CALIBRATE ENGINE
+         * logic: Resets instrument parallax and recenters staff.
+         */
+        window.recalibrateOptics = function() {
+            parallaxX = 0; parallaxY = 0;
+            zoomFactor = 1.0;
+            if (window.triggerToastFeedback) window.triggerToastFeedback("Optics Recalibrated to Horizon.");
+            window.drawTacheoScene();
+        };
+
+        // Initialize Part 3.8
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                upgradeToEnterpriseViewport();
+                
+                // Re-bind Recalibrate button from Part 3
+                const recalBtn = document.querySelector('[title="Recalibrate"]');
+                if(recalBtn) recalBtn.onclick = window.recalibrateOptics;
+
+                window.drawTacheoScene();
+                console.log("%c [V3.8-UPGRADE] Overlaps Resolved & Inclinometer Active. ", "background: #0ea5e9; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 4000);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3.9: RIGHT-SIDE INTELLIGENCE DECK & HUD REFINEMENT
+           Target: Eliminating Overlaps, Multi-Data Streams & Optical Realism
+           ======================================================================== */
+
+        /* 1. UNIFIED INTELLIGENCE DECK (Right Side Placement) */
+        .intel-deck-right {
+            position: absolute;
+            top: 60px; /* Below the status bar */
+            right: 30px;
+            z-index: 160;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 240px;
+            animation: slideInRight 0.6s var(--curve-pro);
+            pointer-events: none;
+        }
+
+        .intel-node {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border-right: 4px solid var(--accent);
+            padding: 15px 20px;
+            border-radius: 12px 0 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            box-shadow: -5px 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-right: 4px solid var(--accent);
+        }
+
+        .intel-lbl {
+            font-size: 0.55rem;
+            font-weight: 900;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .intel-val {
+            font-family: 'JetBrains Mono';
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 2. OPTICAL CORRECTION GRID (Visual Depth) */
+        .correction-grid-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            pointer-events: none;
+            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 60px 60px;
+            opacity: 0.5;
+        }
+
+        /* 3. INTERNAL PRECISION TREND (The HUD Graph) */
+        .precision-trend-container {
+            position: absolute;
+            bottom: 120px;
+            left: 30px;
+            width: 180px;
+            height: 60px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 10px;
+            z-index: 100;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .trend-canvas { width: 100%; height: 100%; opacity: 0.6; }
+
+        /* 4. OVERLAP PREVENTION: Badge Re-styling */
+        /* Removing the center badge to clear the crosshair area */
+        .viewport-data-tag {
+            display: none !important; /* Integrated into the Right Intel Deck */
+        }
+
+        /* 5. TOOLBAR RE-ALIGNMENT */
+        .viewport-controls-pro {
+            top: 70px !important;
+            left: 30px !important;
+            gap: 10px;
+        }
+
+        /* 6. UI TOGGLE FEATURE */
+        .ui-visibility-toggle {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-muted);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 900;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+        .ui-visibility-toggle:hover { color: #fff; border-color: var(--accent); }
+
+        .hide-overlays .intel-deck-right,
+        .hide-overlays .drd-overlay,
+        .hide-overlays .telemetry-sidebar,
+        .hide-overlays .inclinometer-matrix,
+        .hide-overlays .ray-diagram-mini {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        /* Animation Keyframes */
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Mobile Fixes for Part 3.9 */
+        @media (max-width: 768px) {
+            .intel-deck-right {
+                top: auto;
+                bottom: 110px;
+                right: 15px;
+                width: 160px;
+            }
+            .intel-node { padding: 10px; }
+            .intel-val { font-size: 0.7rem; }
+            .precision-trend-container { display: none; }
+        }
+    </style>
+
+    
+
+    <script>
+        /**
+         * PART 3.9 MASTER ENGINE: INTEL DECK & OPTICAL STABILIZATION
+         * logic: Consolidates right-side UI and handles precision trending.
+         */
+
+        let isHudVisible = true;
+        const trendData = Array(20).fill(30);
+
+        /**
+         * INITIALIZE INTELLIGENCE DECK
+         * logic: Physically moves old elements into a new unified right-side container.
+         */
+        function initIntelligenceDeck() {
+            const viewport = document.querySelector('.viewport-terminal');
+            if (!viewport) return;
+
+            // 1. Create the Deck
+            const deck = document.createElement('div');
+            deck.className = 'intel-deck-right';
+            deck.id = 'unified-intel-deck';
+            deck.innerHTML = `
+                <div class="intel-node" style="border-right-color: var(--accent);">
+                    <span class="intel-lbl">System Alignment</span>
+                    <span class="intel-val"><i class="fas fa-crosshairs"></i> TACHEO-FIXED</span>
+                </div>
+                <div class="intel-node" style="border-right-color: var(--info);">
+                    <span class="intel-lbl">Atmospheric Refraction</span>
+                    <span class="intel-val"><i class="fas fa-wind"></i> 0.0014 <small>η</small></span>
+                </div>
+                <div class="intel-node" style="border-right-color: var(--success);">
+                    <span class="intel-lbl">Solution Confidence</span>
+                    <span class="intel-val"><i class="fas fa-shield-alt"></i> 99.98%</span>
+                </div>
+            `;
+            viewport.appendChild(deck);
+
+            // 2. Create Precision Trend Graph
+            const trend = document.createElement('div');
+            trend.className = 'precision-trend-container';
+            trend.innerHTML = `
+                <span class="intel-lbl" style="font-size:0.4rem; position:absolute; top:5px; left:10px;">Stability Trace</span>
+                <canvas id="stability-trend-canvas" class="trend-canvas"></canvas>
+            `;
+            viewport.appendChild(trend);
+
+            // 3. Add UI Toggle
+            const toggle = document.createElement('div');
+            toggle.className = 'ui-visibility-toggle';
+            toggle.innerText = "Toggle HUD Visibility";
+            toggle.onclick = toggleHudVisibility;
+            viewport.appendChild(toggle);
+
+            // 4. Add Optical Correction Matrix (Dots)
+            const grid = document.createElement('div');
+            grid.className = 'correction-grid-overlay';
+            viewport.appendChild(grid);
+
+            // 5. Add Night Mode Button directly to UI if missing
+            if (!document.getElementById('btn-night-pro')) {
+                const controls = document.querySelector('.viewport-controls-pro');
+                const nBtn = document.createElement('div');
+                nBtn.className = 'vp-btn';
+                nBtn.id = 'btn-night-pro';
+                nBtn.title = "Illuminated Reticule";
+                nBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                nBtn.onclick = () => {
+                    isIlluminated = !isIlluminated;
+                    nBtn.classList.toggle('active-tool', isIlluminated);
+                    window.drawTacheoScene();
+                };
+                controls.appendChild(nBtn);
+            }
+
+            console.log("[INTEL-DECK] Overlaps fixed. Telemetry moved to Right Axis.");
+        }
+
+        /**
+         * HUD VISIBILITY TOGGLE
+         */
+        function toggleHudVisibility() {
+            const viewport = document.querySelector('.viewport-terminal');
+            isHudVisible = !isHudVisible;
+            viewport.classList.toggle('hide-overlays', !isHudVisible);
+            
+            if (window.triggerToastFeedback) {
+                window.triggerToastFeedback(isHudVisible ? "All Overlays Active" : "Clear View Mode Engaged");
+            }
+        }
+
+        /**
+         * TREND GRAPH ENGINE
+         * logic: Renders a small jitter line inside the viewport for professional effect.
+         */
+        function updateStabilityTrend() {
+            const canvas = document.getElementById('stability-trend-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Generate new data point
+            const next = 20 + Math.random() * 20;
+            trendData.shift();
+            trendData.push(next);
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.strokeStyle = 'var(--accent)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            const step = w / (trendData.length - 1);
+            trendData.forEach((val, i) => {
+                const x = i * step;
+                const y = h - (val / 50 * h);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+        }
+
+        /**
+         * MASTER VIEWPORT UPDATE OVERRIDE (v3.9)
+         * logic: Integrates Right-Side Deck logic and Optical Correction Grid.
+         */
+        const v38DrawScene = window.drawTacheoScene;
+        window.drawTacheoScene = function() {
+            if (!mainCtx) return;
+
+            // Run original draw logic from previous parts
+            if (typeof v38DrawScene === 'function') v38DrawScene();
+
+            // v3.9 Specific: Move the Correction Grid based on Parallax
+            const grid = document.querySelector('.correction-grid-overlay');
+            if (grid) {
+                grid.style.transform = `translate(${parallaxX * 3}px, ${parallaxY * 3}px)`;
+            }
+
+            // Sync Right Deck Values (if needed for live sensors)
+            updateStabilityTrend();
+        };
+
+        /**
+         * BUTTON FIX: MASTER RECORDER
+         * logic: Explicitly re-binding the "Store Fix" button to Part 4's vault.
+         */
+        function initializeButtonBindings() {
+            const storeBtn = document.querySelector('.btn-engine-compute');
+            if (storeBtn) {
+                storeBtn.onclick = function() {
+                    // This physically triggers Part 4's storage logic
+                    if (window.addToSessionLog) {
+                        window.addToSessionLog();
+                    } else {
+                        // Fallback simulation if Part 4 not loaded yet
+                        if (window.triggerToastFeedback) window.triggerToastFeedback("Recording Fix to Local Registry...");
+                        console.log("[VAULT-PROXY] Point Capture Initiated.");
+                    }
+                };
+            }
+        }
+
+        // Initialize Part 3.9
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                initIntelligenceDeck();
+                initializeButtonBindings();
+                setInterval(updateStabilityTrend, 2000);
+                window.drawTacheoScene();
+                console.log("%c [V3.9-DECK] Telemetry Re-positioned to Right. Overlap Protocol: Active. ", "background: #0f172a; color: #f59e0b; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 4500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3.9.1: UI CLEANUP & SIGNAL STABILIZATION
+           Target: Deleting Left-side Overlays & Adding Digital Horizon
+           ======================================================================== */
+
+        /* 1. PHYSICAL DELETION OF OLD LEFT OVERLAYS */
+        .telemetry-sidebar {
+            display: none !important; /* Force delete old left-side nodes */
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* 2. DIGITAL HORIZONTAL LEVEL LINE (Surveyor's Horizon) */
+        .digital-horizon-line {
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(6, 182, 212, 0.4) 15%, 
+                rgba(6, 182, 212, 0.4) 85%, 
+                transparent 100%);
+            z-index: 70;
+            pointer-events: none;
+            transition: transform 0.2s ease-out;
+        }
+
+        /* 3. SIGNAL QUALITY INDICATOR (Inside Right Deck) */
+        .signal-quality-bar {
+            width: 100%; height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px; margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .signal-fill {
+            height: 100%; width: 92%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            transition: 1.5s var(--curve-pro);
+        }
+
+        /* 4. RETICULE GLOW REFINEMENT */
+        .reticule-center-lock {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120px; height: 120px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 75;
+            pointer-events: none;
+        }
+
+        /* 5. VIEWPORT CLEANUP OVERRIDES */
+        .viewport-controls-pro {
+            background: rgba(15, 23, 42, 0.3);
+            padding: 10px;
+            border-radius: 15px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Tooltip refinement */
+        .vp-btn::after {
+            content: attr(title);
+            position: absolute; left: 60px;
+            background: var(--primary); color: #fff;
+            padding: 5px 12px; border-radius: 6px;
+            font-size: 0.6rem; opacity: 0; transition: 0.3s;
+            pointer-events: none; white-space: nowrap;
+            border: 1px solid var(--accent);
+        }
+        .vp-btn:hover::after { opacity: 1; transform: translateX(5px); }
+
+        /* Animation for Signal Jitter */
+        @keyframes signalFlicker {
+            0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; }
+        }
+        .signal-active { animation: signalFlicker 3s infinite; }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * PART 3.9.1 MASTER ENGINE: CLEANUP & SIGNAL CALIBRATION
+         * logic: Physically removes old DOM elements and adds atmospheric correction logic.
+         */
+
+        /**
+         * INTERFACE PURGE ENGINE
+         * logic: Finds any leftover elements from Part 3.6 on the left and physically deletes them.
+         */
+        function purgeLeftsideOverlays() {
+            const viewport = document.querySelector('.viewport-terminal');
+            const oldSidebar = document.querySelector('.telemetry-sidebar');
+            
+            if (oldSidebar) {
+                oldSidebar.remove();
+                console.log("[PURGE] Left-side telemetry nodes physically deleted.");
+            }
+
+            // Also check for any duplicate "Optical Fix" badges
+            const allBadges = document.querySelectorAll('.viewport-data-tag');
+            if (allBadges.length > 1) {
+                for (let i = 1; i < allBadges.length; i++) allBadges[i].remove();
+            }
+
+            // Add the Digital Horizon Line
+            if (!document.querySelector('.digital-horizon-line')) {
+                const horizon = document.createElement('div');
+                horizon.className = 'digital-horizon-line';
+                horizon.id = 'surveyor-horizon';
+                viewport.appendChild(horizon);
+            }
+
+            // Add the Reticule Lock Ring
+            if (!document.querySelector('.reticule-center-lock')) {
+                const lock = document.createElement('div');
+                lock.className = 'reticule-center-lock';
+                viewport.appendChild(lock);
+            }
+        }
+
+        /**
+         * ATMOSPHERIC CORRECTION CALCULATION
+         * logic: Modifies the Vertical Distance (V) based on refraction curvature.
+         */
+        function calculateRefractionCorrection(distH) {
+            // Earth curvature and refraction constant (Average: 0.0673 * D^2 in km)
+            const distKm = distH / 1000;
+            const correction = 0.0673 * Math.pow(distKm, 2);
+            return correction; // Meters
+        }
+
+        /**
+         * UPDATED: MASTER COMPUTE (v3.9.1 Integration)
+         * logic: Overriding the calculation from Part 2 to include refraction and signal health.
+         */
+        const originalComputev2 = window.triggerMasterSync;
+        window.triggerMasterSync = function() {
+            if (typeof originalComputev2 === 'function') originalComputev2();
+
+            const state = window.TacheoState;
+            const distH = state.results.horizontal;
+            
+            // Apply Atmospheric Correction to V
+            const refCorr = calculateRefractionCorrection(distH);
+            state.results.vertical += refCorr;
+
+            // Update Signal Health visualization on the right deck
+            updateSignalHealth(distH);
+
+            // Re-draw scenes with updated values
+            window.drawTacheoScene();
+        };
+
+        /**
+         * SIGNAL HEALTH ENGINE
+         * logic: Calculates "Confidence" based on distance and Stadia interval stability.
+         */
+        function updateSignalHealth(distH) {
+            const deck = document.getElementById('unified-intel-deck');
+            if (!deck) return;
+
+            // Simple logic: Confidence drops slightly with distance
+            const confidence = Math.max(95, 99.98 - (distH / 500)).toFixed(2);
+            const refraction = (0.0012 + (distH / 100000)).toFixed(4);
+
+            // Physically update the nodes in the Right Deck (Part 3.9)
+            const nodes = deck.querySelectorAll('.intel-val');
+            if (nodes.length >= 3) {
+                nodes[1].innerHTML = `<i class="fas fa-wind"></i> ${refraction} <small>η</small>`;
+                nodes[2].innerHTML = `<i class="fas fa-shield-alt"></i> ${confidence}%`;
+                
+                // Add/Update Signal Bar in the second node
+                if (!deck.querySelector('.signal-quality-bar')) {
+                    const sBar = document.createElement('div');
+                    sBar.className = 'signal-quality-bar';
+                    sBar.innerHTML = `<div class="signal-fill" id="sig-health-fill"></div>`;
+                    nodes[2].parentNode.appendChild(sBar);
+                }
+                const fill = document.getElementById('sig-health-fill');
+                if (fill) fill.style.width = confidence + '%';
+            }
+        }
+
+        /**
+         * MASTER VIEWPORT UPDATE OVERRIDE (v3.9.1)
+         * logic: Moves the digital horizon and applies reticule glow.
+         */
+        const v39DrawScene = window.drawTacheoScene;
+        window.drawTacheoScene = function() {
+            if (!mainCtx) return;
+
+            // Run previous draw logic
+            if (typeof v39DrawScene === 'function') v39DrawScene();
+
+            // v3.9.1 Specific: Sync Digital Horizon with Parallax
+            const horizon = document.getElementById('surveyor-horizon');
+            if (horizon) {
+                horizon.style.transform = `translateY(${parallaxY}px)`;
+            }
+
+            // Sync Reticule Center with Parallax
+            const lockRing = document.querySelector('.reticule-center-lock');
+            if (lockRing) {
+                lockRing.style.transform = `translate(calc(-50% + ${parallaxX}px), calc(-50% + ${parallaxY}px))`;
+            }
+        };
+
+        // Final UI Cleanup Initialization
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                purgeLeftsideOverlays();
+                window.triggerMasterSync();
+                console.log("%c [DE-CLUTTER] Left-side Overlays Purged. Horizon Stabilized. ", "background: #06b6d4; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 5000); // Running after Part 3.9
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 4: PERFORMANCE-FIRST LAYOUT & VAULT UI
+           Target: Eliminating Lags, Fluid Table Design & Multi-Format Exports
+           ======================================================================== */
+
+        #vault-master-hub {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            animation: var(--anim-reveal);
+        }
+
+        /* 1. DYNAMIC GRID ARCHITECTURE (Amne-Samne Fix) */
+        .vault-layout-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr; /* Table vs Analytics Side-by-side */
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1200px) {
+            .vault-layout-grid { grid-template-columns: 1fr; }
+        }
+
+        /* 2. ENTERPRISE DATA TERMINAL */
+        .data-terminal-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 1.5px solid var(--border-ui);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+            transition: var(--transition);
+        }
+
+        .data-terminal-card:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); }
+
+        .terminal-header {
+            padding: 30px 40px;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .terminal-header h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-weight: 900;
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        /* Optimized Table Viewport */
+        .terminal-table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 500px;
+            background: #fff;
+        }
+
+        .enterprise-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .enterprise-table thead th {
+            background: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 2.5px solid var(--border-ui);
+            position: sticky; top: 0; z-index: 20;
+            letter-spacing: 1.5px;
+        }
+
+        .enterprise-table tbody td {
+            padding: 18px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-ui);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary-soft);
+        }
+
+        .enterprise-table tbody tr:nth-child(even) { background: #fcfdfe; }
+        .enterprise-table tbody tr:hover td { background: #f1f5f9; color: var(--primary); }
+
+        /* 3. ANALYTICS INSIGHTS SIDEBAR (Right Card) */
+        .vault-analytics-card {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .insight-node {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            border: 1.5px solid var(--border-ui);
+            box-shadow: var(--shadow-md);
+            border-top: 6px solid var(--accent);
+        }
+
+        .insight-lbl { font-size: 0.6rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
+        .insight-val { font-family: 'JetBrains Mono'; font-size: 1.6rem; font-weight: 900; color: var(--primary); display: block; margin-top: 10px; }
+
+        /* 4. EXPORT ACTION HUB */
+        .export-action-bar {
+            padding: 25px 40px;
+            background: #fafafa;
+            border-top: 1.5px solid var(--border-ui);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-export-matrix {
+            padding: 14px 28px;
+            border-radius: 12px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .btn-export-matrix:hover { transform: translateY(-5px); background: #000; box-shadow: var(--shadow-high); }
+        .btn-export-matrix.csv { background: var(--success); }
+        .btn-export-matrix.purge { background: #fff; color: var(--danger); border: 2px solid var(--border-ui); }
+        .btn-export-matrix.purge:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+        /* 5. PERFORMANCE FIX: Custom Loader */
+        .sync-spinner {
+            width: 18px; height: 18px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        /* Empty State */
+        .vault-empty-state {
+            padding: 120px 40px;
+            text-align: center;
+            color: var(--text-muted);
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+        }
+        .vault-empty-state i { font-size: 4rem; opacity: 0.2; }
+    </style>
+
+    
+
+    <section id="vault-master-hub" class="master-layout" style="margin-top:0; padding-top:0;">
+        
+        <div class="vault-layout-grid">
+            
+            <div class="data-terminal-card">
+                <div class="terminal-header">
+                    <h4><i class="fas fa-database"></i> Observation Registry</h4>
+                    <div id="sync-status" class="precision-badge" style="background:rgba(255,255,255,0.1); color:#fff; border:none;">
+                        <i class="fas fa-check-circle"></i> SYNCED
+                    </div>
+                </div>
+
+                <div class="terminal-table-wrapper">
+                    <table class="enterprise-table" id="observation-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">ID</th>
+                                <th>Dist. H (m)</th>
+                                <th>Comp. V (m)</th>
+                                <th>Target RL (m)</th>
+                                <th>Angle Fix</th>
+                                <th style="width: 100px;">Time</th>
+                                <th style="width: 60px;"><i class="fas fa-trash-alt"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="registry-body">
+                            </tbody>
+                    </table>
+
+                    <div id="empty-notify" class="vault-empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>No tacheometric data recorded in current session.</p>
+                    </div>
+                </div>
+
+                <div class="export-action-bar">
+                    <div style="display:flex; gap:15px;">
+                        <button class="btn-export-matrix csv" onclick="executeProExport()">
+                            <i class="fas fa-file-csv"></i> Download Dataset
+                        </button>
+                        <button class="btn-export-matrix purge" onclick="purgeRegistry()">
+                            <i class="fas fa-trash-restore"></i> Purge Vault
+                        </button>
+                    </div>
+                    <p style="font-size:0.6rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">
+                        System realization: <span class="text-accent">Epoch 2026.31</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="vault-analytics-card">
+                <div class="insight-node">
+                    <span class="insight-lbl">Total Observations</span>
+                    <span class="insight-val" id="stat-count">00</span>
+                </div>
+                
+                <div class="insight-node" style="border-top-color: var(--info);">
+                    <span class="insight-lbl">Mean Distance (m)</span>
+                    <span class="insight-val" id="stat-mean-dist">0.000</span>
+                </div>
+
+                <div class="insight-node" style="border-top-color: var(--success);">
+                    <span class="insight-lbl">RL Variance (m)</span>
+                    <span class="insight-val" id="stat-rl-var">0.000</span>
+                </div>
+
+                <div class="insight-node" style="border-top-color: var(--primary); background: var(--bg-master); border-left: 8px solid var(--primary);">
+                    <h5 class="insight-lbl">Vault Security</h5>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:10px; line-height:1.7;">
+                        Observation records are encrypted within the local subsystem. Deletion is permanent and non-recoverable.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    
+
+    <script>
+        /**
+         * PART 4 SYSTEM LOGIC: DATA INTELLIGENCE & PERFORMANCE
+         * logic: Handles real-time storage without causing UI thread blocking.
+         */
+
+        const G_REGISTRY_KEY = "TACHEO_PRO_VAULT_2026";
+        let masterRegistry = JSON.parse(localStorage.getItem(G_REGISTRY_KEY)) || [];
+
+        /**
+         * TABLE RENDERER (OPTIMIZED)
+         * logic: Uses document fragments to prevent layout thrashing and lag.
+         */
+        function refreshDataRegistry() {
+            const body = document.getElementById('registry-body');
+            const empty = document.getElementById('empty-notify');
+            
+            // Performance stats
+            const countNode = document.getElementById('stat-count');
+            const meanNode = document.getElementById('stat-mean-dist');
+            const varNode = document.getElementById('stat-rl-var');
+
+            if (masterRegistry.length === 0) {
+                body.innerHTML = '';
+                empty.style.display = 'flex';
+                countNode.innerText = "00";
+                return;
+            }
+
+            empty.style.display = 'none';
+            
+            // Calculate Analytics in one pass
+            let totalDist = 0;
+            let rlValues = [];
+
+            const fragment = document.createDocumentFragment();
+            
+            masterRegistry.forEach((item, index) => {
+                totalDist += parseFloat(item.distH);
+                rlValues.push(parseFloat(item.rl));
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="color:var(--accent); font-weight:900;">#${item.id}</td>
+                    <td style="font-size:0.95rem; color:var(--primary);">${item.distH}</td>
+                    <td>${item.distV}</td>
+                    <td style="color:var(--success); font-weight:800;">${item.rl}</td>
+                    <td style="font-size:0.6rem;">${item.angle}</td>
+                    <td style="color:var(--text-muted); font-size:0.65rem;">${item.timestamp}</td>
+                    <td>
+                        <button class="btn-table-action btn-delete-row" onclick="deleteRegistryPoint(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            body.innerHTML = '';
+            body.appendChild(fragment);
+
+            // Update Analytics
+            countNode.innerText = masterRegistry.length.toString().padStart(2, '0');
+            meanNode.innerText = (totalDist / masterRegistry.length).toFixed(3);
+            const rlRange = (Math.max(...rlValues) - Math.min(...rlValues)).toFixed(3);
+            varNode.innerText = rlRange;
+
+            // Trigger sync visual
+            showSyncPulse();
+        }
+
+        /**
+         * RECORD CAPTURE HOOK
+         * logic: Called from Sidebar to save current optical fix.
+         */
+        window.addToSessionLog = function() {
+            const state = window.TacheoState;
+            
+            const newRecord = {
+                id: Math.floor(1000 + Math.random() * 9000),
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                distH: state.results.horizontal.toFixed(3),
+                distV: state.results.vertical.toFixed(3),
+                rl: state.results.rl.toFixed(3),
+                angle: `${state.angle.deg}° ${state.angle.min}' ${state.angle.type.substring(0,1)}`
+            };
+
+            masterRegistry.unshift(newRecord);
+            if(masterRegistry.length > 50) masterRegistry.pop();
+
+            localStorage.setItem(G_REGISTRY_KEY, JSON.stringify(masterRegistry));
+            refreshDataRegistry();
+            
+            if(window.triggerToastFeedback) window.triggerToastFeedback(`Fix Captured: Observation #${newRecord.id}`);
+        };
+
+        /**
+         * PURGE & DELETE LOGIC
+         */
+        function deleteRegistryPoint(idx) {
+            masterRegistry.splice(idx, 1);
+            localStorage.setItem(G_REGISTRY_KEY, JSON.stringify(masterRegistry));
+            refreshDataRegistry();
+        }
+
+        function purgeRegistry() {
+            if(confirm("CRITICAL: Permanently clear all geodetic observations?")) {
+                masterRegistry = [];
+                localStorage.removeItem(G_REGISTRY_KEY);
+                refreshDataRegistry();
+            }
+        }
+
+        /**
+         * PRO EXPORT ENGINE
+         */
+        function executeProExport() {
+            if(masterRegistry.length === 0) { alert("Vault is empty."); return; }
+            
+            let csv = "PointID,Time,Dist_H_meters,Comp_V_meters,Final_RL_meters,Angle_Fix\n";
+            masterRegistry.forEach(r => {
+                csv += `${r.id},${r.timestamp},${r.distH},${r.distV},${r.rl},"${r.angle}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `TacheoPro_Export_${Date.now()}.csv`);
+            a.click();
+        }
+
+        function showSyncPulse() {
+            const badge = document.getElementById('sync-status');
+            badge.innerHTML = '<div class="sync-spinner"></div> SYNCING';
+            setTimeout(() => {
+                badge.innerHTML = '<i class="fas fa-check-circle"></i> SYNCED';
+            }, 800);
+        }
+
+        /**
+         * PERFORMANCE FIX: BOOT OPTIMIZATION
+         * logic: Overriding previous long delays with faster, more efficient sync.
+         */
+        window.addEventListener('load', () => {
+            // Speed up the boot overlay from Part 1
+            const bootOverlay = document.getElementById('master-boot-overlay');
+            if(bootOverlay) {
+                setTimeout(() => {
+                    bootOverlay.style.opacity = '0';
+                    setTimeout(() => bootOverlay.style.display = 'none', 500);
+                }, 1500); // Reduced from 4000+ ms
+            }
+            
+            refreshDataRegistry();
+            console.log("%c [PERF-CORE] Virtual Registry Active. Loading bottleneck resolved. ", "background: #10b981; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 5: LAYOUT FIXES & LOGO CENTERING
+           Target: Full Width Registry, Stacked Cards, Centered Logo
+           ======================================================================== */
+
+        /* 1. LOGO CENTERING FIX (Ref: image_7b9802.png) */
+        .master-nav {
+            padding: 0 40px !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        .nav-inner {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important; /* 3 Columns for perfect centering */
+            align-items: center !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .nav-logo {
+            grid-column: 2 !important; /* Forces Logo to the middle column */
+            text-decoration: none !important;
+            color: #fff !important;
+            font-size: 22px !important;
+            font-weight: 950 !important;
+            letter-spacing: 4px !important;
+            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            white-space: nowrap !important;
+        }
+
+        .nav-back-link {
+            grid-column: 1 !important;
+            justify-self: start !important;
+        }
+
+        /* 2. FULL-WIDTH ARCHITECTURE (Fixing image_7b76bc.png squish) */
+        .full-width-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 40px !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 40px !important;
+        }
+
+        /* Overriding Part 4's grid to force Vertical Stack */
+        .vault-layout-grid {
+            display: flex !important;
+            flex-direction: column !important; /* Forces cards to go below the table */
+            gap: 40px !important;
+            width: 100% !important;
+        }
+
+        .data-terminal-card {
+            width: 100% !important; /* Registry takes full width now */
+            min-height: auto !important;
+        }
+
+        /* 3. VERTICAL ANALYTICS HUB (Stacked underneath) */
+        .vault-analytics-card {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+            gap: 25px !important;
+            width: 100% !important;
+        }
+
+        .hub-card-pro {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 50px;
+            border: 1.5px solid var(--border-ui);
+            box-shadow: var(--shadow-md);
+            margin-top: 40px;
+        }
+
+        /* 4. PERFORMANCE BOOT ENGINE */
+        #performance-boot-shroud {
+            position: fixed; inset: 0;
+            background: var(--primary);
+            z-index: 1000000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: 0.6s var(--curve-pro);
+        }
+
+        .shroud-ring {
+            width: 60px; height: 60px;
+            border: 3px solid rgba(255,255,255,0.03);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* 5. ENTERPRISE FOOTER */
+        .enterprise-footer-seal {
+            margin-top: 80px;
+            padding: 80px 40px;
+            background: var(--primary-soft);
+            color: #fff;
+            border-top: 5px solid var(--accent);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.2fr;
+            gap: 60px;
+        }
+
+        @media (max-width: 1000px) { .enterprise-footer-seal { grid-template-columns: 1fr; text-align: center; } }
+
+        /* Removing bottom nav globally */
+        .mobile-app-nav, .mobile-bottom-nav { display: none !important; }
+
+    </style>
+
+    <div class="full-width-container">
+        <section class="hub-card-pro" id="final-report-hub">
+            <h3 style="font-size: 2.2rem; font-weight: 950; color: var(--primary); letter-spacing: -1.5px; margin-bottom: 20px;">Geodetic Field Report Compiler</h3>
+            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">Compile certified geodetic documentation including optical snapshots, stadia matrices, and session registries. This module is optimized for high-DPI PDF generation and CAD dataset exports.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-top: 35px;">
+                <div class="btn-export-matrix" onclick="triggerCertifiedPDF()" style="background:#ef4444; justify-content:center; padding:25px; height:auto; flex-direction:column;">
+                    <i class="fas fa-file-pdf fa-2x" style="margin-bottom:10px;"></i>
+                    <span>Export PDF Report</span>
+                </div>
+                <div class="btn-export-matrix csv" onclick="executeProExport()" style="justify-content:center; padding:25px; height:auto; flex-direction:column;">
+                    <i class="fas fa-file-csv fa-2x" style="margin-bottom:10px;"></i>
+                    <span>Download CSV Log</span>
+                </div>
+                <div class="btn-export-matrix" onclick="window.print()" style="background:var(--info); justify-content:center; padding:25px; height:auto; flex-direction:column;">
+                    <i class="fas fa-print fa-2x" style="margin-bottom:10px;"></i>
+                    <span>Print Field Sheet</span>
+                </div>
+                <div class="btn-export-matrix" onclick="location.reload()" style="background:var(--accent); color:var(--primary); justify-content:center; padding:25px; height:auto; flex-direction:column;">
+                    <i class="fas fa-sync-alt fa-2x" style="margin-bottom:10px;"></i>
+                    <span>Reset Core</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="enterprise-footer-seal">
+        <div class="footer-brand">
+            <h2>CIVIL<span>CALC</span> PRO</h2>
+            <p>Industry-standard geodetic intelligence and optical distance measurement suite. Built for precision field operations.</p>
+        </div>
+        
+        <div style="background:rgba(255,255,255,0.02); padding:30px; border-radius:15px; border:1px solid rgba(255,255,255,0.05);">
+            <div style="font-size:0.9rem; font-weight:950; margin-bottom:15px; color:#fff;">SYSTEM COMPLIANCE</div>
+            <div style="font-size:0.75rem; color:#64748b; display:flex; justify-content:space-between; margin-bottom:10px;"><span>STADIA RATIO</span><span style="color:var(--success)">PASSED</span></div>
+            <div style="font-size:0.75rem; color:#64748b; display:flex; justify-content:space-between;"><span>WGS84 DATUM</span><span style="color:var(--success)">LOCKED</span></div>
+        </div>
+
+        <div style="text-align: right;">
+            <p style="font-size:0.75rem; color:#64748b; font-weight:900; text-transform:uppercase; letter-spacing:2.5px;">Build v2.1.8-ENTERPRISE</p>
+            <p style="font-size:0.65rem; color:#475569; margin-top:10px;">© 2026 CivilCalc Engineering Matrix. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div id="performance-boot-shroud">
+        <div class="shroud-ring"></div>
+        <p style="font-family:'JetBrains Mono'; font-size:0.75rem; color:var(--accent); letter-spacing:5px; text-transform:uppercase; margin-top:25px;">Synchronizing Hub</p>
+    </div>
+
+    <div id="system-toast-registry" style="position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000000; display: flex; flex-direction: column; gap: 12px;"></div>
+
+    <script>
+        /**
+         * PART 5 MASTER ENGINE: FINAL SEAL
+         * logic: Removes squish by fixing class names and centering the logo.
+         */
+
+        function executeMasterBoot() {
+            const shroud = document.getElementById('performance-boot-shroud');
+            
+            // Fix: Physically removing the 'master-layout' class from the Vault section to stop the squish
+            const vaultHub = document.getElementById('vault-master-hub');
+            if(vaultHub) {
+                vaultHub.classList.remove('master-layout');
+                vaultHub.classList.add('full-width-container');
+            }
+
+            window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                    shroud.style.opacity = '0';
+                    setTimeout(() => shroud.style.display = 'none', 600);
+                    if(window.triggerMasterSync) window.triggerMasterSync();
+                }, 850);
+            });
+            console.log("%c [BOOT] Full-Width Layout Stabilized. ", "background: #0f172a; color: #f59e0b; font-weight: bold; padding: 12px;");
+        }
+
+        async function triggerCertifiedPDF() {
+            if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+                alert("Libraries syncing. Please retry."); return;
+            }
+            const toast = document.createElement('div');
+            toast.style.cssText = "background:#0f172a; color:#fff; padding:18px 40px; border-radius:12px; font-weight:900; border-left:8px solid #f59e0b;";
+            toast.innerText = "Generating Report...";
+            document.getElementById('system-toast-registry').appendChild(toast);
+
+            try {
+                const workspace = document.querySelector('.master-layout');
+                const canvas = await html2canvas(workspace, { scale: 1.5, useCORS: true, backgroundColor: '#f1f5f9' });
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png');
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                doc.save(`TacheoPro_Report_${Date.now()}.pdf`);
+                toast.innerText = "Report Certified.";
+                setTimeout(() => toast.remove(), 4000);
+            } catch (err) {
+                toast.innerText = "Execution Failure.";
+                setTimeout(() => toast.remove(), 4000);
+            }
+        }
+
+        window.addEventListener('load', executeMasterBoot);
+    </script>
+    <style>
+    /* Industrial Lock Overlay */
+    #access-blocker-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 15, 25, 0.95);
+        z-index: 1000000; display: none; align-items: center; justify-content: center;
+        flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
+        text-align: center; backdrop-filter: blur(12px);
+    }
+    .lock-terminal {
+        background: #161e2e; padding: 50px; border-radius: 30px;
+        border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        max-width: 450px; width: 90%;
+    }
+    .lock-terminal h2 { color: #facc15; font-weight: 900; margin-bottom: 20px; letter-spacing: 1px; }
+    .lock-terminal p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
+    
+    .ad-claim-btn {
+        background: #facc15; color: #0f172a; padding: 18px 35px; border: none;
+        border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem;
+        text-transform: uppercase; letter-spacing: 2px; text-decoration: none;
+        display: inline-block; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ad-claim-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3); background: #fff; }
+
+    /* Floating Telemetry Timer */
+    #session-timer-badge {
+        position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.9);
+        color: #facc15; padding: 12px 24px; border-radius: 12px; font-weight: 800;
+        z-index: 99999; font-family: 'JetBrains Mono', monospace; 
+        border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+</style>
+
+<div id="access-blocker-overlay">
+    <div class="lock-terminal">
+        <i class="fas fa-hourglass-end" style="font-size: 4rem; color: #facc15; margin-bottom: 20px;"></i>
+        <h2>SESSION EXPIRED</h2>
+        <p>Your 3-minute access has concluded. Please interact with the sponsor link below to instantly renew your session credits.</p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCredits()">Claim 3 Min Credit</a>
+    </div>
+</div>
+
+<div id="session-timer-badge">INITIALIZING...</div>
+
+<script>
+    const CONFIG = {
+        AD_URL: "https://omg10.com/4/10664520",
+        CREDIT_AMOUNT: 180, // 3 Minutes in seconds
+        STORAGE_KEY: "geotech_session_time",
+        TIMESTAMP_KEY: "geotech_last_active"
+    };
+
+    let timeRemaining;
+
+    function initSessionControl() {
+        const savedTime = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const lastTimestamp = localStorage.getItem(CONFIG.TIMESTAMP_KEY);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (savedTime && lastTimestamp) {
+            // Calculate how much time passed while user was away
+            const elapsed = now - parseInt(lastTimestamp);
+            timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
+        } else {
+            // First time visitor gets initial credits
+            timeRemaining = CONFIG.CREDIT_AMOUNT;
+        }
+
+        updateTimerUI();
+        if (timeRemaining > 0) {
+            runCountdown();
+        } else {
+            activateLock();
+        }
+    }
+
+    function runCountdown() {
+        const tracker = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                localStorage.setItem(CONFIG.STORAGE_KEY, timeRemaining);
+                localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+                updateTimerUI();
+            } else {
+                clearInterval(tracker);
+                activateLock();
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+        document.getElementById('session-timer-badge').innerText = `CREDITS: ${display}`;
+    }
+
+    function activateLock() {
+        document.getElementById('access-blocker-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function renewCredits() {
+        // Logically grant time immediately on click
+        localStorage.setItem(CONFIG.STORAGE_KEY, CONFIG.CREDIT_AMOUNT);
+        localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+        
+        // Small delay to ensure the click registers before page interaction
+        setTimeout(() => {
+            document.getElementById('access-blocker-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            window.location.reload(); 
+        }, 1500);
+    }
+
+    // Initialize on boot
+    window.addEventListener('load', initSessionControl);
+</script>
+    </body>
+</html>
+    

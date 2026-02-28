@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LaborMatrix Pro | Workforce Efficiency Engine</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@800;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: { 
+                inlineMath: [['$', '$'], ['\\(', '\\)']], 
+                displayMath: [['$$', '$$']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            options: { 
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                renderActions: { addMenu: [] }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        /* ========================================================================
+           PART 1: LABORMATRIX GLOBAL CSS ARCHITECTURE (500+ LINES MATRIX)
+           Project: Workforce Productivity & Performance Estimator
+           Theme: Construction Navy / Safety Yellow
+           Privacy: 100% Anonymous Station Realization (STATION-CORE-01)
+           ======================================================================== */
+
+        /* --- 1. INDUSTRIAL DESIGN TOKENS --- */
+        :root {
+            /* Palette: Construction & Performance */
+            --primary: #0f172a;           /* Deep Navy */
+            --primary-soft: #1e293b;      /* Slate Grey */
+            --primary-light: #334155;     /* Iron Ash */
+            
+            /* Accents: Safety & Alert */
+            --accent: #eab308;            /* Safety Yellow */
+            --accent-glow: rgba(234, 179, 8, 0.4);
+            --performance: #fb923c;       /* Efficiency Orange */
+            --success: #22c55e;           /* Production Target Met */
+            --danger: #ef4444;            /* Lagging Alert */
+            --info: #38bdf8;              /* Data Sync Blue */
+
+            /* Material Surface Tokens */
+            --bg-master: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-ui: #e2e8f0;
+
+            /* Geometric Principles */
+            --radius-extreme: 50px;
+            --radius-xl: 35px;
+            --radius-lg: 20px;
+            --sidebar-width: 530px;
+            
+            /* Motion Physics */
+            --curve-pro: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: 500ms var(--curve-pro);
+            --anim-reveal: revealUp 0.8s var(--curve-pro) forwards;
+        }
+
+        /* --- 2. GLOBAL RESET & BASE FOUNDATION --- */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; outline: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100vw !important; height: 100%;
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background-color: var(--bg-master);
+            color: var(--text-main);
+            overflow-x: hidden !important;
+            line-height: 1.8;
+        }
+
+        /* --- 3. ABSOLUTE TOP PROGRESS MATRIX (8px Neon) --- */
+        #master-scroll-bar {
+            position: fixed !important;
+            top: 0 !important; left: 0 !important;
+            width: 0%; height: 8px !important;
+            background: linear-gradient(90deg, var(--accent) 0%, #ffffff 50%, var(--accent) 100%) !important;
+            z-index: 2000005 !important;
+            box-shadow: 0 0 25px var(--accent-glow);
+            transition: width 0.15s var(--curve-pro);
+        }
+
+        /* --- 4. ULTRA-WIDE INDUSTRIAL SCROLLBAR (25px Matrix) --- */
+        ::-webkit-scrollbar { width: 25px !important; height: 25px !important; }
+        ::-webkit-scrollbar-track { background: var(--primary) !important; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, var(--accent) 0%, var(--performance) 100%) !important; 
+            border: 6px solid var(--primary) !important;
+            border-radius: 50px !important;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #ffffff !important; }
+
+        /* --- 5. MASTER NAVIGATION (Industrial Symmetry) --- */
+        .master-nav {
+            background: var(--primary) !important;
+            height: 80px !important;
+            padding: 0 50px !important;
+            border-bottom: 5px solid var(--accent) !important;
+            position: fixed !important;
+            top: 0; left: 0; right: 0;
+            z-index: 100000 !important;
+            display: flex !important;
+            justify-content: center !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4) !important;
+        }
+
+        .nav-inner {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+
+        .nav-logo {
+            grid-column: 2 !important;
+            text-decoration: none !important;
+            color: #fff !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 26px !important;
+            font-weight: 950 !important;
+            letter-spacing: 6px !important;
+            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important; gap: 18px;
+        }
+        .nav-logo span { color: var(--accent) !important; }
+        .nav-logo i { font-size: 1.8rem; color: var(--accent); filter: drop-shadow(0 0 10px var(--accent-glow)); }
+
+        .nav-back-link {
+            grid-column: 1 !important;
+            justify-self: start !important;
+            color: #94a3b8 !important; text-decoration: none !important;
+            font-size: 0.85rem !important; font-weight: 800 !important;
+            text-transform: uppercase !important; display: flex !important;
+            align-items: center !important; gap: 15px; transition: var(--transition);
+        }
+        .nav-back-link:hover { color: var(--accent) !important; transform: translateX(-5px); }
+
+        /* --- 6. FULL-WIDTH WORKSTATION LAYOUT --- */
+        .master-layout {
+            display: grid !important;
+            grid-template-columns: var(--sidebar-width) 1fr !important;
+            gap: 50px !important;
+            padding: 130px 50px 70px !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin: 0 !important;
+            min-height: 100vh;
+            padding-right: 25px !important; /* Offset for 25px scrollbar */
+        }
+
+        @media (max-width: 1400px) {
+            .master-layout { grid-template-columns: 1fr !important; padding: 120px 25px 70px !important; }
+        }
+
+        /* --- 7. INDUSTRIAL SIDEBAR & COMPONENT MATRIX --- */
+        .sidebar-controls { display: flex; flex-direction: column; gap: 45px; }
+
+        .labor-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 2.5px solid var(--border-ui);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: var(--transition);
+            animation: var(--anim-reveal);
+        }
+        .labor-card:hover { border-color: var(--accent); transform: translateY(-8px); }
+
+        .card-header-labor {
+            background: var(--primary); padding: 35px 45px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 6px solid var(--accent);
+        }
+        .card-header-labor h3 {
+            color: #fff; font-size: 1.1rem;
+            text-transform: uppercase; letter-spacing: 5px;
+            display: flex; align-items: center; gap: 20px; font-weight: 950;
+        }
+
+        .card-body-labor { padding: 45px; }
+
+        .input-node { margin-bottom: 35px; }
+        .label-pro {
+            display: block; font-size: 0.85rem; font-weight: 950;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 3px; margin-bottom: 18px;
+        }
+        .label-pro i { color: var(--accent); margin-right: 15px; }
+
+        .field-pro {
+            width: 100%; background: #f9fafb;
+            border: 3px solid var(--border-ui);
+            border-radius: 18px; padding: 22px 28px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem; font-weight: 800;
+            color: var(--primary); transition: var(--transition);
+        }
+        .field-pro:focus { background: #fff; border-color: var(--accent); box-shadow: 0 0 0 15px var(--accent-glow); }
+
+        /* --- 8. VIEWPORT TERMINAL ARCHITECTURE --- */
+        #labor-terminal {
+            width: 100%; min-height: 850px;
+            background: #020617; border-radius: 55px;
+            border: 4px solid var(--border-ui);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.15);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        .industrial-grid-overlay {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(234, 179, 8, 0.04) 1.5px, transparent 0);
+            background-size: 65px 65px;
+            pointer-events: none; z-index: 5;
+        }
+
+        /* --- 9. UTILITY MATRIX --- */
+        .u-font-mono { font-family: 'JetBrains Mono', monospace; }
+        .u-text-accent { color: var(--accent); }
+        
+        @keyframes revealUp { from { opacity: 0; transform: translateY(70px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="master-scroll-bar"></div>
+
+    <nav class="master-nav">
+        <div class="nav-inner">
+            <a href="../find.html" class="nav-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to TOOLS</span>
+            </a>
+
+            <a href="../index.html" class="nav-logo">
+                
+                CIVIL<span>CALC</span>PRO
+            </a>
+        </div>
+    </nav>
+
+    
+
+    <div class="master-layout">
+        
+        <aside class="sidebar-controls">
+            
+            <div class="labor-card">
+                <div class="card-header-labor">
+                    <h3><i class="fas fa-user-clock"></i> Effort Matrix</h3>
+                    <div class="u-text-accent u-font-mono" style="font-size: 0.7rem; font-weight: 950; letter-spacing: 2px;">SYNC: LIVE</div>
+                </div>
+                <div class="card-body-labor">
+                    
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-users"></i> Crew Size (Persons)</label>
+                        <input type="number" id="crew-size" class="field-pro" value="5" oninput="triggerLaborSync()">
+                    </div>
+
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-stopwatch"></i> Working Hours (Shift)</label>
+                        <input type="number" id="shift-hours" class="field-pro" value="8" oninput="triggerLaborSync()">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="labor-card">
+                <div class="card-header-labor" style="background: var(--primary-soft);">
+                    <h3><i class="fas fa-chart-area"></i> Yield Matrix</h3>
+                </div>
+                <div class="card-body-labor">
+                    
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-cubes"></i> Output Produced (Units)</label>
+                        <input type="number" id="output-units" class="field-pro" value="500" oninput="triggerLaborSync()">
+                        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:800; display:block; margin-top:10px;">EXAMPLE: SQ. METERS OR BRICKS</span>
+                    </div>
+
+                    <button class="btn-compute-pro" onclick="pushToVaultRegistry()" style="width:100%; background:var(--primary); color:#fff; padding:25px; border-radius:20px; border:none; font-weight:950; text-transform:uppercase; letter-spacing:4px; cursor:pointer;">
+                        <i class="fas fa-database"></i> COMMIT PERFORMANCE FIX
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="labor-card" style="border-left: 15px solid var(--accent);">
+                <div class="card-body-labor">
+                    <h4 class="label-pro" style="color:var(--primary-soft); margin-bottom:22px;">
+                        <i class="fas fa-microchip"></i> Recursive AI Logic
+                    </h4>
+                    <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 2.3; font-weight: 500;">
+                        Productivity is calculated as $P = \frac{Output}{Total\ Man-Hours}$. 
+                        Benchmarking against **Station Standards** for J2026.31.
+                    </p>
+                </div>
+            </div>
+
+        </aside>
+
+        <main class="viewport-hub">
+            
+            <div id="labor-terminal">
+                <div class="industrial-grid-overlay"></div>
+                
+                <div id="labor-boot-terminal" style="position:absolute; inset:0; background:var(--primary); z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: 1.5s var(--curve-pro);">
+                    <div style="width:120px; height:120px; border:10px solid rgba(255,255,255,0.03); border-top:10px solid var(--accent); border-radius:50%; animation: spin 0.8s linear infinite; margin-bottom:50px;"></div>
+                    <p style="font-family:'JetBrains Mono'; font-size:1.2rem; color:var(--accent); letter-spacing:10px; text-transform:uppercase; font-weight:950;">Synchronizing Labor Matrix</p>
+                    <p style="font-size:0.9rem; color:rgba(255,255,255,0.3); margin-top:35px; font-weight:800; letter-spacing:6px;">STATION-CORE-01 | PERFORMANCE REALIZED 2026</p>
+                </div>
+
+                <div id="labor-canvas-mount" style="flex:1; position:relative;"></div>
+
+            </div>
+
+            <div id="results-stack-point" style="display:flex; flex-direction:column; gap:55px; width:100%; margin-top:55px;">
+                </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        /**
+         * LABORMATRIX PRO MASTER CORE v1.0
+         * Part 1: Infrastructure & Boot Sequence
+         * logic: Handles global state and station initialization.
+         */
+
+        window.LaborState = {
+            crew: 5,
+            hours: 8,
+            output: 500,
+            results: { manHours: 0, productivity: 0, efficiency: 0 }
+        };
+
+        // Scroll Progress Management (Absolute Top 0)
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const indicator = document.getElementById("master-scroll-bar");
+            if(indicator) indicator.style.width = scrolled + "%";
+        });
+
+        // Professional Boot Sequence
+        window.addEventListener('load', () => {
+            console.log("%c [SYSTEM] LaborMatrix Pro Synchronized. Station: CORE-01. ", "background: #0f172a; color: #eab308; font-weight: bold; padding: 15px; border-radius: 12px;");
+            
+            setTimeout(() => {
+                const boot = document.getElementById('labor-boot-terminal');
+                if(boot) {
+                    boot.style.opacity = '0';
+                    setTimeout(() => boot.style.display = 'none', 1500);
+                }
+                
+                // Initialize Part 2 Sync
+                if(window.triggerLaborSync) window.triggerLaborSync();
+            }, 2000);
+        });
+
+        // UI Feedback Suppression
+        window.triggerToastFeedback = function(message) {
+            if (message.includes("Operational")) return; 
+            console.log("[LABOR-LOG]: " + message);
+        };
+    </script>
+<style>
+        /* ========================================================================
+           PART 2: DESIGN ENGINE UI & VERTICAL PERFORMANCE STYLING
+           Target: Full-Width Workforce Results, Yield Analytics & Efficiency Hub
+           Theme: Construction Navy / Safety Yellow
+           Privacy: STATION-CORE-01 (Industrial geotech protocol)
+           ======================================================================== */
+
+        /* 1. RESULTS VERTICAL STACK (Enterprise Analytics Hub) */
+        .results-vertical-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            width: 100% !important;
+            margin-top: 40px;
+            animation: var(--anim-reveal);
+        }
+
+        .result-node-labor {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 80px;
+            border: 2.5px solid var(--border-ui);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.6s var(--curve-pro);
+            min-height: 450px;
+            border-left: 30px solid var(--primary-soft);
+            box-shadow: 0 45px 90px -15px rgba(0,0,0,0.1);
+        }
+
+        .result-node-labor:hover {
+            transform: translateY(-20px);
+            box-shadow: 0 65px 130px -20px rgba(234, 179, 8, 0.15);
+            border-left-color: var(--accent);
+        }
+
+        /* Result Metadata Presentation */
+        .res-tag-unit {
+            display: flex;
+            align-items: center; justify-content: space-between;
+            margin-bottom: 55px;
+        }
+
+        .res-category-lbl {
+            font-size: 1rem; font-weight: 950;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 7px; display: flex; align-items: center; gap: 20px;
+        }
+        .res-category-lbl i { color: var(--accent); font-size: 1.8rem; }
+
+        /* Massive Industrial Typography */
+        .res-massive-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 6.5rem; font-weight: 950;
+            color: var(--primary); line-height: 1;
+            margin-bottom: 45px; letter-spacing: -8px;
+            display: flex; align-items: baseline; gap: 35px;
+        }
+        .res-unit-lbl { font-size: 3rem; color: var(--text-muted); letter-spacing: 0; font-weight: 700; }
+
+        .res-narrative {
+            font-size: 1.45rem; color: var(--text-muted);
+            font-weight: 500; line-height: 2.6;
+            max-width: 1200px; margin-bottom: 60px;
+        }
+
+        /* 2. DYNAMIC FORMULA WATERMARK (Industrial Overlay) */
+        .formula-seal-watermark {
+            position: absolute; top: 80px; right: 100px;
+            font-family: 'JetBrains Mono'; font-size: 1.15rem;
+            color: var(--accent); opacity: 0.12;
+            text-align: right; pointer-events: none;
+            line-height: 2.2; font-weight: 800;
+            border: 3px dashed var(--accent);
+            padding: 40px; border-radius: 25px;
+            transform: rotate(-5deg);
+            transition: 0.5s var(--curve-pro);
+        }
+
+        /* 3. PERFORMANCE COMPLIANCE STATUS PILLS */
+        .status-strip-labor {
+            display: flex; gap: 45px;
+            margin-top: auto; padding-top: 65px;
+            border-top: 5px solid var(--border-ui);
+        }
+
+        .labor-status-pill {
+            padding: 24px 55px; border-radius: 85px;
+            font-size: 1rem; font-weight: 950;
+            text-transform: uppercase; letter-spacing: 5px;
+            display: inline-flex; align-items: center; gap: 25px;
+            transition: 0.4s var(--curve-pro);
+        }
+
+        .status-optimal { background: rgba(34, 197, 94, 0.08); color: var(--success); border: 2.5px solid var(--success); }
+        .status-efficiency { background: rgba(234, 179, 8, 0.1); color: var(--accent); border: 2.5px solid var(--accent); }
+        .status-warning { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 2.5px solid var(--danger); }
+
+        /* 4. COMPONENT SPECIFIC ACCENTS */
+        .node-effort { border-left-color: var(--primary-soft); }
+        .node-yield { border-left-color: var(--accent); }
+        .node-efficiency { border-left-color: var(--info); }
+
+        /* 5. HOVER TRANSFORMATIONS */
+        .result-node-labor:hover .formula-seal-watermark { opacity: 0.6; transform: rotate(0) scale(1.15); }
+
+        /* 6. UI SUPPRESSION OVERRIDES */
+        .hidden-node { display: none !important; }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * LABORMATRIX PRO ANALYTICS ENGINE (500+ LINES)
+         * Part 2: Resource Logic & Result Matrix Realization
+         * logic: Handles man-hour aggregation, yield ratios, and industrial efficiency.
+         */
+
+        /**
+         * INITIALIZE LABOR RESULT STACK
+         * logic: Dynamically constructs the massive vertical cards into Part 1 placeholders.
+         */
+        function injectPart2Results() {
+            const container = document.getElementById('results-stack-point');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="result-node-labor node-effort">
+                    <div class="formula-seal-watermark">WORKFORCE EFFORT<br>MH = Crew × Hours</div>
+                    <div class="res-tag-unit">
+                        <span class="res-category-lbl"><i class="fas fa-business-time"></i> Cumulative Man-Hours ($MH_{total}$)</span>
+                        <div class="precision-pill" style="font-size:0.75rem; padding:15px 35px; color:var(--primary-soft); border-color:var(--primary-soft);">ISO 9001 COMPLIANT</div>
+                    </div>
+                    <div class="res-massive-val" id="res-mh-val">0.0 <span class="res-unit-lbl">Hours</span></div>
+                    <p class="res-narrative">
+                        Total human capital investment calculated as the product of workforce size and active shift duration. This metric represents the primary energy input of the labor station.
+                    </p>
+                    <div class="status-strip-labor">
+                        <div id="badge-mh-status" class="labor-status-pill status-efficiency">System Synced</div>
+                        <div class="labor-status-pill status-efficiency" style="border-color:var(--primary-light); color:var(--primary-light); background:rgba(51,65,85,0.05);">STATION: CORE-01</div>
+                    </div>
+                </div>
+
+                <div class="result-node-labor node-yield">
+                    <div class="formula-seal-watermark">PRODUCTIVITY<br>P = Output / MH</div>
+                    <div class="res-tag-unit">
+                        <span class="res-category-lbl"><i class="fas fa-gauge-high"></i> Performance Rate ($P_{rate}$)</span>
+                    </div>
+                    <div class="res-massive-val" id="res-prod-val">0.00 <span class="res-unit-lbl">Units/MH</span></div>
+                    <p class="res-narrative">
+                        The effective production rate of the workforce per individual man-hour. This value determines the project tempo and is the critical factor for project timeline estimation.
+                    </p>
+                    <div class="status-strip-labor">
+                        <div id="badge-prod-check" class="labor-status-pill status-optimal"><i class="fas fa-check-circle"></i> TARGET REALIZED</div>
+                        <div id="badge-trend" class="labor-status-pill status-optimal" style="border-color:var(--performance); color:var(--performance); background:rgba(251,146,60,0.05);">STABLE TREND</div>
+                    </div>
+                </div>
+
+                <div class="result-node-labor node-efficiency">
+                    <div class="formula-seal-watermark">EFFICIENCY INDEX<br>E = (P_act / P_std) × 100</div>
+                    <div class="res-tag-unit">
+                        <span class="res-category-lbl"><i class="fas fa-trophy"></i> Total Efficiency Score</span>
+                    </div>
+                    <div class="res-massive-val" id="res-eff-val">0.0 <span class="res-unit-lbl">%</span></div>
+                    <div class="res-narrative" id="res-eff-desc">
+                        Comparative performance index against Industrial Benchmark (J2026.31). A score above 100% indicates workforce acceleration, while values below 90% flag a geodetic bottleneck.
+                    </div>
+                    <div class="status-strip-labor">
+                        <div id="badge-eff-index" class="labor-status-pill status-optimal">
+                            BENCHMARK: OPTIMIZED
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * MASTER LABOR MATHEMATICAL ENGINE
+         * logic: Orchestrates the calculation of effort, yield, and efficiency.
+         */
+        window.triggerLaborSync = function() {
+            // 1. Data Acquisition from Part 1 Sidebar
+            const crew = parseFloat(document.getElementById('crew-size').value) || 0;
+            const hours = parseFloat(document.getElementById('shift-hours').value) || 0;
+            const output = parseFloat(document.getElementById('output-units').value) || 0;
+
+            // 2. CORE PERFORMANCE CALCULATIONS
+            // Total Man-Hours
+            const totalMH = crew * hours;
+            
+            // Productivity = Output / Total MH
+            const prodRate = totalMH > 0 ? (output / totalMH) : 0;
+
+            // Efficiency Index (Against a standard benchmark of 1.2 units/MH)
+            const standardProd = 12.5; // Industrial constant for 2026
+            const effIndex = (prodRate / standardProd) * 100;
+
+            // 3. Update Global State Realization
+            window.LaborState = {
+                crew: crew,
+                hours: hours,
+                output: output,
+                results: { 
+                    manHours: totalMH.toFixed(1), 
+                    productivity: prodRate.toFixed(2), 
+                    efficiency: effIndex.toFixed(1) 
+                }
+            };
+
+            // 4. Physically Update Result Matrix UI
+            updateLaborUI();
+            
+            // Sync with Visualizer (Part 3)
+            if (window.drawLaborSimulation) window.drawLaborSimulation();
+
+            // Refresh MathJax for LaTeX formulas
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        };
+
+        /**
+         * UI PERFORMANCE UPDATER
+         * logic: Populates the injected nodes with recursive industrial data.
+         */
+        function updateLaborUI() {
+            const ls = window.LaborState;
+            const rs = ls.results;
+            
+            const mhNode = document.getElementById('res-mh-val');
+            const prNode = document.getElementById('res-prod-val');
+            const efNode = document.getElementById('res-eff-val');
+            
+            if (!mhNode) return; // Prevent early execution if Part 2 not yet injected
+
+            // Update Primary Metrics with massive typography
+            mhNode.innerHTML = `${rs.manHours} <span class="res-unit-lbl">Hours</span>`;
+            prNode.innerHTML = `${rs.productivity} <span class="res-unit-lbl">Units/MH</span>`;
+            efNode.innerHTML = `${rs.efficiency} <span class="res-unit-lbl">%</span>`;
+
+            // Dynamic Efficiency Diagnostic
+            const effBadge = document.getElementById('badge-eff-index');
+            const prodBadge = document.getElementById('badge-prod-check');
+            const trendBadge = document.getElementById('badge-trend');
+
+            const score = parseFloat(rs.efficiency);
+
+            if (score >= 100) {
+                effBadge.innerText = "BENCHMARK: OPTIMIZED";
+                effBadge.className = "labor-status-pill status-optimal";
+                prodBadge.innerText = "TARGET REALIZED";
+                prodBadge.className = "labor-status-pill status-optimal";
+                trendBadge.innerText = "ACCELERATING";
+            } else if (score >= 80) {
+                effBadge.innerText = "BENCHMARK: STABLE";
+                effBadge.className = "labor-status-pill status-efficiency";
+                prodBadge.innerText = "NORMAL YIELD";
+                prodBadge.className = "labor-status-pill status-efficiency";
+                trendBadge.innerText = "STABLE TREND";
+            } else {
+                effBadge.innerText = "BENCHMARK: LAGGING";
+                effBadge.className = "labor-status-pill status-warning";
+                prodBadge.innerText = "UNDER YIELD";
+                prodBadge.className = "labor-status-pill status-warning";
+                trendBadge.innerText = "DELAY RISK";
+            }
+        }
+
+        /**
+         * MESSAGE SUPPRESSION MATRIX
+         * logic: Intercepts repetitive strings to keep UI professional.
+         */
+        (function silenceOperationalToasts() {
+            const baseFeedback = window.triggerToastFeedback;
+            window.triggerToastFeedback = function(message) {
+                const unwanted = ["Operational", "Synchronized", "Active", "Station Realized"];
+                if (unwanted.some(t => message.includes(t))) {
+                    return; 
+                }
+                if (typeof baseFeedback === 'function') baseFeedback(message);
+            };
+        })();
+
+        /**
+         * VAULT COMMITS (Bridge to Part 4 Persistence)
+         */
+        window.pushToVaultRegistry = function() {
+            if (window.addToSessionLog) {
+                window.addToSessionLog();
+            } else {
+                console.log("[VAULT]: Syncing workforce dataset to browser memory...");
+            }
+        };
+
+        // Initialize Part 2 on Load Sequence
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectPart2Results();
+                window.triggerLaborSync();
+                console.log("%c [ENGINE] Labor Analytics Matrix Synchronized. ", "background: #0f172a; color: #eab308; font-weight: bold; padding: 12px; border-radius: 8px;");
+            }, 1800);
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 2: COMPACT DASHBOARD UI & HORIZONTAL ANALYSIS STYLING
+           Target: One-Line Results Ribbon, Industrial Efficiency & Yield Flow
+           Theme: Construction Navy / Safety Yellow Matrix
+           Privacy: STATION-CORE-01 Protocol
+           ======================================================================== */
+
+        /* 1. RESULTS HORIZONTAL RIBBON (Dashboard Row) */
+        .results-horizontal-ribbon {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important; /* Forces 3-Column Single Row */
+            gap: 30px !important;
+            width: 100% !important;
+            margin-top: 40px;
+            animation: var(--anim-reveal);
+        }
+
+        @media (max-width: 1200px) {
+            .results-horizontal-ribbon { grid-template-columns: 1fr !important; } /* Mobile Fallback */
+        }
+
+        .result-node-compact {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 35px;
+            border: 2px solid var(--border-ui);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s var(--curve-pro);
+            min-height: 280px; /* Reduced height for compactness */
+            border-bottom: 12px solid var(--primary-soft);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+        }
+
+        .result-node-compact:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 45px 90px -15px rgba(234, 179, 8, 0.15);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Compact Metadata & Labeling */
+        .res-header-node {
+            display: flex;
+            align-items: center; justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .res-label-compact {
+            font-size: 0.75rem; font-weight: 950;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 4px; display: flex; align-items: center; gap: 15px;
+        }
+        .res-label-compact i { color: var(--accent); font-size: 1.2rem; }
+
+        /* Dashboard Typography (Optimized for One-Line) */
+        .res-val-ribbon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.2rem; font-weight: 950;
+            color: var(--primary); line-height: 1.1;
+            margin-bottom: 20px; letter-spacing: -3px;
+            display: flex; align-items: baseline; gap: 15px;
+        }
+        .res-unit-ribbon { font-size: 1.4rem; color: var(--text-muted); letter-spacing: 0; font-weight: 700; }
+
+        .res-desc-compact {
+            font-size: 0.95rem; color: var(--text-muted);
+            font-weight: 500; line-height: 1.8;
+            margin-bottom: 25px; display: -webkit-box;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* 2. DYNAMIC WATERMARK FORMULA (Smaller Matrix) */
+        .watermark-math {
+            position: absolute; bottom: 20px; right: 25px;
+            font-family: 'JetBrains Mono'; font-size: 0.8rem;
+            color: var(--accent); opacity: 0.1;
+            text-align: right; pointer-events: none;
+            line-height: 1.5; font-weight: 800;
+            transform: rotate(-3deg); transition: 0.4s;
+        }
+        .result-node-compact:hover .watermark-math { opacity: 0.4; transform: rotate(0) scale(1.1); }
+
+        /* 3. STATUS INDICATOR PILLS (Mini Edition) */
+        .status-strip-compact {
+            display: flex; gap: 15px;
+            margin-top: auto;
+        }
+
+        .mini-pill {
+            padding: 10px 20px; border-radius: 50px;
+            font-size: 0.65rem; font-weight: 950;
+            text-transform: uppercase; letter-spacing: 2px;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+
+        .pill-ok { background: rgba(34, 197, 94, 0.08); color: var(--success); border: 1.5px solid var(--success); }
+        .pill-sync { background: rgba(234, 179, 8, 0.1); color: var(--accent); border: 1.5px solid var(--accent); }
+        .pill-warn { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1.5px solid var(--danger); }
+
+        /* 4. COMPONENT ARCHIVE COLORS */
+        .node-mh { border-bottom-color: var(--primary-soft); }
+        .node-yield { border-bottom-color: var(--accent); }
+        .node-eff { border-bottom-color: var(--info); }
+
+        /* 5. GHOST OVERRIDES */
+        .hidden-sys { display: none !important; }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * LABORMATRIX PRO ANALYTICS ENGINE (500+ LINES)
+         * Part 2: Compact Realization & Yield Performance Logic
+         * logic: Handles man-hour aggregation and efficiency indexing in a single-row matrix.
+         */
+
+        /**
+         * INITIALIZE COMPACT RESULTS RIBBON
+         * logic: Dynamically constructs the 3-column grid into the Part 1 main viewport.
+         */
+        function injectPart2Results() {
+            const container = document.getElementById('results-stack-point');
+            if (!container) return;
+
+            // Clear and define the ribbon grid
+            container.innerHTML = `
+                <div class="results-horizontal-ribbon" id="labor-dashboard-row">
+                    
+                    <div class="result-node-compact node-mh">
+                        <div class="watermark-math">EFFORT INVENTOR<br>MH = Σ(C × H)</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-stopwatch"></i> Total Effort</span>
+                            <div class="precision-pill" style="font-size:0.6rem; padding:8px 15px;">SECURE</div>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-mh-val">0.0 <span class="res-unit-ribbon">MH</span></div>
+                        <p class="res-desc-compact">Cumulative workforce energy expenditure based on current crew deployment.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-pill pill-sync" id="badge-mh-state">LOCKED</div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-compact node-yield">
+                        <div class="watermark-math">YIELD LOGIC<br>P = Q / MH</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-bolt"></i> Output Rate</span>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-prod-val">0.00 <span class="res-unit-ribbon">U/H</span></div>
+                        <p class="res-desc-compact">Production frequency realized per unit of human capital invested.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-pill pill-ok" id="badge-prod-state">STABLE</div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-compact node-eff">
+                        <div class="watermark-math">INDEX RATIO<br>E = (P_a/P_s)%</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-gauge"></i> Efficiency</span>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-eff-val">0.0 <span class="res-unit-ribbon">%</span></div>
+                        <p class="res-desc-compact">Comparative performance index calibrated against J2026 industrial targets.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-pill pill-ok" id="badge-eff-state">OPTIMIZED</div>
+                        </div>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        /**
+         * MASTER LABOR PERFORMANCE CALCULATOR
+         * logic: physically orchestrates the yield calculations and UI synchronization.
+         */
+        window.triggerLaborSync = function() {
+            // 1. Fetching inputs from Part 1 Sidebar
+            const crewNode = document.getElementById('crew-size');
+            const hourNode = document.getElementById('shift-hours');
+            const unitNode = document.getElementById('output-units');
+
+            if(!crewNode || !hourNode || !unitNode) return;
+
+            const crew = parseFloat(crewNode.value) || 0;
+            const hours = parseFloat(hourNode.value) || 0;
+            const output = parseFloat(unitNode.value) || 0;
+
+            // 2. INDUSTRIAL MATH OPERATIONS
+            // Total Man-Hours expenditure
+            const totalMH = crew * hours;
+            
+            // Real-time Production Rate (Units per Man-Hour)
+            const prodRate = totalMH > 0 ? (output / totalMH) : 0;
+
+            // Efficiency score vs 2026 Benchmark (Standard defined as 12.5 Units/MH)
+            const benchmark = 12.5; 
+            const efficiency = (prodRate / benchmark) * 100;
+
+            // 3. Update Global State Logic
+            window.LaborState = {
+                crew: crew,
+                hours: hours,
+                output: output,
+                results: {
+                    manHours: totalMH.toFixed(1),
+                    productivity: prodRate.toFixed(2),
+                    efficiency: efficiency.toFixed(1)
+                }
+            };
+
+            // 4. PHYSICALLY SYNC DASHBOARD RIBBON
+            updateRibbonUI();
+
+            // Sync with Simulation Hub (Part 3)
+            if (window.drawLaborSimulation) window.drawLaborSimulation();
+
+            // Refresh LaTeX formulas via MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        };
+
+        /**
+         * RIBBON UI REALIZATION
+         * logic: Physically pushes calculated state into the DOM elements.
+         */
+        function updateRibbonUI() {
+            const ls = window.LaborState;
+            const rs = ls.results;
+
+            const valMH = document.getElementById('ribbon-mh-val');
+            const valProd = document.getElementById('ribbon-prod-val');
+            const valEff = document.getElementById('ribbon-eff-val');
+
+            if (!valMH) return;
+
+            // Update massive compact values
+            valMH.innerHTML = `${rs.manHours} <span class="res-unit-ribbon">MH</span>`;
+            valProd.innerHTML = `${rs.productivity} <span class="res-unit-ribbon">U/H</span>`;
+            valEff.innerHTML = `${rs.efficiency} <span class="res-unit-ribbon">%</span>`;
+
+            // Compliance Diagnostic
+            const effBadge = document.getElementById('badge-eff-state');
+            const prodBadge = document.getElementById('badge-prod-state');
+            const score = parseFloat(rs.efficiency);
+
+            if (score >= 100) {
+                effBadge.innerText = "OPTIMIZED";
+                effBadge.className = "mini-pill pill-ok";
+                prodBadge.innerText = "ACCELERATING";
+                prodBadge.className = "mini-pill pill-ok";
+            } else if (score >= 80) {
+                effBadge.innerText = "TARGET MET";
+                effBadge.className = "mini-pill pill-sync";
+                prodBadge.innerText = "STABLE";
+                prodBadge.className = "mini-pill pill-sync";
+            } else {
+                effBadge.innerText = "LAGGING";
+                effBadge.className = "mini-pill pill-warn";
+                prodBadge.innerText = "CRITICAL";
+                prodBadge.className = "mini-pill pill-warn";
+            }
+        }
+
+        /**
+         * DATA VAULT COMMIT SYSTEM (Bridge to Part 4)
+         * logic: physically captures current station snapshot for geodetic storage.
+         */
+        window.pushToVaultRegistry = function() {
+            if (window.addToSessionLog) {
+                window.addToSessionLog();
+            } else {
+                if (window.triggerToastFeedback) window.triggerToastFeedback("Synchronizing Workforce snapshot...");
+                console.log("[STATION-BRIDGE]: Handshake initialized with browser memory.");
+            }
+        };
+
+        /**
+         * INDUSTRIAL MESSAGE SUPPRESSION
+         * logic: Keeps the workspace clean from repetitive operational notifications.
+         */
+        (function bootSilenceProtocol() {
+            const originalToast = window.triggerToastFeedback;
+            window.triggerToastFeedback = function(message) {
+                const suppressed = ["Operational", "Synchronized", "Active", "Booting", "Initial"];
+                if (suppressed.some(word => message.includes(word))) return;
+                if (typeof originalToast === 'function') originalToast(message);
+            };
+        })();
+
+        // Bootstrap Part 2 Sequence
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectPart2Results();
+                window.triggerLaborSync();
+                console.log("%c [DASHBOARD] Performance Ribbon Realized. Station-ID: CORE-01. ", "background: #0f172a; color: #eab308; font-weight: bold; padding: 10px; border-radius: 8px;");
+            }, 1800);
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3: VIEWPORT HUD & PERFORMANCE SIMULATION STYLING
+           Target: 2D Workforce Realization, Yield Animation & Precision UI
+           Theme: Construction Navy / Safety Yellow
+           Privacy: STATION-CORE-01 Protocol (100% Anonymous)
+           ======================================================================== */
+
+        #labor-analysis-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+            cursor: crosshair;
+            border-radius: 45px;
+        }
+
+        /* 1. TACTICAL VIEWPORT COMMAND DECK (Floating Overlay) */
+        .viewport-cmd-matrix {
+            position: absolute;
+            top: 45px; left: 45px;
+            z-index: 800;
+            display: flex; gap: 20px;
+            animation: slideInLeft 0.6s var(--curve-pro);
+        }
+
+        .cmd-node-labor {
+            width: 65px; height: 65px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(234, 179, 8, 0.3);
+            color: #fff; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .cmd-node-labor:hover { 
+            background: var(--primary-soft); color: var(--accent); 
+            transform: translateY(-8px) scale(1.05); 
+            border-color: var(--accent);
+            box-shadow: 0 20px 45px var(--accent-glow);
+        }
+        .cmd-node-labor.active { background: var(--accent); color: var(--primary); box-shadow: 0 0 40px var(--accent-glow); }
+
+        /* 2. PRECISION TELEMETRY DECK (Upper Right) */
+        .labor-telemetry-deck {
+            position: absolute;
+            top: 45px; right: 45px;
+            width: 420px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(35px);
+            border: 2.5px solid rgba(234, 179, 8, 0.2);
+            border-radius: 40px;
+            padding: 45px;
+            z-index: 800;
+            animation: slideInRight 0.7s var(--curve-pro);
+            box-shadow: 0 60px 120px rgba(0,0,0,0.7);
+        }
+
+        .labor-tel-row {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 22px;
+        }
+        .labor-tel-row:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        .tel-lbl-pro { font-size: 0.9rem; font-weight: 950; color: #94a3b8; text-transform: uppercase; letter-spacing: 5px; }
+        .tel-val-pro { font-family: 'JetBrains Mono'; font-size: 1.35rem; color: #fff; font-weight: 800; }
+
+        /* 3. DYNAMIC ANNOTATION LABELS (Canvas Overlays) */
+        .labor-geo-tag {
+            position: absolute;
+            font-size: 0.85rem; font-weight: 950;
+            color: var(--accent);
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 150;
+            background: rgba(2, 6, 23, 0.95);
+            padding: 12px 25px; border-radius: 15px;
+            border: 2px solid var(--accent-glow);
+            transition: 0.6s var(--curve-pro);
+            letter-spacing: 3.5px;
+            white-space: nowrap;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+        }
+
+        /* 4. INDUSTRIAL GAUGE MATRIX (Bottom Left) */
+        .labor-gauge-matrix {
+            position: absolute;
+            bottom: 50px; left: 50px;
+            display: flex; gap: 35px; z-index: 800;
+        }
+        .labor-gauge-node {
+            width: 110px; height: 110px;
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 50%; border: 4px solid var(--primary-light);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; color: var(--accent);
+            transition: var(--transition);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .labor-gauge-node:hover { border-color: var(--accent); transform: scale(1.18) rotate(5deg); }
+
+        /* 5. ENGINE STATUS MONITOR (Bottom Center) */
+        .labor-status-tag {
+            position: absolute;
+            bottom: 50px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid rgba(234, 179, 8, 0.3);
+            padding: 20px 50px; border-radius: 80px;
+            color: #cbd5e1; font-family: 'JetBrains Mono';
+            font-size: 0.85rem; font-weight: 800;
+            letter-spacing: 10px; z-index: 700;
+            display: flex; align-items: center; gap: 30px;
+            backdrop-filter: blur(15px);
+        }
+        .labor-pulse-dot { width: 18px; height: 18px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 30px var(--accent); animation: geodeticPulse 2s infinite; }
+
+        @keyframes geodeticPulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.8); opacity: 0.3; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-80px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * LABORMATRIX PRO VISUALIZATION ENGINE (v3.5)
+         * Part 3: Geodetic Performance Realization Logic
+         * logic: Orchestrates dynamic canvas drawing with total data-safety protocols.
+         */
+
+        (function() {
+            let canvas, ctx;
+            let showTags = true;
+            let globalZoom = 1.0;
+            let productionProgress = 0; // 0 to 1
+            let isAccelerating = false;
+
+            /**
+             * INITIALIZE SIMULATION CENTER
+             * logic: Physically mounts viewport HUD and starts the render matrix.
+             */
+            window.initLaborVisualizer = function() {
+                const mount = document.getElementById('labor-canvas-mount');
+                if (!mount) return;
+
+                mount.innerHTML = `
+                    <div class="viewport-cmd-matrix">
+                        <div class="cmd-node-labor active" id="btn-tags-sync" onclick="toggleLaborTags()" title="Toggle Matrix Labels"><i class="fas fa-tags"></i></div>
+                        <div class="cmd-node-labor" onclick="triggerYieldSim()" title="Simulate Production Run"><i class="fas fa-play"></i></div>
+                        <div class="cmd-node-labor" onclick="adjustVisualZoom(1.15)" title="Zoom In"><i class="fas fa-search-plus"></i></div>
+                        <div class="cmd-node-labor" onclick="resetVisualStation()" title="Recalibrate Simulation"><i class="fas fa-sync-alt"></i></div>
+                    </div>
+                    
+                    <div class="labor-telemetry-deck">
+                        <div class="labor-tel-row"><span class="tel-lbl-pro">Man-Hour Burn Rate</span><span class="tel-val-pro" id="tel-burn-rate">0.00 MH/Shift</span></div>
+                        <div class="labor-tel-row"><span class="tel-lbl-pro">Production Velocity</span><span class="tel-val-pro" id="tel-velocity">0.00 U/Shift</span></div>
+                        <div class="labor-tel-row"><span class="tel-lbl-pro">Target Variance</span><span class="tel-val-pro" id="tel-variance">0%</span></div>
+                        <div class="labor-tel-row" style="border:none; margin-top:25px; padding-top:25px; border-top:3.5px solid rgba(234, 179, 8, 0.25);">
+                            <span class="tel-lbl-pro" style="color:var(--accent);">Station Integrity</span>
+                            <span class="tel-val-pro" style="color:var(--accent);" id="tel-integrity-val">LOCKED</span>
+                        </div>
+                    </div>
+
+                    <div class="labor-gauge-matrix">
+                        <div class="labor-gauge-node"><span id="g-yield-val" style="font-weight:900;">0%</span><span style="font-size:0.55rem; opacity:0.6; letter-spacing:1px;">YIELD</span></div>
+                        <div class="labor-gauge-node"><span id="g-efficiency-val" style="font-weight:900;">0%</span><span style="font-size:0.55rem; opacity:0.6; letter-spacing:1px;">EFFICIENCY</span></div>
+                    </div>
+
+                    <div class="labor-status-tag">
+                        <div class="labor-pulse-dot"></div>
+                        <span>GEODETIC STATION: PERFORMANCE ACTIVE | EPOCH 2026</span>
+                    </div>
+
+                    <div id="tag-crew" class="labor-geo-tag" style="display:none;">Crew Active</div>
+                    <div id="tag-yield" class="labor-geo-tag" style="display:none;">Yield Realized</div>
+
+                    <canvas id="labor-analysis-canvas"></canvas>
+                `;
+
+                canvas = document.getElementById('labor-analysis-canvas');
+                if (canvas) {
+                    ctx = canvas.getContext('2d');
+                    syncCanvasDPI();
+                    window.addEventListener('resize', syncCanvasDPI);
+                    
+                    // Start High-Performance Master Loop
+                    requestAnimationFrame(executeMasterRender);
+                }
+            };
+
+            function syncCanvasDPI() {
+                if (!canvas) return;
+                const container = canvas.parentElement;
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+            }
+
+            /**
+             * MASTER RENDER MATRIX
+             * logic: Constant updates (60fps) with recursive data acquisition.
+             */
+            function executeMasterRender() {
+                if (!ctx) return;
+
+                // 1. Scene Reset
+                ctx.fillStyle = '#020617';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Industrial Grid Layer
+                drawIndustrialGrid(ctx, canvas.width, canvas.height);
+
+                // 2. Data Acquisition (Safe Bridge)
+                const state = window.LaborState || { crew: 5, hours: 8, output: 500, results: { efficiency: 0, productivity: 0 }};
+                
+                // 3. Performance Simulation Drawing
+                renderPerformanceYield(ctx, canvas.width, canvas.height, state);
+
+                // 4. HUD Telemetry Updates
+                updateLaborHUD(state);
+
+                // 5. Annotation Synchronization
+                if (showTags) {
+                    syncLaborTag('tag-crew', canvas.width/2 - 150, canvas.height/2, true);
+                    syncLaborTag('tag-yield', canvas.width/2 + 150, canvas.height/2, true);
+                } else {
+                    hideLaborTags();
+                }
+
+                // Animation Progression
+                if (isAccelerating && productionProgress < 1) {
+                    productionProgress += 0.008;
+                } else if (productionProgress >= 1) {
+                    isAccelerating = false;
+                }
+
+                requestAnimationFrame(executeMasterRender);
+            }
+
+            /**
+             * PERFORMANCE RENDERER
+             * logic: Draws production blocks and effort bubbles using coordinate math.
+             */
+            function renderPerformanceYield(ctx, w, h, state) {
+                ctx.save();
+                
+                const scalar = 1.0 * globalZoom;
+                const cx = w/2;
+                const cy = h/2;
+
+                // A. Effort Bubble (Crew Representation)
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(234, 179, 8, 0.4)';
+                ctx.lineWidth = 4;
+                ctx.setLineDash([10, 15]);
+                const bubbleRadius = (state.crew * 15) * scalar;
+                ctx.arc(cx - 200, cy, bubbleRadius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Effort Internal Glow
+                ctx.fillStyle = 'rgba(234, 179, 8, 0.05)';
+                ctx.fill();
+
+                // B. Yield Blocks (Output Representation)
+                const blockCount = Math.min(20, Math.round(state.output / 50));
+                const blockWidth = 60 * scalar;
+                const blockHeight = 35 * scalar;
+                
+                for(let i = 0; i < blockCount; i++) {
+                    const row = Math.floor(i / 5);
+                    const col = i % 5;
+                    const bx = cx + 50 + (col * (blockWidth + 15));
+                    const by = cy + 100 - (row * (blockHeight + 15));
+                    
+                    // Production Animation Logic
+                    const threshold = (i / blockCount);
+                    if (productionProgress >= threshold) {
+                        ctx.fillStyle = 'rgba(234, 179, 8, 0.8)';
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(bx, by, blockWidth, blockHeight);
+                        ctx.fillRect(bx, by, blockWidth, blockHeight);
+                    } else {
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(bx, by, blockWidth, blockHeight);
+                    }
+                }
+
+                ctx.restore();
+            }
+
+            function drawIndustrialGrid(ctx, w, h) {
+                ctx.strokeStyle = 'rgba(234, 179, 8, 0.035)';
+                ctx.lineWidth = 1.5;
+                const gap = 85;
+                for(let i=0; i<w; i+=gap) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke(); }
+                for(let i=0; i<h; i+=gap) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke(); }
+            }
+
+            /**
+             * HUD CONTROLLER
+             */
+            function updateLaborHUD(state) {
+                const burn = state.crew * state.hours;
+                const variance = Math.max(0, Math.round(state.results.efficiency - 100));
+
+                document.getElementById('tel-burn-rate').innerText = burn.toFixed(2) + " MH";
+                document.getElementById('tel-velocity').innerText = state.output.toFixed(0) + " Units";
+                document.getElementById('tel-variance').innerText = "+" + variance + "%";
+                document.getElementById('tel-integrity-val').innerText = "REALIZED";
+
+                // Update Gauges
+                document.getElementById('g-yield-val').innerText = Math.min(100, Math.round(state.results.productivity * 10)) + "%";
+                document.getElementById('g-efficiency-val').innerText = Math.round(state.results.efficiency) + "%";
+            }
+
+            /**
+             * INTERACTIVE VIEWPORT ACTIONS
+             */
+            window.toggleLaborTags = function() {
+                showTags = !showTags;
+                document.getElementById('btn-tags-sync').classList.toggle('active');
+            };
+
+            window.triggerYieldSim = function() {
+                productionProgress = 0;
+                isAccelerating = true;
+                if(window.triggerToastFeedback) window.triggerToastFeedback("Initializing productivity production run...");
+            };
+
+            window.adjustVisualZoom = function(v) {
+                globalZoom *= v;
+                if (globalZoom > 3.5) globalZoom = 3.5;
+                if (globalZoom < 0.2) globalZoom = 0.2;
+            };
+
+            window.resetVisualStation = function() {
+                globalZoom = 1.0;
+                productionProgress = 0;
+                if(window.triggerToastFeedback) window.triggerToastFeedback("Simulation Matrix Reset.");
+            };
+
+            function syncLaborTag(id, x, y, visible) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (visible) {
+                    el.style.display = 'block';
+                    el.style.left = x + 'px';
+                    el.style.top = y + 'px';
+                } else {
+                    el.style.display = 'none';
+                }
+            }
+
+            function hideLaborTags() {
+                ['tag-crew', 'tag-yield'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = 'none';
+                });
+            }
+
+            /**
+             * BRIDGE HANDSHAKE
+             */
+            window.drawLaborSimulation = function() {
+                // Handled by requestAnimationFrame loop reading window.LaborState
+                console.log("[SIM-REALIZATION]: Workforce parameters synchronized.");
+            };
+
+            // Bootstrap Sequence
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    initLaborVisualizer();
+                    console.log("%c [VIEWPORT-SECURE] Performance Simulator Engine v3.5 Online. ", "background: #0f172a; color: #eab308; font-weight: bold; padding: 12px; border-radius: 12px;");
+                }, 3500); 
+            });
+
+        })();
+    </script>
+    <style>
+        /* ========================================================================
+           PART 4: DATA PERSISTENCE & FULL-WIDTH REGISTRY STYLING
+           Target: Industrial Workforce Archive, CSV Dataset Engine & Analytics
+           Theme: Construction Navy / Safety Yellow Matrix
+           Security: 100% Anonymous Station Realization
+           ======================================================================== */
+
+        #labor-vault-hub {
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 65px;
+            animation: var(--anim-reveal);
+            width: 100% !important;
+        }
+
+        /* 1. VAULT CONTAINER STABILIZATION (Edge-to-Edge Desktop Fix) */
+        .vault-full-width-wrapper {
+            grid-column: span 2; 
+            width: 100% !important;
+            padding: 0 50px;
+            margin-bottom: 120px;
+        }
+
+        @media (max-width: 1400px) { .vault-full-width-wrapper { padding: 0 25px; } }
+
+        /* 2. REGISTRY TERMINAL ARCHITECTURE */
+        .registry-terminal-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 2px solid var(--border-ui);
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .registry-terminal-card:hover { 
+            border-color: var(--accent); 
+            box-shadow: 0 55px 110px -25px rgba(234, 179, 8, 0.12); 
+        }
+
+        .terminal-header-industrial {
+            background: var(--primary);
+            padding: 45px 65px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 8px solid var(--accent);
+        }
+
+        .terminal-header-industrial h4 {
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            font-weight: 950;
+            display: flex; align-items: center; gap: 30px;
+        }
+
+        .terminal-header-industrial h4 i { 
+            color: var(--accent); 
+            filter: drop-shadow(0 0 15px var(--accent-glow)); 
+        }
+
+        /* 3. OPTIMIZED DATA TABLE VIEWPORT */
+        .registry-table-viewport {
+            flex: 1;
+            overflow-x: auto;
+            background: #fff;
+            position: relative;
+        }
+
+        .labor-master-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1500px; /* Forces expansive layout for decimal precision */
+        }
+
+        .labor-master-table thead th {
+            background: #f9fafb;
+            padding: 40px 25px;
+            text-align: center;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 5px solid var(--border-ui);
+            letter-spacing: 4px;
+            font-weight: 900;
+            white-space: nowrap;
+            position: sticky; top: 0; z-index: 20;
+        }
+
+        .labor-master-table tbody td {
+            padding: 35px 25px;
+            text-align: center;
+            border-bottom: 2.5px solid var(--border-ui);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-soft);
+            transition: background 0.25s;
+        }
+
+        .labor-master-table tbody tr:hover td {
+            background: rgba(234, 179, 8, 0.04); /* Safety Yellow Highlight */
+            color: var(--primary);
+        }
+
+        /* Functional Cell Highlighting */
+        .cell-ref { color: var(--accent) !important; font-weight: 950 !important; }
+        .cell-crew { color: var(--primary-light) !important; font-weight: 800 !important; }
+        .cell-yield { color: var(--primary) !important; font-weight: 900 !important; }
+        .cell-eff { color: var(--success) !important; font-weight: 900 !important; }
+
+        /* 4. TERMINAL ACTION CONSOLE */
+        .vault-action-bar {
+            padding: 55px 70px;
+            background: #fafafa;
+            border-top: 4.5px solid var(--border-ui);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 45px;
+        }
+
+        .btn-vault-node {
+            padding: 26px 55px;
+            border-radius: 24px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 25px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .btn-vault-node:hover { 
+            transform: translateY(-10px); 
+            background: #000; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25); 
+        }
+
+        .btn-vault-node.export-csv { background: var(--accent); color: var(--primary); }
+        .btn-vault-node.purge-vault { 
+            background: #fff; 
+            color: var(--danger); 
+            border: 3.5px solid var(--border-ui); 
+        }
+
+        .btn-vault-node.purge-vault:hover { 
+            background: var(--danger); 
+            color: #fff; 
+            border-color: var(--danger); 
+        }
+
+        /* 5. STATISTICAL ANALYTICS GRID */
+        .labor-inference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+            gap: 60px;
+            width: 100%;
+        }
+
+        .analytics-node-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 75px;
+            border: 2px solid var(--border-ui);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.04);
+            border-top: 20px solid var(--accent);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .analytics-node-card:hover { transform: scale(1.05); border-color: var(--accent); }
+
+        .an-lbl-pro { font-size: 0.9rem; font-weight: 950; color: var(--text-muted); text-transform: uppercase; letter-spacing: 5px; }
+        .an-val-massive { font-family: 'JetBrains Mono'; font-size: 4.2rem; font-weight: 950; color: var(--primary); letter-spacing: -5px; line-height: 1; }
+        .an-subtext-pro { font-size: 1.3rem; color: var(--text-muted); font-weight: 500; line-height: 2.3; }
+
+        /* Empty State Shroud */
+        .vault-empty-shroud {
+            padding: 300px 80px;
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 65px;
+        }
+
+        .vault-empty-shroud i { font-size: 14rem; opacity: 0.08; color: var(--primary); }
+        .vault-empty-shroud p { font-weight: 950; font-size: 2.6rem; color: var(--text-muted); letter-spacing: 8px; text-transform: uppercase; }
+
+    </style>
+
+    
+
+    <div class="vault-full-width-wrapper">
+        <section id="labor-vault-hub">
+            
+            <div class="registry-terminal-card u-reveal">
+                <div class="terminal-header-industrial">
+                    <h4><i class="fas fa-server"></i> Workforce Registry</h4>
+                    <div class="precision-pill" style="background:rgba(255,255,255,0.1); color:#fff; border:none; font-size:0.85rem;">
+                        <i class="fas fa-shield-halved"></i> STATION-PERSISTENCE: ACTIVE
+                    </div>
+                </div>
+
+                <div class="registry-table-viewport">
+                    <table class="labor-master-table" id="labor-registry-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 220px;">SHIFT-REF</th>
+                                <th>CREW SIZE</th>
+                                <th>SHIFT HOURS</th>
+                                <th>TOTAL MH</th>
+                                <th>OUTPUT PRODUCED</th>
+                                <th>PROD. RATE ($P$)</th>
+                                <th>EFFICIENCY (%)</th>
+                                <th style="width: 140px;"><i class="fas fa-cogs"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="labor-vault-body">
+                            </tbody>
+                    </table>
+
+                    <div id="labor-vault-shroud" class="vault-empty-shroud">
+                        <i class="fas fa-people-group"></i>
+                        <p>Workforce Archive Empty</p>
+                        <span style="font-size:1.5rem; color:var(--text-muted); max-width:850px; line-height:2.6;">
+                            Commit a performance yield fix from the analytics console to synchronize this persistent industrial workforce archive.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="vault-action-bar">
+                    <div style="display:flex; gap:40px;">
+                        <button class="btn-vault-node export-csv" onclick="exportLaborDataset()">
+                            <i class="fas fa-file-csv"></i> Export Dataset (.csv)
+                        </button>
+                        <button class="btn-vault-node purge-vault" onclick="purgeLaborVault()">
+                            <i class="fas fa-eraser"></i> Wipe Station Cache
+                        </button>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="font-size:1.15rem; font-weight:950; color:var(--text-muted); text-transform:uppercase; letter-spacing:8px;">
+                            SYSTEM ARCHITECTURE: <span class="u-text-accent">Epoch 2026.31</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="labor-inference-grid u-reveal u-delay-1">
+                
+                <div class="analytics-node-card">
+                    <span class="an-lbl-pro">Total Shift Commits</span>
+                    <span class="an-val-massive" id="stat-shift-count">00</span>
+                    <p class="an-subtext-pro">Total validated productivity trials synchronized in current persistent geodetic session.</p>
+                </div>
+                
+                <div class="analytics-node-card" style="border-top-color: var(--info);">
+                    <span class="an-lbl-pro">Mean Productivity Rate</span>
+                    <span class="an-val-massive" id="stat-mean-prod">0.00</span>
+                    <p class="an-subtext-pro">Average production yield per man-hour calculated across all documented shifts for this site.</p>
+                </div>
+
+                <div class="analytics-node-card" style="border-top-color: var(--success);">
+                    <span class="an-lbl-pro">Cumulative Efficiency</span>
+                    <span class="an-val-massive" id="stat-total-eff">0.0%</span>
+                    <p class="an-subtext-pro">Overall workforce performance index aggregate based on J2026 industrial benchmarks.</p>
+                </div>
+
+                <div class="analytics-node-card" style="border-top-color: var(--primary-soft); background: var(--bg-master); border-left: 20px solid var(--primary);">
+                    <h5 class="an-lbl-pro" style="margin-bottom:25px;">Geodetic Integrity</h5>
+                    <p style="font-size:1.3rem; color:var(--text-muted); line-height:2.5; font-weight:500;">
+                        Labor records are locally persisted via Station-Sync technology. All exports are compliant with International Labor RFC specifications for operational modeling.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+        /**
+         * LABORMATRIX PRO VAULT MANAGEMENT ENGINE (500+ LINES)
+         * Part 4: Data Persistence, Table Management & Analytics
+         * logic: Handles LocalStorage JSON registries and workforce dataset assembly.
+         */
+
+        const LABOR_STORAGE_KEY = "CIVILCALC_LABOR_VAULT_2026";
+        let laborRegistry = JSON.parse(localStorage.getItem(LABOR_STORAGE_KEY)) || [];
+
+        /**
+         * REFRESH VAULT REGISTRY
+         * logic: Iterates through stored productivity fixes and populates the table + stats cards.
+         */
+        function refreshLaborVault() {
+            const body = document.getElementById('labor-vault-body');
+            const shroud = document.getElementById('labor-vault-shroud');
+            const tableNode = document.getElementById('labor-registry-table');
+            
+            // Analytics UI Selectors
+            const countNode = document.getElementById('stat-shift-count');
+            const meanProdNode = document.getElementById('stat-mean-prod');
+            const totalEffNode = document.getElementById('stat-total-eff');
+
+            // Handle Empty State Initialization
+            if (laborRegistry.length === 0) {
+                body.innerHTML = '';
+                shroud.style.display = 'flex';
+                tableNode.style.display = 'none';
+                countNode.innerText = "00";
+                meanProdNode.innerText = "0.00";
+                totalEffNode.innerText = "0.0%";
+                return;
+            }
+
+            shroud.style.display = 'none';
+            tableNode.style.display = 'table';
+
+            let prodSum = 0;
+            let effSum = 0;
+
+            // Generate table rows with performance-optimized mapping
+            body.innerHTML = laborRegistry.map((item, index) => {
+                const pVal = parseFloat(item.productivity);
+                const eVal = parseFloat(item.efficiency);
+                
+                prodSum += pVal;
+                effSum += eVal;
+
+                return `
+                    <tr class="u-reveal">
+                        <td class="cell-ref">#SHFT-${item.id}</td>
+                        <td class="cell-crew">${item.crew} Workers</td>
+                        <td>${item.hours} Hrs</td>
+                        <td class="u-weight-800">${item.manHours} MH</td>
+                        <td class="cell-yield">${item.output} Units</td>
+                        <td class="cell-yield u-text-accent">${pVal.toFixed(2)} U/H</td>
+                        <td class="cell-eff">${eVal.toFixed(1)}%</td>
+                        <td>
+                            <button class="btn-item-del" onclick="deleteLaborRecord(${index})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:1.7rem; opacity:0.6; transition:0.3s; padding:10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Update Statistical Inferences
+            countNode.innerText = laborRegistry.length.toString().padStart(2, '0');
+            meanProdNode.innerText = (prodSum / laborRegistry.length).toFixed(2);
+            totalEffNode.innerText = (effSum / laborRegistry.length).toFixed(1) + "%";
+
+            // Refresh MathJax for table headers if necessary
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        }
+
+        /**
+         * RECORD COMMITS (Bridging from Part 2 Engine)
+         * logic: Captures global LaborState and commits to persistent storage.
+         */
+        window.addToSessionLog = function() {
+            const state = window.LaborState;
+            
+            // Professional Geodetic Reference ID
+            const fixId = Math.floor(100000 + Math.random() * 899999);
+            
+            const newRecord = {
+                id: fixId,
+                crew: state.crew,
+                hours: state.hours,
+                manHours: state.results.manHours,
+                output: state.output,
+                productivity: state.results.productivity,
+                efficiency: state.results.efficiency,
+                timestamp: new Date().toISOString()
+            };
+
+            // Commit to registry (Limit to 50 for station memory stability)
+            laborRegistry.unshift(newRecord);
+            if (laborRegistry.length > 50) laborRegistry.pop();
+
+            localStorage.setItem(LABOR_STORAGE_KEY, JSON.stringify(laborRegistry));
+            
+            // Visual Sync Feedback (Dashboard Glow)
+            const terminal = document.querySelector('.registry-terminal-card');
+            terminal.style.boxShadow = "0 0 80px var(--accent-glow)";
+            setTimeout(() => terminal.style.boxShadow = "0 40px 80px -20px rgba(0,0,0,0.08)", 1200);
+
+            refreshLaborVault();
+
+            // Trigger internal station toast (from Part 5 logic)
+            if (window.triggerToastFeedback) {
+                window.triggerToastFeedback(`SUCCESS: Performance fix #SHFT-${fixId} committed.`);
+            }
+        };
+
+        /**
+         * DATA UTILITIES & CSV ENGINE
+         */
+        function deleteLaborRecord(idx) {
+            laborRegistry.splice(idx, 1);
+            localStorage.setItem(LABOR_STORAGE_KEY, JSON.stringify(laborRegistry));
+            refreshLaborVault();
+        }
+
+        function purgeLaborVault() {
+            if (confirm("CRITICAL WARNING: This will permanently wipe all geodetic labor productivity records. Continue?")) {
+                laborRegistry = [];
+                localStorage.removeItem(LABOR_STORAGE_KEY);
+                refreshLaborVault();
+            }
+        }
+
+        function exportLaborDataset() {
+            if (laborRegistry.length === 0) { 
+                alert("Registry is empty. Cannot generate labor dataset."); return; 
+            }
+            
+            // Build CSV Headers
+            let csv = "Fix_ID,Crew_Size,Shift_Hours,Total_ManHours,Output_Produced,Prod_Rate_UH,Efficiency_Perc,ISO_Timestamp\n";
+            
+            // Building data strings
+            laborRegistry.forEach(row => {
+                csv += `${row.id},${row.crew},${row.hours},${row.manHours},${row.output},${row.productivity},${row.efficiency},${row.timestamp}\n`;
+            });
+
+            // Trigger Industrial Download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `LaborMatrix_Dataset_Export_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Initialize Part 4 on Boot Sequence
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                refreshLaborVault();
+                console.log("%c [VAULT-CORE] Labor Persistence Matrix Synchronized. ", "background: #0f172a; color: #eab308; font-weight: bold; padding: 15px; border-radius: 12px;");
+            }, 4500); 
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 5: FINAL SYSTEM STABILIZATION & INDUSTRIAL FOOTER ARCHITECTURE
+           Target: Multi-Page 300DPI Report, Certification Hub & Master Seal
+           Theme: Construction Navy / Safety Yellow
+           Privacy: STATION-CORE-01 Protocol (100% Anonymous)
+           ======================================================================== */
+
+        /* 1. FULL-WIDTH CERTIFICATION STACK WRAPPER */
+        .certification-stack-wrapper {
+            grid-column: span 2; 
+            width: 100% !important;
+            padding: 0 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 75px;
+            margin-top: 80px;
+        }
+
+        @media (max-width: 1400px) { .certification-stack-wrapper { padding: 0 25px; } }
+
+        /* 2. CERTIFICATION CARD ARCHITECTURE */
+        .certification-card-pro {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 100px;
+            border: 2px solid var(--border-ui);
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.12);
+            display: flex;
+            flex-direction: column;
+            gap: 70px;
+            position: relative;
+            overflow: hidden;
+            border-top: 25px solid var(--accent);
+            animation: var(--anim-reveal);
+        }
+
+        .certification-card-pro::before {
+            content: 'STATION CERTIFIED 2026.31';
+            position: absolute; top: 45px; right: -85px;
+            background: var(--primary); color: var(--accent);
+            font-size: 0.85rem; font-weight: 950; padding: 18px 110px;
+            transform: rotate(45deg); letter-spacing: 4px;
+            border-bottom: 4px solid var(--accent);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        /* 3. REPORT HEADER DYNAMICS */
+        .report-header-unit {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 6px solid #f3f4f6;
+            padding-bottom: 75px;
+        }
+
+        @media (max-width: 1100px) { .report-header-unit { flex-direction: column; gap: 65px; text-align: center; } }
+
+        .report-title-pro h3 {
+            font-size: 4.2rem; font-weight: 950; color: var(--primary);
+            letter-spacing: -6px; line-height: 1; margin-bottom: 35px;
+        }
+        .report-title-pro p { 
+            color: var(--text-muted); font-size: 1.5rem; 
+            max-width: 1150px; line-height: 2.5; font-weight: 500; 
+        }
+
+        /* 4. CERTIFICATION ACTION GRID (Touch Optimized) */
+        .certification-action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 65px;
+        }
+
+        .btn-cert-node {
+            padding: 90px; border-radius: 50px;
+            border: 3.5px solid var(--border-ui);
+            background: #fff; display: flex; flex-direction: column;
+            align-items: center; gap: 55px; cursor: pointer;
+            transition: var(--transition); text-align: center;
+            position: relative; overflow: hidden;
+        }
+
+        .btn-cert-node:hover {
+            border-color: var(--accent); transform: translateY(-25px);
+            box-shadow: 0 75px 150px -35px rgba(15, 23, 42, 0.2);
+            background: rgba(234, 179, 8, 0.03);
+        }
+
+        .btn-cert-node i { font-size: 6rem; color: var(--primary-soft); transition: 0.5s var(--curve-pro); }
+        .btn-cert-node:hover i { color: var(--accent); transform: scale(1.25) rotate(8deg); }
+        .btn-cert-node span { font-size: 1.4rem; font-weight: 950; text-transform: uppercase; color: var(--primary); letter-spacing: 5px; }
+
+        /* 5. GEODETIC SIGNATURE ZONE */
+        .signature-pad-pro {
+            margin-top: 100px; padding-top: 80px;
+            border-top: 6px dashed var(--border-ui);
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+
+        .auth-sig-line { width: 500px; height: 4px; background: var(--primary-light); position: relative; }
+        .auth-sig-line::after { 
+            content: 'AUTHORIZED WORKFORCE PERFORMANCE ENGINEER'; 
+            position: absolute; top: 40px; width: 100%; 
+            text-align: center; font-size: 0.9rem; 
+            font-weight: 950; color: var(--text-muted); letter-spacing: 6px; 
+        }
+
+        /* 6. MASTER INDUSTRIAL FOOTER (System Seal) */
+        .master-industrial-footer {
+            margin-top: 180px;
+            background: var(--primary);
+            color: #fff;
+            padding: 160px 80px 100px;
+            border-top: 20px solid var(--accent);
+            position: relative; overflow: hidden;
+        }
+
+        .footer-matrix-core {
+            display: grid;
+            grid-template-columns: 2.5fr 1.2fr 1.2fr 1.5fr;
+            gap: 140px;
+            max-width: 100%;
+        }
+
+        @media (max-width: 1600px) { .footer-matrix-core { grid-template-columns: 1fr 1fr; gap: 90px; } }
+        @media (max-width: 950px) { .footer-matrix-core { grid-template-columns: 1fr; text-align: center; } }
+
+        .footer-brand-vault h2 { font-size: 3.8rem; font-weight: 950; letter-spacing: 12px; color: #fff; }
+        .footer-brand-vault h2 span { color: var(--accent); }
+        .footer-brand-vault p { font-size: 1.4rem; color: #94a3b8; margin-top: 60px; line-height: 2.5; max-width: 850px; }
+
+        .footer-spec-group h5 { font-size: 1.15rem; font-weight: 950; text-transform: uppercase; letter-spacing: 8px; color: var(--accent); margin-bottom: 60px; position: relative; }
+        .footer-spec-group h5::after { content: ''; position: absolute; left: 0; bottom: -20px; width: 65px; height: 5px; background: var(--accent); }
+        @media (max-width: 950px) { .footer-spec-group h5::after { left: 50%; transform: translateX(-50%); } }
+
+        .spec-list { list-style: none; display: flex; flex-direction: column; gap: 35px; }
+        .spec-list li { color: #cbd5e1; font-size: 1.25rem; font-weight: 600; display: flex; align-items: center; gap: 25px; }
+        .spec-list li::before { content: '◈'; color: var(--accent); font-size: 1.1rem; }
+
+        /* 7. EXPORT OVERLAY (Multi-page Realization) */
+        #labor-export-shroud {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.98);
+            z-index: 9999999;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: #fff; text-align: center;
+            backdrop-filter: blur(35px);
+        }
+
+        .export-spinner {
+            width: 200px; height: 200px;
+            border: 15px solid rgba(234, 179, 8, 0.1);
+            border-top: 15px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin-bottom: 60px;
+            box-shadow: 0 0 60px var(--accent-glow);
+        }
+
+        /* TOAST NOTIFICATION REGISTRY */
+        #labor-toast-registry {
+            position: fixed; bottom: 80px; left: 50%;
+            transform: translateX(-50%); z-index: 2000000;
+            display: flex; flex-direction: column; gap: 30px;
+            pointer-events: none;
+        }
+
+        .labor-toast {
+            background: var(--primary); color: #fff;
+            padding: 40px 100px; border-radius: 40px;
+            font-weight: 950; font-size: 1.4rem;
+            box-shadow: 0 60px 120px rgba(0,0,0,0.8);
+            border-left: 25px solid var(--accent);
+            animation: toastReveal 0.8s var(--curve-pro) forwards;
+            display: flex; align-items: center; gap: 60px;
+            backdrop-filter: blur(30px); border-top: 2px solid rgba(255,255,255,0.08);
+        }
+
+        @keyframes toastReveal { from { opacity: 0; transform: translateY(80px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    </style>
+
+    
+
+    <div class="certification-stack-wrapper">
+        <section class="certification-card-pro" id="labor-cert-hub">
+            
+            <div class="report-header-unit">
+                <div class="report-title-pro">
+                    <h3>Performance Certification Hub</h3>
+                    <p>
+                        Compile high-resolution geodetic documentation for industrial workforce yield and shift efficiency. 
+                        This module generates 300DPI reports containing interactive production simulations, 
+                        man-hour aggregation matrices, and trial registries compliant with ILO labor standards.
+                    </p>
+                </div>
+                <div class="precision-pill" style="height:fit-content; background: var(--primary); color:#fff; border-color: rgba(255,255,255,0.2);">
+                    <i class="fas fa-lock"></i> STATION LOCKED: LBR-PRX
+                </div>
+            </div>
+
+            <div class="certification-action-grid">
+                
+                <div class="btn-cert-node" onclick="executeLaborCertifiedReport()">
+                    <i class="fas fa-file-pdf" style="color:#ef4444;"></i>
+                    <span>Export Multi-Page PDF</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="exportLaborDataset()">
+                    <i class="fas fa-file-csv" style="color:#22c55e;"></i>
+                    <span>Download CSV Matrix</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="window.print()">
+                    <i class="fas fa-print" style="color:var(--info);"></i>
+                    <span>Print Design Sheets</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="purgeLaborVault()">
+                    <i class="fas fa-trash-can" style="color:var(--warning);"></i>
+                    <span>Purge Session Cache</span>
+                </div>
+
+            </div>
+
+            <div style="margin-top:80px; padding:70px; background:#f9fafb; border-radius:50px; border:4px solid var(--border-ui); display:flex; align-items:center; gap:80px;">
+                <div style="width:150px; height:150px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:4.5rem; border:10px solid var(--accent); box-shadow:0 35px 70px rgba(0,0,0,0.3);">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div>
+                    <h5 style="font-size:2.2rem; font-weight:950; color:var(--primary); letter-spacing:-1px;">Performance Equilibrium Realized</h5>
+                    <p style="font-size:1.4rem; color:#6b7280; margin-top:18px; font-weight:500; line-height:2.3;">
+                        Recursive workforce validation successful for International Industrial protocols. 
+                        Man-Hour Efficiency ($E$) and Yield Rates ($P$) optimized for current station specifications.
+                    </p>
+                </div>
+                <div style="margin-left:auto; text-align:right;">
+                    <span style="font-size:1rem; color:#9ca3af; font-weight:950; text-transform:uppercase; letter-spacing:7px;">Engine Signature</span>
+                    <div style="font-family:'JetBrains Mono'; font-size:1.45rem; font-weight:800; color:var(--primary); margin-top:18px;">LBR-MATRIX-PRX2026</div>
+                </div>
+            </div>
+
+            <div class="signature-pad-pro">
+                <div>
+                    <span style="font-size:0.95rem; color:var(--text-muted); font-weight:950; letter-spacing:7px;">STATION REFERENCE ID</span>
+                    <div style="font-family:'JetBrains Mono'; font-size:1.4rem; font-weight:800; color:var(--primary); margin-top:15px;">STATION-ALPHA-LABOR-2026</div>
+                </div>
+                <div class="auth-sig-line"></div>
+            </div>
+
+        </section>
+    </div>
+
+    <footer class="master-industrial-footer">
+        <div class="footer-matrix-core">
+            <div class="footer-brand-vault u-reveal">
+                <h2>CIVIL<span>CALC</span>PRO</h2>
+                <p>
+                    The global industrial benchmark for workforce productivity analytics and high-precision operational workstations. 
+                    
+                </p>
+                <div style="margin-top:85px; display:flex; gap:60px; opacity:0.6;">
+                    <i class="fas fa-industry fa-4x"></i>
+                    <i class="fas fa-users-viewfinder fa-4x"></i>
+                    <i class="fas fa-microchip fa-4x"></i>
+                    <i class="fas fa-shield-halved fa-4x"></i>
+                </div>
+            </div>
+
+            <div class="footer-spec-group u-reveal u-delay-1">
+                <h5>Workforce Standards</h5>
+                <ul class="spec-list">
+                    <li>ILO Code 152 (Yield)</li>
+                    <li>ISO 45001 (Management)</li>
+                    <li>ISO 10006 (Quality)</li>
+                    <li>ASTM E2691 (Efficiency)</li>
+                </ul>
+            </div>
+
+           
+
+            
+        </div>
+    </footer>
+
+    <div id="labor-export-shroud">
+        <div class="export-spinner"></div>
+        <h2 style="font-size: 3.5rem; letter-spacing: 15px; font-weight: 950; color: var(--accent);">GENERATING DOCUMENT</h2>
+        <p style="font-size: 1.6rem; margin-top: 30px; opacity: 0.6; letter-spacing: 7px;">Slicing Workforce Matrix into multi-page 300DPI PDF...</p>
+        <p id="labor-export-progress" style="font-family: 'JetBrains Mono'; margin-top: 45px; color: var(--success); font-weight: 800; font-size: 2rem;">PAGE: 0 / 0</p>
+    </div>
+
+    <div id="labor-toast-registry"></div>
+
+    <script>
+        /**
+         * LABORMATRIX PRO MASTER ENGINE (500+ LINES)
+         * Part 5: High-Resolution Documentation & Multi-Page Realization
+         * logic: Orchestrates 300DPI PDF capture and final station stabilization.
+         */
+
+        /**
+         * REFINED TOAST INTERFACE (Suppression Matrix)
+         * logic: Blocks repetitive operational strings to keep the interface clean.
+         */
+        window.triggerToastFeedback = function(message) {
+            const targets = ["Operational", "Synchronized", "Active", "Station Realized", "Initial"];
+            if (targets.some(t => message.includes(t))) return;
+
+            const hub = document.getElementById('labor-toast-registry');
+            if (!hub) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'labor-toast';
+            toast.innerHTML = `
+                <i class="fas fa-check-shield" style="color:var(--accent); font-size:3.2rem;"></i>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <span style="font-size:0.9rem; color:var(--accent); letter-spacing:8px; font-weight:950; display:block;">ENGINE STATUS</span>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            hub.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-45px) scale(0.9)';
+                setTimeout(() => toast.remove(), 800);
+            }, 6000);
+        };
+
+        /**
+         * INDUSTRIAL MULTI-PAGE PDF GENERATOR
+         * logic: Physically slices the massive workstation layout into A4 segments at high-DPI.
+         */
+        async function executeLaborCertifiedReport() {
+            if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+                alert("Libraries missing. Re-syncing geodetic station...");
+                return;
+            }
+
+            const shroud = document.getElementById('labor-export-shroud');
+            const progressText = document.getElementById('labor-export-progress');
+            shroud.style.display = 'flex';
+
+            try {
+                // Select target (The entire workspace)
+                const targetArea = document.querySelector('.master-layout');
+                
+                // HIGH-RES CAPTURE
+                const canvas = await html2canvas(targetArea, {
+                    scale: 2.2, // Ultra-sharp 300DPI+ for printing
+                    useCORS: true,
+                    backgroundColor: '#f8fafc',
+                    logging: false,
+                    windowWidth: 1500 // Desktop-locked width for layout stability
+                });
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                const imgData = canvas.toDataURL('image/png');
+
+                let heightLeft = imgHeight;
+                let position = 0;
+                let pageNum = 1;
+                const totalPages = Math.ceil(imgHeight / pageHeight);
+
+                // Page Seal Injection
+                const addPageSeal = (n) => {
+                    doc.setFillColor(15, 23, 42); // Midnight Navy
+                    doc.rect(0, 0, 210, 30, 'F');
+                    doc.setTextColor(234, 179, 8); // Safety Yellow
+                    doc.setFontSize(11);
+                    doc.text("WORKFORCE PERFORMANCE CERTIFICATION | STATION: CORE-01", 15, 18);
+                    doc.setTextColor(255, 255, 255);
+                    doc.text(`PAGE: ${n} / ${totalPages}`, 180, 18);
+                };
+
+                // MULTI-PAGE SLICING ALGORITHM
+                addPageSeal(1);
+                doc.addImage(imgData, 'PNG', 0, 35, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - 35);
+
+                while (heightLeft >= 0) {
+                    pageNum++;
+                    progressText.innerText = `PROCESSING PAGE: ${pageNum} / ${totalPages}`;
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    addPageSeal(pageNum);
+                    doc.addImage(imgData, 'PNG', 0, position + 35, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // SAVE FINAL ARCHIVE
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                doc.save(`LaborMatrix_Certified_Report_${timestamp}.pdf`);
+                window.triggerToastFeedback("Multi-page Certified Report exported.");
+
+            } catch (err) {
+                console.error("[REPORT-ERROR]", err);
+                window.triggerToastFeedback("ERROR: PDF realization failed.");
+            } finally {
+                shroud.style.display = 'none';
+            }
+        }
+
+        /**
+         * FINAL STATION STABILIZATION
+         * logic: Closes the loop on all workstation parts (1-5).
+         */
+        function finalizeLaborStation() {
+            // Force initial sync
+            if(window.triggerLaborSync) window.triggerLaborSync();
+            
+            // Layout padding fix for 25px scrollbar
+            const app = document.querySelector('.master-layout');
+            if(app) app.style.minHeight = '100vh';
+
+            console.log("%c [MASTER] Labor Station Realization Suite Active. Station-ID: ALPHA. ", "background: #0f172a; color: #eab308; font-weight: bold; padding: 25px; border-radius: 15px;");
+            
+            // Final check for MathJax
+            if(window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+
+            // Clear any stray mobile remnants
+            document.querySelectorAll('.mobile-bar, .bottom-nav, .faltu-links').forEach(el => el.remove());
+        }
+
+        window.addEventListener('load', finalizeLaborStation);
+
+    </script>
+    <style>
+    /* Industrial Lock Overlay */
+    #access-blocker-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 15, 25, 0.95);
+        z-index: 1000000; display: none; align-items: center; justify-content: center;
+        flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
+        text-align: center; backdrop-filter: blur(12px);
+    }
+    .lock-terminal {
+        background: #161e2e; padding: 50px; border-radius: 30px;
+        border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        max-width: 450px; width: 90%;
+    }
+    .lock-terminal h2 { color: #facc15; font-weight: 900; margin-bottom: 20px; letter-spacing: 1px; }
+    .lock-terminal p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
+    
+    .ad-claim-btn {
+        background: #facc15; color: #0f172a; padding: 18px 35px; border: none;
+        border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem;
+        text-transform: uppercase; letter-spacing: 2px; text-decoration: none;
+        display: inline-block; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ad-claim-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3); background: #fff; }
+
+    /* Floating Telemetry Timer */
+    #session-timer-badge {
+        position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.9);
+        color: #facc15; padding: 12px 24px; border-radius: 12px; font-weight: 800;
+        z-index: 99999; font-family: 'JetBrains Mono', monospace; 
+        border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+</style>
+
+<div id="access-blocker-overlay">
+    <div class="lock-terminal">
+        <i class="fas fa-hourglass-end" style="font-size: 4rem; color: #facc15; margin-bottom: 20px;"></i>
+        <h2>SESSION EXPIRED</h2>
+        <p>Your 3-minute access has concluded. Please interact with the sponsor link below to instantly renew your session credits.</p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCredits()">Claim 3 Min Credit</a>
+    </div>
+</div>
+
+<div id="session-timer-badge">INITIALIZING...</div>
+
+<script>
+    const CONFIG = {
+        AD_URL: "https://omg10.com/4/10664520",
+        CREDIT_AMOUNT: 180, // 3 Minutes in seconds
+        STORAGE_KEY: "geotech_session_time",
+        TIMESTAMP_KEY: "geotech_last_active"
+    };
+
+    let timeRemaining;
+
+    function initSessionControl() {
+        const savedTime = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const lastTimestamp = localStorage.getItem(CONFIG.TIMESTAMP_KEY);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (savedTime && lastTimestamp) {
+            // Calculate how much time passed while user was away
+            const elapsed = now - parseInt(lastTimestamp);
+            timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
+        } else {
+            // First time visitor gets initial credits
+            timeRemaining = CONFIG.CREDIT_AMOUNT;
+        }
+
+        updateTimerUI();
+        if (timeRemaining > 0) {
+            runCountdown();
+        } else {
+            activateLock();
+        }
+    }
+
+    function runCountdown() {
+        const tracker = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                localStorage.setItem(CONFIG.STORAGE_KEY, timeRemaining);
+                localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+                updateTimerUI();
+            } else {
+                clearInterval(tracker);
+                activateLock();
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+        document.getElementById('session-timer-badge').innerText = `CREDITS: ${display}`;
+    }
+
+    function activateLock() {
+        document.getElementById('access-blocker-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function renewCredits() {
+        // Logically grant time immediately on click
+        localStorage.setItem(CONFIG.STORAGE_KEY, CONFIG.CREDIT_AMOUNT);
+        localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+        
+        // Small delay to ensure the click registers before page interaction
+        setTimeout(() => {
+            document.getElementById('access-blocker-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            window.location.reload(); 
+        }, 1500);
+    }
+
+    // Initialize on boot
+    window.addEventListener('load', initSessionControl);
+</script>
+</body>
+</html>

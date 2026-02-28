@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CBRMatrix Pro | Professional Highway Yield Analyst</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@800;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: { 
+                inlineMath: [['$', '$'], ['\\(', '\\)']], 
+                displayMath: [['$$', '$$']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            options: { 
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                renderActions: { addMenu: [] }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        /* ========================================================================
+           PART 1: CBRMATRIX GLOBAL CSS ARCHITECTURE (500+ LINES MATRIX)
+           Project: Industrial California Bearing Ratio Workstation
+           Theme: Asphalt Slate / Road Yellow
+           Version: 2026.31 Stable Build
+           ======================================================================== */
+
+        /* --- 1. DESIGN SYSTEM TOKENS --- */
+        :root {
+            /* Palette: Pavement, Asphalt & Highway Safety */
+            --primary: #1e293b;           /* Asphalt Dark */
+            --primary-soft: #334155;      /* Slate Road */
+            --primary-light: #64748b;     /* Concrete Ash */
+            
+            /* Accents: Road Marking Yellow & Danger Orange */
+            --accent: #fbbf24;            /* High-Viz Yellow */
+            --accent-glow: rgba(251, 191, 36, 0.35);
+            --caution: #f97316;           /* Construction Orange */
+            --caution-glow: rgba(249, 115, 22, 0.2);
+            
+            /* Functional Status Indicators */
+            --success: #10b981;           /* CBR Passing */
+            --danger: #ef4444;            /* Subgrade Failure */
+            --info: #0ea5e9;              /* Data Sync */
+
+            /* Neutral Surfaces & Surface Elevations */
+            --bg-master: #f8fafc;         /* Clean Site Grey */
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-ui: #e2e8f0;
+
+            /* Geometric Principles (Industrial Layout) */
+            --radius-extreme: 60px;
+            --radius-xl: 40px;
+            --radius-lg: 25px;
+            --sidebar-width: 540px;
+            
+            /* Motion Physics (Cubic Beziers) */
+            --curve-pro: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: 550ms var(--curve-pro);
+            --anim-reveal: revealUp 0.9s var(--curve-pro) forwards;
+        }
+
+        /* --- 2. GLOBAL RESET & BASE FOUNDATION --- */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; outline: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100vw !important; height: 100%;
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background-color: var(--bg-master);
+            color: var(--text-main);
+            overflow-x: hidden !important;
+            line-height: 1.8;
+        }
+
+        /* --- 3. ABSOLUTE TOP PROGRESS BAR (8px Highway Neon) --- */
+        #master-scroll-bar {
+            position: fixed !important;
+            top: 0 !important; left: 0 !important;
+            width: 0%; height: 8px !important;
+            background: linear-gradient(90deg, var(--accent) 0%, #ffffff 50%, var(--accent) 100%) !important;
+            z-index: 2000005 !important;
+            box-shadow: 0 0 25px var(--accent-glow);
+            transition: width 0.15s var(--curve-pro);
+        }
+
+        /* --- 4. ULTRA-WIDE INDUSTRIAL SCROLLBAR (25px Matrix) --- */
+        ::-webkit-scrollbar { width: 25px !important; height: 25px !important; }
+        ::-webkit-scrollbar-track { background: var(--primary) !important; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, var(--accent) 0%, var(--caution) 100%) !important; 
+            border: 6px solid var(--primary) !important;
+            border-radius: 50px !important;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #ffffff !important; }
+
+        /* --- 5. MASTER NAVIGATION (Industrial Symmetry) --- */
+        .master-nav {
+            background: var(--primary) !important;
+            height: 90px !important;
+            padding: 0 60px !important;
+            border-bottom: 8px solid var(--accent) !important;
+            position: fixed !important;
+            top: 0; left: 0; right: 0;
+            z-index: 100000 !important;
+            display: flex !important;
+            justify-content: center !important;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.45) !important;
+        }
+
+        .nav-inner {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+
+        .nav-logo {
+            grid-column: 2 !important;
+            text-decoration: none !important;
+            color: #fff !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 28px !important;
+            font-weight: 950 !important;
+            letter-spacing: 9px !important;
+            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important; gap: 20px;
+        }
+        .nav-logo span { color: var(--accent) !important; }
+        .nav-logo i { font-size: 2.2rem; color: var(--accent); filter: drop-shadow(0 0 15px var(--accent-glow)); }
+
+        .nav-back-link {
+            grid-column: 1 !important;
+            justify-self: start !important;
+            color: #94a3b8 !important; text-decoration: none !important;
+            font-size: 0.9rem !important; font-weight: 800 !important;
+            text-transform: uppercase !important; display: flex !important;
+            align-items: center !important; gap: 15px; transition: var(--transition);
+        }
+        .nav-back-link:hover { color: var(--accent) !important; transform: translateX(-5px); }
+
+        /* --- 6. FULL-WIDTH WORKSTATION LAYOUT --- */
+        .master-layout {
+            display: grid !important;
+            grid-template-columns: var(--sidebar-width) 1fr !important;
+            gap: 60px !important;
+            padding: 150px 60px 80px !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin: 0 !important;
+            min-height: 100vh;
+            padding-right: 35px !important; /* Offset for 25px scrollbar */
+        }
+
+        @media (max-width: 1450px) {
+            .master-layout { grid-template-columns: 1fr !important; padding: 130px 30px 70px !important; }
+        }
+
+        /* --- 7. INDUSTRIAL SIDEBAR & LAB COMPONENT MATRIX --- */
+        .sidebar-controls { display: flex; flex-direction: column; gap: 50px; }
+
+        .pavement-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 3.5px solid var(--border-ui);
+            box-shadow: 0 45px 90px -20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: var(--transition);
+            animation: var(--anim-reveal);
+        }
+        .pavement-card:hover { border-color: var(--accent); transform: translateY(-12px); }
+
+        .card-header-industrial {
+            background: var(--primary); padding: 45px 55px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 8px solid var(--accent);
+        }
+        .card-header-industrial h3 {
+            color: #fff; font-size: 1.3rem;
+            text-transform: uppercase; letter-spacing: 7px;
+            display: flex; align-items: center; gap: 25px; font-weight: 950;
+        }
+
+        .card-body-industrial { padding: 55px; }
+
+        .input-node { margin-bottom: 45px; }
+        .label-pro {
+            display: block; font-size: 0.95rem; font-weight: 950;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 5px; margin-bottom: 25px;
+        }
+        .label-pro i { color: var(--accent); margin-right: 20px; }
+
+        .field-pro {
+            width: 100%; background: #f8fafc;
+            border: 4px solid var(--border-ui);
+            border-radius: 22px; padding: 26px 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem; font-weight: 800;
+            color: var(--primary); transition: var(--transition);
+        }
+        .field-pro:focus { background: #fff; border-color: var(--accent); box-shadow: 0 0 0 20px var(--caution-glow); }
+
+        /* --- 8. VIEWPORT TERMINAL ARCHITECTURE --- */
+        #pavement-terminal {
+            width: 100%; min-height: 950px;
+            background: #020617; border-radius: 70px;
+            border: 6px solid var(--border-ui);
+            box-shadow: 0 65px 130px rgba(0,0,0,0.3);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        .industrial-grid-overlay {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(251, 191, 36, 0.05) 2px, transparent 0);
+            background-size: 85px 85px;
+            pointer-events: none; z-index: 5;
+        }
+
+        /* --- 9. ANIMATIONS & UTILITIES --- */
+        @keyframes revealUp { from { opacity: 0; transform: translateY(90px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .u-weight-950 { font-weight: 950; }
+        .u-text-accent { color: var(--accent); }
+        .u-font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Massive Action Button */
+        .btn-massive-pro {
+            width: 100%; background: var(--primary);
+            color: #fff; padding: 32px; border-radius: 25px;
+            border: none; font-weight: 950; text-transform: uppercase;
+            letter-spacing: 6px; cursor: pointer; transition: 0.4s var(--curve-pro);
+            display: flex; align-items: center; justify-content: center; gap: 25px;
+        }
+        .btn-massive-pro:hover { background: #000; transform: translateY(-5px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .btn-massive-pro i { color: var(--accent); font-size: 1.8rem; }
+
+    </style>
+</head>
+<body>
+
+    <div id="master-scroll-bar"></div>
+
+    <nav class="master-nav">
+        <div class="nav-inner">
+            <a href="../find.html" class="nav-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to TOOLS</span>
+            </a>
+            <a href="../index.html" class="nav-logo">
+                
+                CIVIL<span>CALC</span>PRO
+            </a>
+        </div>
+    </nav>
+
+    
+
+    <div class="master-layout">
+        
+        <aside class="sidebar-controls">
+            
+            <div class="pavement-card">
+                <div class="card-header-industrial">
+                    <h3><i class="fas fa-file-signature"></i> Site Metadata</h3>
+                    <div class="u-text-accent u-font-mono" style="font-size: 0.8rem; font-weight: 950; letter-spacing: 2.5px;">SYNC: LIVE</div>
+                </div>
+                <div class="card-body-industrial">
+                    
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-hashtag"></i> Project ID / RD</label>
+                        <input type="text" id="project-id" class="field-pro" value="N5-SITE-K-2026" oninput="triggerGlobalSync()">
+                    </div>
+
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-layer-group"></i> Sample Depth (mm)</label>
+                        <input type="number" id="sample-depth" class="field-pro" value="300" step="50" oninput="triggerGlobalSync()">
+                    </div>
+
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-vial"></i> Soil Classification</label>
+                        <input type="text" id="soil-type" class="field-pro" value="A-2-4 (Silty Sand)" oninput="triggerGlobalSync()">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="pavement-card">
+                <div class="card-header-industrial" style="background: var(--primary-soft);">
+                    <h3><i class="fas fa-terminal"></i> Compute Registry</h3>
+                </div>
+                <div class="card-body-industrial">
+                    
+                    <button class="btn-massive-pro" onclick="pushToVaultRegistry()">
+                        <i class="fas fa-database"></i> COMMIT LAB FIX
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="pavement-card" style="border-left: 20px solid var(--accent);">
+                <div class="card-body-industrial">
+                    <h4 class="label-pro" style="color:var(--primary); margin-bottom:28px;">
+                        <i class="fas fa-microchip"></i> Recursive AI Logic
+                    </h4>
+                    <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 2.5; font-weight: 500;">
+                        CBR Value is realized by comparing test loads against standard crushed stone:
+                        $$CBR = \frac{p}{p_s} \times 100$$
+                        Where $p$ is measured pressure and $p_s$ is standard pressure ($13.24\text{ kN}$ at $2.5\text{ mm}$).
+                    </p>
+                </div>
+            </div>
+
+        </aside>
+
+        <main class="viewport-hub">
+            
+            <div id="pavement-terminal">
+                <div class="industrial-grid-overlay"></div>
+                
+                <div id="pavement-boot-terminal" style="position:absolute; inset:0; background:var(--primary); z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: 1.6s var(--curve-pro);">
+                    <div style="width:140px; height:140px; border:14px solid rgba(255,255,255,0.03); border-top:14px solid var(--accent); border-radius:50%; animation: spin 0.85s linear infinite; margin-bottom:65px;"></div>
+                    <p style="font-family:'JetBrains Mono'; font-size:1.4rem; color:var(--accent); letter-spacing:14px; text-transform:uppercase; font-weight:950;">Synchronizing Lab Matrix</p>
+                    <p style="font-size:1rem; color:rgba(255,255,255,0.3); margin-top:45px; font-weight:800; letter-spacing:8px;">STATION-CORE-01 | HIGHWAY REALIZED 2026</p>
+                </div>
+
+                <div id="pavement-canvas-mount" style="flex:1; position:relative;"></div>
+
+            </div>
+
+            <div id="results-stack-point" style="display:flex; flex-direction:column; gap:65px; width:100%; margin-top:65px;">
+                </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        /**
+         * CBRMATRIX PRO MASTER CORE v1.0
+         * Part 1: Infrastructure & Boot Sequence
+         * logic: Handles global workstation state and station initialization.
+         */
+
+        window.CBRState = {
+            projectId: "N5-SITE-K-2026",
+            depth: 300,
+            soilType: "A-2-4",
+            dataPoints: [
+                { penetration: 0, load: 0 },
+                { penetration: 0.5, load: 0 },
+                { penetration: 1.0, load: 0 },
+                { penetration: 1.5, load: 0 },
+                { penetration: 2.0, load: 0 },
+                { penetration: 2.5, load: 0 },
+                { penetration: 4.0, load: 0 },
+                { penetration: 5.0, load: 0 },
+                { penetration: 7.5, load: 0 },
+                { penetration: 10.0, load: 0 },
+                { penetration: 12.5, load: 0 }
+            ],
+            results: { cbr25: 0, cbr50: 0, finalCBR: 0 }
+        };
+
+        // Absolute Top Scroll Progress (User request: top:0)
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const indicator = document.getElementById("master-scroll-bar");
+            if(indicator) indicator.style.width = scrolled + "%";
+        });
+
+        // Professional Boot Sequence
+        window.addEventListener('load', () => {
+            console.log("%c [SYSTEM] CBRMatrix Pro Synchronized. Station: CORE-01. ", "background: #1e293b; color: #fbbf24; font-weight: bold; padding: 15px; border-radius: 12px;");
+            
+            setTimeout(() => {
+                const boot = document.getElementById('pavement-boot-terminal');
+                if(boot) {
+                    boot.style.opacity = '0';
+                    setTimeout(() => boot.style.display = 'none', 1600);
+                }
+                
+                // Initialize Part 2 Handshake
+                if(window.triggerCBRSync) window.triggerCBRSync();
+            }, 2500);
+        });
+
+        // UI Feedback Suppression Matrix
+        window.triggerToastFeedback = function(message) {
+            if (message.includes("Operational")) return; 
+            console.log("[CBR-LOG]: " + message);
+        };
+
+        function triggerGlobalSync() {
+            // Bridge to Part 2 calculations
+            if (window.triggerCBRSync) window.triggerCBRSync();
+        }
+    </script>
+<style>
+        /* ========================================================================
+           PART 2: COMPACT DASHBOARD UI & LOAD-PENETRATION MATRIX STYLING
+           Target: One-Line Results Ribbon, Penetration Data Entry & Yield Flow
+           Theme: Asphalt Slate / Highway Yellow Matrix
+           Privacy: STATION-CORE-01 Protocol
+           ======================================================================== */
+
+        /* 1. RESULTS HORIZONTAL RIBBON (Dashboard Architecture) */
+        .results-horizontal-ribbon {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important; /* Forces 3-Column Single Row on Desktop */
+            gap: 30px !important;
+            width: 100% !important;
+            margin-top: 50px;
+            animation: var(--anim-reveal);
+        }
+
+        /* Responsive Breakpoint for Tablet/Mobile Viewport */
+        @media (max-width: 1250px) {
+            .results-horizontal-ribbon { grid-template-columns: 1fr !important; }
+        }
+
+        .result-node-compact {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 35px;
+            border: 2.5px solid var(--border-ui);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.55s var(--curve-pro);
+            min-height: 310px; /* Physically reduced height for dashboard compactness */
+            border-bottom: 12px solid var(--primary-soft);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.05);
+        }
+
+        .result-node-compact:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 50px 100px -20px rgba(251, 191, 36, 0.2);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Compact Metadata & Labeling Matrix */
+        .res-header-node {
+            display: flex;
+            align-items: center; justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .res-label-compact {
+            font-size: 0.8rem; font-weight: 950;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 4.5px; display: flex; align-items: center; gap: 15px;
+        }
+        .res-label-compact i { color: var(--accent); font-size: 1.3rem; }
+
+        /* Dashboard Typography (Optimized for One-Line Layout) */
+        .res-val-ribbon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem; font-weight: 950;
+            color: var(--primary); line-height: 1.1;
+            margin-bottom: 20px; letter-spacing: -3.5px;
+            display: flex; align-items: baseline; gap: 18px;
+        }
+        .res-unit-ribbon { font-size: 1.6rem; color: var(--text-muted); letter-spacing: 0; font-weight: 700; }
+
+        .res-desc-compact {
+            font-size: 1rem; color: var(--text-muted);
+            font-weight: 500; line-height: 1.8;
+            margin-bottom: 25px; display: -webkit-box;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 2. DYNAMIC WATERMARK MATH (Compact Ribbon Edition) */
+        .watermark-math-ribbon {
+            position: absolute; bottom: 30px; right: 30px;
+            font-family: 'JetBrains Mono'; font-size: 0.9rem;
+            color: var(--accent); opacity: 0.12;
+            text-align: right; pointer-events: none;
+            line-height: 1.7; font-weight: 800;
+            transform: rotate(-4deg); transition: 0.45s var(--curve-pro);
+        }
+        .result-node-compact:hover .watermark-math-ribbon { opacity: 0.5; transform: rotate(0) scale(1.15); }
+
+        /* 3. MINI STATUS PILLS (Performance Indicators) */
+        .status-strip-compact {
+            display: flex; gap: 18px;
+            margin-top: auto;
+        }
+
+        .mini-status-pill {
+            padding: 14px 24px; border-radius: 60px;
+            font-size: 0.7rem; font-weight: 950;
+            text-transform: uppercase; letter-spacing: 2.5px;
+            display: inline-flex; align-items: center; gap: 12px;
+            transition: 0.35s;
+        }
+
+        .pill-safe { background: rgba(16, 185, 129, 0.08); color: var(--success); border: 2px solid var(--success); }
+        .pill-sync { background: rgba(251, 191, 36, 0.08); color: var(--accent); border: 2px solid var(--accent); }
+        .pill-warn { background: rgba(239, 68, 68, 0.08); color: var(--danger); border: 2px solid var(--danger); }
+
+        /* 4. DATA ENTRY TABLE STYLING (Industrial) */
+        .cbr-input-table {
+            width: 100%; border-collapse: separate; border-spacing: 0 15px;
+            margin-top: 20px;
+        }
+        .cbr-input-table th {
+            text-align: left; padding: 15px 20px; font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted);
+            font-weight: 900;
+        }
+        .cbr-input-table td { background: #f8fafc; border: 2px solid var(--border-ui); padding: 5px; }
+        .cbr-input-table tr td:first-child { border-radius: 15px 0 0 15px; background: #f1f5f9; width: 40%; font-family: 'JetBrains Mono'; font-weight: 800; padding-left: 20px; }
+        .cbr-input-table tr td:last-child { border-radius: 0 15px 15px 0; width: 60%; }
+        
+        .table-field-pro {
+            width: 100%; border: none; background: transparent; padding: 15px 20px;
+            font-family: 'JetBrains Mono'; font-size: 1.1rem; font-weight: 800; color: var(--primary);
+        }
+
+        /* Component Bottom Accents */
+        .node-cbr25 { border-bottom-color: var(--primary-soft); }
+        .node-cbr50 { border-bottom-color: var(--caution); }
+        .node-final { border-bottom-color: var(--accent); }
+
+        /* Suppression of unwanted global clutter */
+        .massive-layout-stack, .old-results-point, .faltu-div { display: none !important; }
+
+    </style>
+
+    <script>
+        /**
+         * CBRMATRIX PRO ANALYTICS ENGINE (COMPACT v2.0)
+         * Part 2: Compact Dashboard Ribbon & Load Calculation Realization
+         * logic: Handles Pavement Bearing Ratio logic in a horizontal matrix.
+         */
+
+        /**
+         * INITIALIZE DATA ENTRY MATRIX
+         * logic: Injects the Load-Penetration table into the sidebar.
+         */
+        function injectCBRDataEntry() {
+            const sidebar = document.querySelector('.sidebar-controls');
+            if (!sidebar) return;
+
+            const entryCard = document.createElement('div');
+            entryCard.className = 'pavement-card';
+            entryCard.innerHTML = `
+                <div class="card-header-industrial" style="background: var(--primary-soft);">
+                    <h3><i class="fas fa-list-ol"></i> Penetration Matrix</h3>
+                </div>
+                <div class="card-body-industrial" style="padding: 30px;">
+                    <table class="cbr-input-table">
+                        <thead>
+                            <tr>
+                                <th>PEN. (mm)</th>
+                                <th>LOAD (kN)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cbr-matrix-body">
+                            </tbody>
+                    </table>
+                </div>
+            `;
+            // Insert after the first card (Site Metadata)
+            sidebar.insertBefore(entryCard, sidebar.children[1]);
+
+            const tableBody = document.getElementById('cbr-matrix-body');
+            const penPoints = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 5.0, 7.5, 10.0, 12.5];
+            
+            tableBody.innerHTML = penPoints.map((p, idx) => `
+                <tr>
+                    <td>${p.toFixed(1)} mm</td>
+                    <td>
+                        <input type="number" step="0.01" class="table-field-pro cbr-data-input" 
+                               data-pen="${p}" value="0.00" oninput="triggerCBRSync()">
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        /**
+         * INITIALIZE COMPACT RESULTS RIBBON
+         * logic: Dynamically constructs the 3-column grid into the Part 1 viewport hub.
+         */
+        function injectPart2Results() {
+            const container = document.getElementById('results-stack-point');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="results-horizontal-ribbon" id="cbr-ribbon-row">
+                    
+                    <div class="result-node-compact node-cbr25">
+                        <div class="watermark-math-ribbon">CBR @ 2.5mm<br>(Load / 13.24) × 100</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-gauge-high"></i> CBR @ 2.5mm</span>
+                            <div class="precision-pill" style="font-size:0.65rem; padding:8px 18px;">SECURE</div>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-cbr25-val">0.0 <span class="res-unit-ribbon">%</span></div>
+                        <p class="res-desc-compact">Bearing ratio at standard penetration of 2.5mm against crushed stone baseline.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-status-pill pill-sync" id="badge-cbr25-state">REALIZED</div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-compact node-cbr50">
+                        <div class="watermark-math-ribbon">CBR @ 5.0mm<br>(Load / 19.96) × 100</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-gauge"></i> CBR @ 5.0mm</span>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-cbr50-val">0.0 <span class="res-unit-ribbon">%</span></div>
+                        <p class="res-desc-compact">Bearing ratio calculated at 5.0mm to verify depth-strength consistency.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-status-pill pill-sync" id="badge-cbr50-state">ISO SYNCED</div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-compact node-final">
+                        <div class="watermark-math-ribbon">DESIGN CBR<br>MAX(CBR2.5, CBR5.0)</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-road"></i> Adopted CBR</span>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-final-val">0.0 <span class="res-unit-ribbon">%</span></div>
+                        <p class="res-desc-compact">The governing strength value used for pavement thickness design calculations.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-status-pill pill-safe" id="badge-final-state">OPTIMIZED</div>
+                        </div>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        /**
+         * MASTER CBR CALCULATOR (Compact Handshake)
+         * logic: Physically orchestrates the calculations and pushes to compact ribbon.
+         */
+        window.triggerCBRSync = function() {
+            // 1. Data acquisition from Dynamic Table
+            const inputs = document.querySelectorAll('.cbr-data-input');
+            const dataMap = {};
+            inputs.forEach(input => {
+                dataMap[input.getAttribute('data-pen')] = parseFloat(input.value) || 0;
+            });
+
+            // Standard Loads for Plunger (kN)
+            const stdLoad25 = 13.24; // 1350 kg approx
+            const stdLoad50 = 19.96; // 2050 kg approx
+
+            // 2. CORE MATHEMATICS (Penetration Ratio)
+            const testLoad25 = dataMap["2.5"] || 0;
+            const testLoad50 = dataMap["5.0"] || 0;
+
+            const cbr25 = (testLoad25 / stdLoad25) * 100;
+            const cbr50 = (testLoad50 / stdLoad50) * 100;
+            const finalCBR = Math.max(cbr25, cbr50);
+
+            // 3. Update Global Station State
+            window.CBRState.dataPoints = Object.keys(dataMap).map(k => ({ penetration: parseFloat(k), load: dataMap[k] }));
+            window.CBRState.results = {
+                cbr25: cbr25.toFixed(1),
+                cbr50: cbr50.toFixed(1),
+                finalCBR: finalCBR.toFixed(1)
+            };
+
+            // 4. PHYSICALLY SYNC DASHBOARD RIBBON
+            updateCompactRibbonUI();
+
+            // Handshake with Simulation Viewport (Part 3)
+            if (window.drawCBRSimulation) window.drawCBRSimulation();
+
+            // Refresh MathJax LaTeX renders
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        };
+
+        /**
+         * RIBBON UI REALIZATION
+         * logic: Physically pushes calculated data into compact UI elements.
+         */
+        function updateCompactRibbonUI() {
+            const rs = window.CBRState.results;
+
+            const val25 = document.getElementById('ribbon-cbr25-val');
+            const val50 = document.getElementById('ribbon-cbr50-val');
+            const valFinal = document.getElementById('ribbon-final-val');
+
+            if (!val25) return; // Guard against early calls
+
+            // Update massive metrics
+            val25.innerHTML = `${rs.cbr25} <span class="res-unit-ribbon">%</span>`;
+            val50.innerHTML = `${rs.cbr50} <span class="res-unit-ribbon">%</span>`;
+            valFinal.innerHTML = `${rs.finalCBR} <span class="res-unit-ribbon">%</span>`;
+            
+            // Dynamic Status Logic
+            const finalBadge = document.getElementById('badge-final-state');
+            const cbrVal = parseFloat(rs.finalCBR);
+
+            if (cbrVal >= 10) {
+                finalBadge.innerText = "EXCELLENT SUBGRADE";
+                finalBadge.className = "mini-status-pill pill-safe";
+            } else if (cbrVal >= 5) {
+                finalBadge.innerText = "FAIR SUBGRADE";
+                finalBadge.className = "mini-status-pill pill-sync";
+            } else if (cbrVal > 0) {
+                finalBadge.innerText = "POOR - STABILIZE";
+                finalBadge.className = "mini-status-pill pill-warn";
+            } else {
+                finalBadge.innerText = "NO DATA";
+                finalBadge.className = "mini-status-pill pill-sync";
+            }
+        }
+
+        /**
+         * DATA VAULT BRIDGE (Part 4 Persistence)
+         * logic: captures current snapshot for geodetic storage.
+         */
+        window.pushToVaultRegistry = function() {
+            if (window.addToSessionLog) {
+                window.addToSessionLog();
+            } else {
+                if (window.triggerToastFeedback) window.triggerToastFeedback("Synchronizing lab fix to session vault...");
+            }
+        };
+
+        // Initialize Part 2 on Boot Sequence
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectCBRDataEntry();
+                injectPart2Results();
+                window.triggerCBRSync();
+                console.log("%c [DASHBOARD] CBR Ribbon Realized. Station-ID: CORE-01. ", "background: #1e293b; color: #fbbf24; font-weight: bold; padding: 10px; border-radius: 8px;");
+            }, 1800);
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3: VIEWPORT HUD & LOAD-PENETRATION GRAPH STYLING
+           Target: 2D Curve Realization, Intersection Animation & Precision HUD
+           Theme: Asphalt Slate / Highway Yellow
+           Privacy: STATION-CORE-01 Protocol (100% Anonymous)
+           ======================================================================== */
+
+        #pavement-viewport-container {
+            width: 100%; height: 100%;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            background: #020617; border-radius: 55px;
+        }
+
+        /* 1. TACTICAL VIEWPORT HUD (Floating Dashboard) */
+        .pavement-action-matrix {
+            position: absolute;
+            top: 40px; left: 40px;
+            z-index: 850;
+            display: flex; gap: 20px;
+            animation: slideInLeft 0.6s var(--curve-pro);
+        }
+
+        .cmd-node-pavement {
+            width: 75px; height: 75px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            color: #fff; border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .cmd-node-pavement:hover { 
+            background: var(--primary-soft); color: var(--accent); 
+            transform: translateY(-8px) scale(1.05); 
+            border-color: var(--accent);
+            box-shadow: 0 20px 45px var(--accent-glow);
+        }
+        .cmd-node-pavement.active { background: var(--accent); color: #000; box-shadow: 0 0 40px var(--accent-glow); }
+
+        /* 2. PRECISION TELEMETRY DECK (Upper Right) */
+        .pavement-telemetry-deck {
+            position: absolute;
+            top: 40px; right: 40px;
+            width: 460px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(40px);
+            border: 2.5px solid rgba(251, 191, 36, 0.2);
+            border-radius: 45px;
+            padding: 55px;
+            z-index: 850;
+            animation: slideInRight 0.7s var(--curve-pro);
+            box-shadow: 0 60px 120px rgba(0,0,0,0.7);
+        }
+
+        .pavement-tel-row {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 22px;
+        }
+        .pavement-tel-row:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        .pavement-lbl-pro { font-size: 0.9rem; font-weight: 950; color: #94a3b8; text-transform: uppercase; letter-spacing: 5px; }
+        .pavement-val-pro { font-family: 'JetBrains Mono'; font-size: 1.4rem; color: #fff; font-weight: 800; }
+
+        /* 3. DYNAMIC GRAPH CANVAS WRAPPER */
+        .chart-master-stage {
+            flex: 1; padding: 100px 60px 60px;
+            position: relative; z-index: 10;
+        }
+
+        #cbr-curve-canvas { width: 100% !important; height: 100% !important; }
+
+        /* 4. PERFORMANCE GAUGE MATRIX (Bottom Left) */
+        .pavement-gauge-matrix {
+            position: absolute;
+            bottom: 45px; left: 45px;
+            display: flex; gap: 35px; z-index: 850;
+        }
+        .pavement-gauge-node {
+            width: 130px; height: 130px;
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 50%; border: 4px solid var(--primary-light);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; color: var(--accent);
+            transition: var(--transition);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .pavement-gauge-node:hover { border-color: var(--accent); transform: scale(1.18) rotate(5deg); }
+
+        /* 5. STATION STATUS TAG (Bottom Center) */
+        .pavement-status-tag {
+            position: absolute;
+            bottom: 45px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid rgba(251, 191, 36, 0.3);
+            padding: 22px 55px; border-radius: 80px;
+            color: #cbd5e1; font-family: 'JetBrains Mono';
+            font-size: 0.9rem; font-weight: 800;
+            letter-spacing: 12px; z-index: 800;
+            display: flex; align-items: center; gap: 35px;
+            backdrop-filter: blur(15px);
+        }
+        .pavement-pulse-node { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 35px var(--accent); animation: highwayPulse 2s infinite; }
+
+        @keyframes highwayPulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.8); opacity: 0.3; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-80px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Overlay for chart tooltips */
+        .custom-chart-legend {
+            position: absolute; bottom: 120px; right: 60px;
+            display: flex; flex-direction: column; gap: 15px;
+            background: rgba(15, 23, 42, 0.8); padding: 25px;
+            border-radius: 20px; border: 2px solid rgba(255,255,255,0.05);
+        }
+        .legend-item { display: flex; align-items: center; gap: 15px; color: #fff; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .leg-box { width: 20px; height: 20px; border-radius: 5px; }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * CBRMATRIX PRO VISUALIZATION ENGINE (v3.5)
+         * Part 3: Load-Penetration Curve Realization
+         * logic: Orchestrates dynamic Chart.js rendering for pavement analytics.
+         */
+
+        (function() {
+            let cbrChart = null;
+            let showMarkers = true;
+
+            /**
+             * INITIALIZE SIMULATION CENTER
+             * logic: Physically mounts the HUD and initializes the Chart.js instance.
+             */
+            window.initPavementVisualizer = function() {
+                const mount = document.getElementById('pavement-canvas-mount');
+                if (!mount) return;
+
+                mount.innerHTML = `
+                    <div id="pavement-viewport-container">
+                        <div class="industrial-grid-overlay"></div>
+                        
+                        <div class="pavement-action-matrix">
+                            <div class="cmd-node-pavement active" id="btn-toggle-markers" onclick="toggleGraphMarkers()" title="Toggle Visual Intercepts"><i class="fas fa-draw-polygon"></i></div>
+                            <div class="cmd-node-pavement" onclick="triggerPavementSim()" title="Execute Load Test Run"><i class="fas fa-play"></i></div>
+                            <div class="cmd-node-pavement" onclick="resetGraphView()" title="Recalibrate Viewport"><i class="fas fa-compress-arrows-alt"></i></div>
+                        </div>
+
+                        <div class="pavement-telemetry-deck">
+                            <div class="pavement-tel-row"><span class="pavement-lbl-pro">Standard Load ($p_s$)</span><span class="pavement-val-pro">13.24 kN</span></div>
+                            <div class="pavement-tel-row"><span class="pavement-lbl-pro">Peak Resistance</span><span class="pavement-val-pro" id="tel-peak-load">0.00 kN</span></div>
+                            <div class="pavement-tel-row"><span class="pavement-lbl-pro">Curve Intercept</span><span class="pavement-val-pro" id="tel-curve-type">Linear</span></div>
+                            <div class="pavement-tel-row" style="border:none; margin-top:25px; padding-top:25px; border-top:3.5px solid rgba(251, 191, 36, 0.25);">
+                                <span class="pavement-lbl-pro" style="color:var(--accent);">Report Status</span>
+                                <span class="pavement-val-pro" style="color:var(--accent);" id="tel-status-val">LOCKED</span>
+                            </div>
+                        </div>
+
+                        <div class="pavement-gauge-matrix">
+                            <div class="pavement-gauge-node"><span id="g-yield-val" style="font-weight:900;">0%</span><span style="font-size:0.55rem; opacity:0.6; letter-spacing:1px;">YIELD</span></div>
+                            <div class="pavement-gauge-node"><span id="g-pass-val" style="font-weight:900;">0%</span><span style="font-size:0.55rem; opacity:0.6; letter-spacing:1px;">PASSING</span></div>
+                        </div>
+
+                        <div class="pavement-status-tag">
+                            <div class="pavement-pulse-node"></div>
+                            <span>ASPHALT ENGINE: CORE-REALIZED | EPOCH 2026.31</span>
+                        </div>
+
+                        <div class="custom-chart-legend">
+                            <div class="legend-item"><div class="leg-box" style="background:var(--accent);"></div> Test Load</div>
+                            <div class="legend-item"><div class="leg-box" style="background:rgba(255,255,255,0.1); border:1px dashed #fff;"></div> Reference</div>
+                        </div>
+
+                        <div class="chart-master-stage">
+                            <canvas id="cbr-curve-canvas"></canvas>
+                        </div>
+                    </div>
+                `;
+
+                setupCBRChart();
+            };
+
+            /**
+             * CHART.JS ARCHITECTURE
+             * logic: Configures the engineering graph for highway load penetration.
+             */
+            function setupCBRChart() {
+                const ctx = document.getElementById('cbr-curve-canvas').getContext('2d');
+                
+                cbrChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [0, 0.5, 1.0, 1.5, 2.0, 2.5, 4.0, 5.0, 7.5, 10.0, 12.5],
+                        datasets: [{
+                            label: 'Load-Penetration Curve',
+                            data: [],
+                            borderColor: '#fbbf24',
+                            backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                            borderWidth: 5,
+                            pointBackgroundColor: '#fbbf24',
+                            pointBorderColor: '#0f172a',
+                            pointRadius: 6,
+                            pointHoverRadius: 10,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: { duration: 1500, easing: 'easeOutQuart' },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                titleFont: { size: 14, weight: 'bold', family: 'JetBrains Mono' },
+                                bodyFont: { size: 14, family: 'JetBrains Mono' },
+                                padding: 20,
+                                cornerRadius: 15,
+                                callbacks: {
+                                    label: function(context) { return ` Load: ${context.parsed.y} kN @ ${context.label} mm`; }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'PENETRATION (MM)', color: '#94a3b8', font: { size: 14, weight: 900, family: 'Inter' } },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)', borderDash: [5, 5] },
+                                ticks: { color: '#64748b', font: { size: 12, weight: 800 } }
+                            },
+                            y: {
+                                title: { display: true, text: 'LOAD (KN)', color: '#94a3b8', font: { size: 14, weight: 900, family: 'Inter' } },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)', borderDash: [5, 5] },
+                                ticks: { color: '#64748b', font: { size: 12, weight: 800 } },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            /**
+             * DYNAMIC CHART REALIZATION
+             * logic: Links Part 2 State to Part 3 Visualization.
+             */
+            window.drawCBRSimulation = function() {
+                if (!cbrChart) return;
+
+                const state = window.CBRState;
+                const data = state.dataPoints.map(p => p.load);
+                
+                cbrChart.data.datasets[0].data = data;
+                cbrChart.update();
+
+                // Telemetry Logic
+                const maxLoad = Math.max(...data);
+                document.getElementById('tel-peak-load').innerText = maxLoad.toFixed(2) + " kN";
+                document.getElementById('tel-status-val').innerText = "REALIZED";
+
+                // Curve Correction Logic (Visual indicator only)
+                const isConcaveUp = data[2] > 0 && (data[1] / data[2] < 0.4);
+                document.getElementById('tel-curve-type').innerText = isConcaveUp ? "CORRECTION REQ." : "LINEAR";
+
+                // Update Bottom Gauges
+                const finalCBR = parseFloat(state.results.finalCBR);
+                const passRatio = Math.min(100, Math.round((finalCBR / 15) * 100));
+                document.getElementById('g-yield-val').innerText = Math.round(finalCBR) + "%";
+                document.getElementById('g-pass-val').innerText = passRatio + "%";
+            };
+
+            /**
+             * INTERACTIVE VIEWPORT ACTIONS
+             */
+            window.toggleGraphMarkers = function() {
+                showMarkers = !showMarkers;
+                document.getElementById('btn-toggle-markers').classList.toggle('active');
+                if (window.triggerToastFeedback) window.triggerToastFeedback(`Visual Markers ${showMarkers ? 'Enabled' : 'Disabled'}.`);
+            };
+
+            window.triggerPavementSim = function() {
+                if(window.triggerToastFeedback) window.triggerToastFeedback("Initializing Load Sequence Simulation...");
+                // Reset then re-draw for animation effect
+                const currentData = [...cbrChart.data.datasets[0].data];
+                cbrChart.data.datasets[0].data = currentData.map(() => 0);
+                cbrChart.update('none');
+                
+                setTimeout(() => {
+                    cbrChart.data.datasets[0].data = currentData;
+                    cbrChart.update();
+                }, 300);
+            };
+
+            window.resetGraphView = function() {
+                if(window.triggerToastFeedback) window.triggerToastFeedback("Viewport Recalibrated to ISO standards.");
+                cbrChart.reset();
+                cbrChart.update();
+            };
+
+            // Initialize Part 3 on Boot Sequence
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    initPavementVisualizer();
+                    console.log("%c [VIEWPORT-SECURE] CBR Curve Engine Online. Station-ID: CORE-01. ", "background: #1e293b; color: #fbbf24; font-weight: bold; padding: 12px; border-radius: 12px;");
+                }, 3500); 
+            });
+
+        })();
+    </script>
+    <style>
+        /* ========================================================================
+           PART 4: DATA PERSISTENCE & FULL-WIDTH REGISTRY STYLING
+           Target: Industrial Pavement Archive, CSV Dataset Engine & Analytics
+           Theme: Asphalt Slate / Highway Yellow Matrix
+           Privacy: STATION-CORE-01 Protocol (Anonymous)
+           ======================================================================== */
+
+        #pavement-vault-hub {
+            margin-top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 75px;
+            animation: var(--anim-reveal);
+            width: 100% !important;
+        }
+
+        /* 1. VAULT CONTAINER STABILIZATION (Edge-to-Edge Desktop Layout) */
+        .vault-full-width-wrapper {
+            grid-column: span 2; 
+            width: 100% !important;
+            padding: 0 60px;
+            margin-bottom: 150px;
+        }
+
+        @media (max-width: 1450px) { .vault-full-width-wrapper { padding: 0 30px; } }
+
+        /* 2. REGISTRY TERMINAL ARCHITECTURE */
+        .registry-terminal-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 4.5px solid var(--border-ui);
+            box-shadow: 0 45px 90px -15px rgba(30, 41, 59, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .registry-terminal-card:hover { 
+            border-color: var(--accent); 
+            box-shadow: 0 65px 130px -25px rgba(251, 191, 36, 0.15); 
+        }
+
+        .terminal-header-asphalt {
+            background: var(--primary);
+            padding: 55px 85px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 12px solid var(--accent);
+        }
+
+        .terminal-header-asphalt h4 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 12px;
+            font-weight: 950;
+            display: flex; align-items: center; gap: 35px;
+        }
+
+        .terminal-header-asphalt h4 i { 
+            color: var(--accent); 
+            filter: drop-shadow(0 0 15px var(--accent-glow)); 
+        }
+
+        /* 3. OPTIMIZED DATA TABLE VIEWPORT */
+        .registry-table-viewport {
+            flex: 1;
+            overflow-x: auto;
+            background: #fff;
+            position: relative;
+        }
+
+        .cbr-master-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1650px; /* Forces expansive layout for high-precision lab data */
+        }
+
+        .cbr-master-table thead th {
+            background: #f8fafc;
+            padding: 45px 30px;
+            text-align: center;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 7px solid var(--border-ui);
+            letter-spacing: 5px;
+            font-weight: 900;
+            white-space: nowrap;
+            position: sticky; top: 0; z-index: 20;
+        }
+
+        .cbr-master-table tbody td {
+            padding: 42px 30px;
+            text-align: center;
+            border-bottom: 3.5px solid var(--border-ui);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-soft);
+            transition: background 0.3s;
+        }
+
+        .cbr-master-table tbody tr:hover td {
+            background: rgba(251, 191, 36, 0.05); /* Yellow Highlight */
+            color: var(--primary);
+        }
+
+        /* Functional Cell Highlighting */
+        .cell-ref { color: var(--caution) !important; font-weight: 950 !important; }
+        .cell-rd { color: var(--primary-light) !important; font-weight: 800 !important; }
+        .cell-value { color: var(--primary) !important; font-weight: 900 !important; }
+        .cell-pass { color: var(--success) !important; font-weight: 900 !important; }
+        .cell-fail { color: var(--danger) !important; font-weight: 900 !important; }
+
+        /* 4. TERMINAL ACTION CONSOLE */
+        .vault-action-bar {
+            padding: 70px 95px;
+            background: #fafafa;
+            border-top: 7px solid var(--border-ui);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 60px;
+        }
+
+        .btn-vault-node {
+            padding: 34px 75px;
+            border-radius: 30px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 1.15rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 7px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 40px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+
+        .btn-vault-node:hover { 
+            transform: translateY(-12px); 
+            background: #000; 
+            box-shadow: 0 45px 90px rgba(0,0,0,0.25); 
+        }
+
+        .btn-vault-node.export-csv { background: var(--success); }
+        .btn-vault-node.purge-vault { 
+            background: #fff; 
+            color: var(--danger); 
+            border: 4.5px solid var(--border-ui); 
+        }
+
+        .btn-vault-node.purge-vault:hover { 
+            background: var(--danger); 
+            color: #fff; 
+            border-color: var(--danger); 
+        }
+
+        /* 5. STATISTICAL ANALYTICS GRID */
+        .cbr-inference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(490px, 1fr));
+            gap: 75px;
+            width: 100%;
+        }
+
+        .analytics-node-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 95px;
+            border: 4px solid var(--border-ui);
+            box-shadow: 0 55px 110px rgba(0,0,0,0.06);
+            border-top: 25px solid var(--accent);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .analytics-node-card:hover { transform: scale(1.06); border-color: var(--accent); }
+
+        .an-lbl-pro { font-size: 1.1rem; font-weight: 950; color: var(--text-muted); text-transform: uppercase; letter-spacing: 8px; }
+        .an-val-massive { font-family: 'JetBrains Mono'; font-size: 5.5rem; font-weight: 950; color: var(--primary); letter-spacing: -8px; line-height: 1; }
+        .an-subtext-pro { font-size: 1.55rem; color: var(--text-muted); font-weight: 500; line-height: 2.7; }
+
+        /* Empty State Shroud */
+        .vault-empty-shroud {
+            padding: 380px 100px;
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 85px;
+        }
+
+        .vault-empty-shroud i { font-size: 18rem; opacity: 0.1; color: var(--primary); }
+        .vault-empty-shroud p { font-weight: 950; font-size: 3.4rem; color: var(--text-muted); letter-spacing: 12px; text-transform: uppercase; }
+
+    </style>
+
+    [Image of an industrial data table for pavement subgrade testing showing RD, penetration, and CBR values]
+
+    <div class="vault-full-width-wrapper">
+        <section id="pavement-vault-hub">
+            
+            <div class="registry-terminal-card u-reveal">
+                <div class="terminal-header-asphalt">
+                    <h4><i class="fas fa-database"></i> Lab Sample Registry</h4>
+                    <div class="precision-pill" style="background:rgba(255,255,255,0.1); color:#fff; border:none; font-size:1rem;">
+                        <i class="fas fa-shield-halved"></i> STATION-PERSISTENCE: ACTIVE
+                    </div>
+                </div>
+
+                <div class="registry-table-viewport">
+                    <table class="cbr-master-table" id="cbr-registry-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 300px;">RD / RD REF</th>
+                                <th>DEPTH (mm)</th>
+                                <th>SOIL CLASSIF.</th>
+                                <th>CBR @ 2.5</th>
+                                <th>CBR @ 5.0</th>
+                                <th>ADOPTED CBR</th>
+                                <th>STATUS</th>
+                                <th style="width: 150px;"><i class="fas fa-cogs"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cbr-vault-body">
+                            </tbody>
+                    </table>
+
+                    <div id="cbr-vault-shroud" class="vault-empty-shroud">
+                        <i class="fas fa-road"></i>
+                        <p>No Lab Records Found</p>
+                        <span style="font-size:1.9rem; color:var(--text-muted); max-width:1050px; line-height:2.9;">
+                            Commit a laboratory CBR test fix from the analysis console to synchronize this persistent industrial site archive.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="vault-action-bar">
+                    <div style="display:flex; gap:60px;">
+                        <button class="btn-vault-node export-csv" onclick="exportCBRDataset()">
+                            <i class="fas fa-file-csv"></i> Export Dataset (.csv)
+                        </button>
+                        <button class="btn-vault-node purge-vault" onclick="purgeCBRVault()">
+                            <i class="fas fa-eraser"></i> Wipe Station Cache
+                        </button>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="font-size:1.5rem; font-weight:950; color:var(--text-muted); text-transform:uppercase; letter-spacing:11px;">
+                            SYSTEM ARCHITECTURE: <span class="u-text-accent">Epoch 2026.31</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cbr-inference-grid u-reveal u-delay-1">
+                
+                <div class="analytics-node-card">
+                    <span class="an-lbl-pro">Total design trials</span>
+                    <span class="an-val-massive" id="stat-cbr-count">00</span>
+                    <p class="an-subtext-pro">Total validated geotechnical iterations synchronized in current persistent geodetic session.</p>
+                </div>
+                
+                <div class="analytics-node-card" style="border-top-color: var(--caution);">
+                    <span class="an-lbl-pro">Mean CBR Value</span>
+                    <span class="an-val-massive" id="stat-mean-cbr">0.0%</span>
+                    <p class="an-subtext-pro">Average California Bearing Ratio realized across all documented site sample locations.</p>
+                </div>
+
+                <div class="analytics-node-card" style="border-top-color: var(--success);">
+                    <span class="an-lbl-pro">Stability Realization</span>
+                    <span class="an-val-massive" id="stat-pass-rate">0%</span>
+                    <p class="an-subtext-pro">Percentage of saved trials meeting the minimum subgrade passing criteria ($CBR \ge 8\%$ baseline).</p>
+                </div>
+
+                <div class="analytics-node-card" style="border-top-color: var(--primary-soft); background: #f8fafc; border-left: 35px solid var(--accent);">
+                    <h5 class="an-lbl-pro" style="margin-bottom:35px;">Data Integrity Protocol</h5>
+                    <p style="font-size:1.65rem; color:var(--text-main); line-height:2.8; font-weight:600;">
+                        Subgrade records are locally persisted via Station-Sync technology. All exports are compliant with International AASHTO specifications for pavement modeling.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+        /**
+         * CBRMATRIX PRO VAULT MANAGEMENT ENGINE (500+ LINES)
+         * Part 4: Data Persistence, Table Management & Analytics
+         * logic: Handles LocalStorage JSON registries and highway dataset assembly.
+         */
+
+        const CBR_STORAGE_KEY = "CIVILCALC_CBR_VAULT_2026";
+        let cbrRegistry = JSON.parse(localStorage.getItem(CBR_STORAGE_KEY)) || [];
+
+        /**
+         * REFRESH VAULT REGISTRY
+         * logic: Iterates through stored lab design fixes and populates the table + stats cards.
+         */
+        function refreshCBRVault() {
+            const body = document.getElementById('cbr-vault-body');
+            const shroud = document.getElementById('cbr-vault-shroud');
+            const tableNode = document.getElementById('cbr-registry-table');
+            
+            // Analytics UI Selectors
+            const countNode = document.getElementById('stat-cbr-count');
+            const meanNode = document.getElementById('stat-mean-cbr');
+            const passNode = document.getElementById('stat-pass-rate');
+
+            // Handle Empty State Initialization
+            if (cbrRegistry.length === 0) {
+                body.innerHTML = '';
+                shroud.style.display = 'flex';
+                tableNode.style.display = 'none';
+                countNode.innerText = "00";
+                meanNode.innerText = "0.0%";
+                passNode.innerText = "0%";
+                return;
+            }
+
+            shroud.style.display = 'none';
+            tableNode.style.display = 'table';
+
+            let cbrSum = 0;
+            let passCount = 0;
+
+            // Generate table rows with performance-optimized mapping
+            body.innerHTML = cbrRegistry.map((item, index) => {
+                const finalVal = parseFloat(item.finalCBR);
+                cbrSum += finalVal;
+                
+                const isPassing = finalVal >= 8;
+                if (isPassing) passCount++;
+
+                return `
+                    <tr class="u-reveal">
+                        <td class="cell-ref">${item.projectId}</td>
+                        <td class="cell-rd">${item.depth} mm</td>
+                        <td>${item.soilType}</td>
+                        <td>${item.cbr25}%</td>
+                        <td>${item.cbr50}%</td>
+                        <td class="cell-value">${finalVal}%</td>
+                        <td class="${isPassing ? 'cell-pass' : 'cell-fail'}">${isPassing ? 'PASS' : 'RE-COMPACT'}</td>
+                        <td>
+                            <button class="btn-item-del" onclick="deleteCBRRecord(${index})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:2.2rem; opacity:0.6; transition:0.3s; padding:10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Update Statistical Inferences
+            countNode.innerText = cbrRegistry.length.toString().padStart(2, '0');
+            meanNode.innerText = (cbrSum / cbrRegistry.length).toFixed(1) + "%";
+            passNode.innerText = Math.round((passCount / cbrRegistry.length) * 100) + "%";
+
+            // Refresh MathJax for table headers if necessary
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        }
+
+        /**
+         * RECORD COMMITS (Bridging from Part 1/2 calculations)
+         * logic: Captures global CBRState and commits to persistent storage.
+         */
+        window.addToSessionLog = function() {
+            const state = window.CBRState;
+            
+            // Generate professional geodetic ref if project ID is empty
+            const projId = document.getElementById('project-id').value || "SITE-" + Math.floor(1000 + Math.random() * 9000);
+            
+            const newRecord = {
+                projectId: projId,
+                depth: state.depth,
+                soilType: document.getElementById('soil-type').value || "Unclassified",
+                cbr25: state.results.cbr25,
+                cbr50: state.results.cbr50,
+                finalCBR: state.results.finalCBR,
+                timestamp: new Date().toISOString()
+            };
+
+            // Commit to registry (Limit to 50 for station memory stability)
+            cbrRegistry.unshift(newRecord);
+            if (cbrRegistry.length > 50) cbrRegistry.pop();
+
+            localStorage.setItem(CBR_STORAGE_KEY, JSON.stringify(cbrRegistry));
+            
+            // Visual Sync Feedback (Dashboard Glow)
+            const terminal = document.querySelector('.registry-terminal-card');
+            terminal.style.boxShadow = "0 0 110px var(--accent-glow)";
+            setTimeout(() => terminal.style.boxShadow = "0 45px 90px -20px rgba(30, 41, 59, 0.1)", 1400);
+
+            refreshCBRVault();
+
+            // Trigger internal station toast (from Part 5 logic)
+            if (window.triggerToastFeedback) {
+                window.triggerToastFeedback(`SUCCESS: Lab fix for ${projId} committed.`);
+            }
+        };
+
+        /**
+         * DATA UTILITIES & CSV ENGINE
+         */
+        function deleteCBRRecord(idx) {
+            cbrRegistry.splice(idx, 1);
+            localStorage.setItem(CBR_STORAGE_KEY, JSON.stringify(cbrRegistry));
+            refreshCBRVault();
+        }
+
+        function purgeCBRVault() {
+            if (confirm("CRITICAL WARNING: This will permanently wipe all geodetic lab CBR records. Continue?")) {
+                cbrRegistry = [];
+                localStorage.removeItem(CBR_STORAGE_KEY);
+                refreshCBRVault();
+            }
+        }
+
+        function exportCBRDataset() {
+            if (cbrRegistry.length === 0) { 
+                alert("Registry is empty. Cannot generate lab dataset."); return; 
+            }
+            
+            // Build CSV Headers
+            let csv = "Project_RD,Depth_mm,Soil_Type,CBR_2.5_mm,CBR_5.0_mm,Adopted_CBR,ISO_Timestamp\n";
+            
+            // Building data strings
+            cbrRegistry.forEach(row => {
+                csv += `"${row.projectId}",${row.depth},"${row.soilType}",${row.cbr25},${row.cbr50},${row.finalCBR},${row.timestamp}\n`;
+            });
+
+            // Trigger Industrial Download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `CBRMatrix_Lab_Dataset_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Initialize Part 4 on Boot Sequence
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                refreshCBRVault();
+                console.log("%c [VAULT-CORE] Lab Persistence Matrix Synchronized. ", "background: #1e293b; color: #fbbf24; font-weight: bold; padding: 15px; border-radius: 12px;");
+            }, 4500); 
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 5: FINAL SYSTEM STABILIZATION & INDUSTRIAL FOOTER ARCHITECTURE
+           Target: Multi-Page 300DPI Report, Certification Hub & Master Seal
+           Theme: Asphalt Slate / Highway Yellow Matrix
+           Privacy: STATION-CORE-01 Protocol (100% Anonymous)
+           ======================================================================== */
+
+        /* 1. FULL-WIDTH CERTIFICATION STACK WRAPPER */
+        .certification-stack-wrapper {
+            grid-column: span 2; 
+            width: 100% !important;
+            padding: 0 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+            margin-top: 120px;
+            padding-bottom: 100px;
+        }
+
+        @media (max-width: 1450px) { .certification-stack-wrapper { padding: 0 30px; } }
+
+        /* 2. CERTIFICATION CARD ARCHITECTURE (Industrial Elevation) */
+        .certification-card-pro {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 120px;
+            border: 5px solid var(--border-ui);
+            box-shadow: 0 70px 140px -30px rgba(30, 41, 59, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 90px;
+            position: relative;
+            overflow: hidden;
+            border-top: 40px solid var(--accent);
+            animation: var(--anim-reveal);
+        }
+
+        /* Industrial Badge Ribbon */
+        .certification-card-pro::before {
+            content: 'STATION CERTIFIED 2026.31';
+            position: absolute; top: 60px; right: -100px;
+            background: var(--primary); color: var(--accent);
+            font-size: 1rem; font-weight: 950; padding: 25px 140px;
+            transform: rotate(45deg); letter-spacing: 6px;
+            border-bottom: 6px solid var(--accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* 3. REPORT HEADER DYNAMICS */
+        .report-header-unit {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 10px solid #f1f5f9;
+            padding-bottom: 95px;
+        }
+
+        @media (max-width: 1150px) { .report-header-unit { flex-direction: column; gap: 80px; text-align: center; } }
+
+        .report-title-pro h3 {
+            font-size: 5rem; font-weight: 950; color: var(--primary);
+            letter-spacing: -8px; line-height: 1; margin-bottom: 45px;
+        }
+        .report-title-pro p { 
+            color: var(--text-muted); font-size: 1.7rem; 
+            max-width: 1300px; line-height: 2.8; font-weight: 500; 
+        }
+
+        /* 4. CERTIFICATION ACTION GRID (Interactive Command Nodes) */
+        .certification-action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 80px;
+        }
+
+        .btn-cert-node {
+            padding: 110px; border-radius: 70px;
+            border: 5px solid var(--border-ui);
+            background: #fff; display: flex; flex-direction: column;
+            align-items: center; gap: 65px; cursor: pointer;
+            transition: var(--transition); text-align: center;
+            position: relative; overflow: hidden;
+        }
+
+        .btn-cert-node:hover {
+            border-color: var(--accent); transform: translateY(-35px);
+            box-shadow: 0 100px 200px -50px rgba(30, 41, 59, 0.3);
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .btn-cert-node i { font-size: 8rem; color: var(--primary-soft); transition: 0.6s var(--curve-pro); }
+        .btn-cert-node:hover i { color: var(--accent); transform: scale(1.35) rotate(12deg); }
+        .btn-cert-node span { font-size: 1.7rem; font-weight: 950; text-transform: uppercase; color: var(--primary); letter-spacing: 8px; }
+
+        /* 5. GEODETIC SIGNATURE ARCHITECTURE */
+        .signature-pad-pro {
+            margin-top: 120px; padding-top: 100px;
+            border-top: 9px dashed var(--border-ui);
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+
+        .auth-sig-line { width: 600px; height: 7px; background: var(--primary-light); position: relative; }
+        .auth-sig-line::after { 
+            content: 'AUTHORIZED PAVEMENT LABORATORY CHIEF'; 
+            position: absolute; top: 50px; width: 100%; 
+            text-align: center; font-size: 1.1rem; 
+            font-weight: 950; color: var(--text-muted); letter-spacing: 9px; 
+        }
+
+        /* 6. MASTER INDUSTRIAL FOOTER (Enterprise Seal) */
+        .master-industrial-footer {
+            margin-top: 250px;
+            background: var(--primary);
+            color: #fff;
+            padding: 200px 100px 140px;
+            border-top: 30px solid var(--accent);
+            position: relative; overflow: hidden;
+        }
+
+        .footer-matrix-core {
+            display: grid;
+            grid-template-columns: 3fr 1.2fr 1.2fr 1.8fr;
+            gap: 160px;
+            max-width: 100%;
+        }
+
+        @media (max-width: 1750px) { .footer-matrix-core { grid-template-columns: 1fr 1fr; gap: 120px; } }
+        @media (max-width: 1050px) { .footer-matrix-core { grid-template-columns: 1fr; text-align: center; } }
+
+        .footer-brand-vault h2 { font-size: 4.5rem; font-weight: 950; letter-spacing: 18px; color: #fff; }
+        .footer-brand-vault h2 span { color: var(--accent); }
+        .footer-brand-vault p { font-size: 1.6rem; color: #94a3b8; margin-top: 75px; line-height: 2.8; max-width: 1000px; }
+
+        .footer-spec-group h5 { font-size: 1.4rem; font-weight: 950; text-transform: uppercase; letter-spacing: 11px; color: var(--accent); margin-bottom: 80px; position: relative; }
+        .footer-spec-group h5::after { content: ''; position: absolute; left: 0; bottom: -30px; width: 100px; height: 7px; background: var(--accent); }
+        @media (max-width: 1050px) { .footer-spec-group h5::after { left: 50%; transform: translateX(-50%); } }
+
+        .spec-list { list-style: none; display: flex; flex-direction: column; gap: 45px; }
+        .spec-list li { color: #cbd5e1; font-size: 1.45rem; font-weight: 600; display: flex; align-items: center; gap: 35px; }
+        .spec-list li::before { content: '◈'; color: var(--accent); font-size: 1.4rem; }
+
+        /* 7. EXPORT PROCESSOR UI (Stabilized) */
+        #cbr-export-shroud {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.995);
+            z-index: 10000000;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: #fff; text-align: center;
+            backdrop-filter: blur(60px);
+        }
+
+        .export-spinner-pro {
+            width: 250px; height: 250px;
+            border: 22px solid rgba(251, 191, 36, 0.1);
+            border-top: 22px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 80px;
+            box-shadow: 0 0 100px var(--accent-glow);
+        }
+
+        /* TOAST REGISTRY ARCHITECTURE */
+        #cbr-toast-registry {
+            position: fixed; bottom: 100px; left: 50%;
+            transform: translateX(-50%); z-index: 5000000;
+            display: flex; flex-direction: column; gap: 40px;
+            pointer-events: none;
+        }
+
+        .cbr-toast {
+            background: var(--primary); color: #fff;
+            padding: 50px 130px; border-radius: 60px;
+            font-weight: 950; font-size: 1.7rem;
+            box-shadow: 0 80px 160px rgba(0,0,0,0.9);
+            border-left: 35px solid var(--accent);
+            animation: toastReveal 0.8s var(--curve-pro) forwards;
+            display: flex; align-items: center; gap: 75px;
+            backdrop-filter: blur(45px); border-top: 4px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes toastReveal { from { opacity: 0; transform: translateY(100px) scale(0.85); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    </style>
+
+    
+
+    <div class="certification-stack-wrapper">
+        <section class="certification-card-pro" id="cbr-cert-hub">
+            
+            <div class="report-header-unit">
+                <div class="report-title-pro">
+                    <h3>Lab Certification Hub</h3>
+                    <p>
+                        Compile high-resolution geodetic documentation for California Bearing Ratio (CBR) and highway load profiles. 
+                        This workstation generates 300DPI reports containing interactive curve realizations, 
+                        penetration matrices, and site registries compliant with AASHTO T193 / ASTM D1883 standards.
+                    </p>
+                </div>
+                <div class="precision-pill" style="height:fit-content; background: var(--primary); color:#fff; border-color: rgba(255,255,255,0.25); padding:20px 45px; font-size:1.1rem;">
+                    <i class="fas fa-shield-halved"></i> STATION LOCKED: CBR-PRX
+                </div>
+            </div>
+
+            <div class="certification-action-grid">
+                
+                <div class="btn-cert-node" onclick="executeCBRCertifiedReport()">
+                    <i class="fas fa-file-pdf" style="color:#ef4444;"></i>
+                    <span>Export Multi-Page PDF</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="exportCBRDataset()">
+                    <i class="fas fa-file-csv" style="color:#10b981;"></i>
+                    <span>Download CSV Matrix</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="window.print()">
+                    <i class="fas fa-print" style="color:var(--info);"></i>
+                    <span>Print Lab Worksheets</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="purgeCBRVault()">
+                    <i class="fas fa-eraser" style="color:var(--caution);"></i>
+                    <span>Purge Station Cache</span>
+                </div>
+
+            </div>
+
+            <div style="margin-top:100px; padding:100px; background:#f8fafc; border-radius:65px; border:7px solid var(--border-ui); display:flex; align-items:center; gap:110px;">
+                <div style="width:200px; height:200px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:7.5rem; border:18px solid var(--accent); box-shadow:0 50px 100px rgba(0,0,0,0.45);">
+                    <i class="fas fa-road-circle-check"></i>
+                </div>
+                <div>
+                    <h5 style="font-size:3rem; font-weight:950; color:var(--primary); letter-spacing:-2px;">Subgrade Integrity Realized</h5>
+                    <p style="font-size:1.7rem; color:#64748b; margin-top:25px; font-weight:500; line-height:2.6;">
+                        Recursive strength validation successful for International Pavement protocols. 
+                        Adopted CBR Value and Load-Penetration Curve optimized for current highway station specifications.
+                    </p>
+                </div>
+                <div style="margin-left:auto; text-align:right;">
+                    <span style="font-size:1.2rem; color:#94a3b8; font-weight:950; text-transform:uppercase; letter-spacing:10px;">Engine Signature</span>
+                    <div style="font-family:'JetBrains Mono'; font-size:1.9rem; font-weight:800; color:var(--primary); margin-top:25px;">CBR-MATRIX-PRX2026</div>
+                </div>
+            </div>
+
+            <div class="signature-pad-pro">
+                <div>
+                    <span style="font-size:1.1rem; color:var(--text-muted); font-weight:950; letter-spacing:10px;">STATION REFERENCE ID</span>
+                    <div style="font-family:'JetBrains Mono'; font-size:1.7rem; font-weight:800; color:var(--primary); margin-top:25px;">STATION-ALPHA-CBR-2026</div>
+                </div>
+                <div class="auth-sig-line"></div>
+            </div>
+
+        </section>
+    </div>
+
+    <footer class="master-industrial-footer">
+        <div class="footer-matrix-core">
+            <div class="footer-brand-vault u-reveal">
+                <h2>CIVIL<span>CALC</span>PRO</h2>
+                <p>
+                    The global industrial benchmark for pavement subgrade strength analytics and high-precision highway engineering workstations. 
+                    
+                </p>
+                
+            </div>
+
+           
+            
+
+            
+        </div>
+    </footer>
+
+    <div id="cbr-export-shroud">
+        <div class="export-spinner-pro"></div>
+        <h2 style="font-size: 4.5rem; letter-spacing: 22px; font-weight: 950; color: var(--accent);">GENERATING DOCUMENT</h2>
+        <p style="font-size: 2.2rem; margin-top: 45px; opacity: 0.75; letter-spacing: 12px;">Slicing Laboratory Matrix into multi-page 300DPI PDF...</p>
+        <p id="cbr-export-progress" style="font-family: 'JetBrains Mono'; margin-top: 60px; color: var(--success); font-weight: 800; font-size: 2.8rem;">PAGE: 0 / 0</p>
+    </div>
+
+    <div id="cbr-toast-registry"></div>
+
+    <script>
+        /**
+         * CBRMATRIX PRO MASTER ENGINE (500+ LINES)
+         * Part 5: High-Resolution Documentation & Final Seal
+         * logic: Orchestrates stabilized PDF capture and final station synchronization.
+         */
+
+        /**
+         * REFINED TOAST INTERFACE (Suppression Protocol)
+         * logic: Maintains industrial look by filtering repetitive strings.
+         */
+        window.triggerToastFeedback = function(message) {
+            const forbidden = ["Operational", "Synchronized", "Active", "Booting", "Station Realized", "Syncing", "Initial"];
+            if (forbidden.some(word => message.includes(word))) return;
+
+            const hub = document.getElementById('cbr-toast-registry');
+            if (!hub) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'cbr-toast';
+            toast.innerHTML = `
+                <i class="fas fa-check-shield" style="color:var(--accent); font-size:4.5rem;"></i>
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <span style="font-size:1.2rem; color:var(--accent); letter-spacing:14px; font-weight:950; display:block;">ENGINE STATUS</span>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            hub.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-75px) scale(0.9)';
+                setTimeout(() => toast.remove(), 800);
+            }, 7000);
+        };
+
+        /**
+         * INDUSTRIAL MULTI-PAGE PDF GENERATOR (STABILIZED)
+         * logic: Physically slices workstation layout into A4 segments at 300DPI.
+         */
+        async function executeCBRCertifiedReport() {
+            if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+                alert("STATION-ERROR: Analytics libraries not synchronized.");
+                return;
+            }
+
+            const shroud = document.getElementById('cbr-export-shroud');
+            const progressNode = document.getElementById('cbr-export-progress');
+            shroud.style.display = 'flex';
+
+            try {
+                // Stabilized Viewport Selection
+                const targetArea = document.querySelector('.master-layout');
+                
+                // HIGH-DPI REALIZATION (Scale 2.8 for Enterprise Sharpness)
+                const canvas = await html2canvas(targetArea, {
+                    scale: 2.8, 
+                    useCORS: true,
+                    backgroundColor: '#f8fafc',
+                    logging: false,
+                    windowWidth: 1600
+                });
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                const imgData = canvas.toDataURL('image/png');
+
+                let heightLeft = imgHeight;
+                let position = 0;
+                let pageNum = 1;
+                const totalPages = Math.ceil(imgHeight / pageHeight);
+
+                // Certified Header Seal Injection
+                const injectPageSeal = (n) => {
+                    doc.setFillColor(30, 41, 59); // Asphalt Slate
+                    doc.rect(0, 0, 210, 40, 'F');
+                    doc.setTextColor(251, 191, 36); // High-Viz Yellow
+                    doc.setFontSize(13);
+                    doc.text("SUBGRADE STRENGTH CERTIFICATION | STATION: CORE-01", 15, 24);
+                    doc.setTextColor(255, 255, 255);
+                    doc.text(`PAGE: ${n} / ${totalPages}`, 175, 24);
+                };
+
+                // MULTI-PAGE SLICING LOGIC
+                injectPageSeal(1);
+                doc.addImage(imgData, 'PNG', 0, 45, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - 45);
+
+                while (heightLeft >= 0) {
+                    pageNum++;
+                    progressNode.innerText = `PROCESSING PAGE: ${pageNum} / ${totalPages}`;
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    injectPageSeal(pageNum);
+                    doc.addImage(imgData, 'PNG', 0, position + 45, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // SAVE FINAL ARCHIVE
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const siteRef = document.getElementById('project-id').value || "SITE-REPORT";
+                doc.save(`CBRMatrix_Report_${siteRef}_${timestamp}.pdf`);
+                window.triggerToastFeedback("Certified Highway Report exported successfully.");
+
+            } catch (err) {
+                console.error("[REPORT-ERROR]", err);
+                window.triggerToastFeedback("ERROR: PDF realization engine failure.");
+            } finally {
+                shroud.style.display = 'none';
+            }
+        }
+
+        /**
+         * FINAL STATION STABILIZATION
+         * logic: Seals the loop on all workstation parts (1-5).
+         */
+        function finalizeCBRStation() {
+            // Force data sync
+            if(window.triggerCBRSync) window.triggerCBRSync();
+            
+            // Adjust layout for 25px scrollbar gap
+            const layout = document.querySelector('.master-layout');
+            if(layout) layout.style.minHeight = '100vh';
+
+            console.log("%c [MASTER] CBRMatrix Suite Re-Stabilized. Station-ID: CORE-ALPHA. ", "background: #1e293b; color: #fbbf24; font-weight: bold; padding: 30px; border-radius: 15px;");
+            
+            // Refresh LaTeX
+            if(window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+
+            // Clear generic mobile leftovers
+            document.querySelectorAll('.mobile-bar, .faltu-div, .bottom-nav').forEach(el => el.remove());
+        }
+
+        window.addEventListener('load', finalizeCBRStation);
+
+    </script>
+    <style>
+    /* Industrial Lock Overlay */
+    #access-blocker-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 15, 25, 0.95);
+        z-index: 1000000; display: none; align-items: center; justify-content: center;
+        flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
+        text-align: center; backdrop-filter: blur(12px);
+    }
+    .lock-terminal {
+        background: #161e2e; padding: 50px; border-radius: 30px;
+        border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        max-width: 450px; width: 90%;
+    }
+    .lock-terminal h2 { color: #facc15; font-weight: 900; margin-bottom: 20px; letter-spacing: 1px; }
+    .lock-terminal p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
+    
+    .ad-claim-btn {
+        background: #facc15; color: #0f172a; padding: 18px 35px; border: none;
+        border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem;
+        text-transform: uppercase; letter-spacing: 2px; text-decoration: none;
+        display: inline-block; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ad-claim-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3); background: #fff; }
+
+    /* Floating Telemetry Timer */
+    #session-timer-badge {
+        position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.9);
+        color: #facc15; padding: 12px 24px; border-radius: 12px; font-weight: 800;
+        z-index: 99999; font-family: 'JetBrains Mono', monospace; 
+        border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+</style>
+
+<div id="access-blocker-overlay">
+    <div class="lock-terminal">
+        <i class="fas fa-hourglass-end" style="font-size: 4rem; color: #facc15; margin-bottom: 20px;"></i>
+        <h2>SESSION EXPIRED</h2>
+        <p>Your 3-minute access has concluded. Please interact with the sponsor link below to instantly renew your session credits.</p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCredits()">Claim 3 Min Credit</a>
+    </div>
+</div>
+
+<div id="session-timer-badge">INITIALIZING...</div>
+
+<script>
+    const CONFIG = {
+        AD_URL: "https://omg10.com/4/10664520",
+        CREDIT_AMOUNT: 180, // 3 Minutes in seconds
+        STORAGE_KEY: "geotech_session_time",
+        TIMESTAMP_KEY: "geotech_last_active"
+    };
+
+    let timeRemaining;
+
+    function initSessionControl() {
+        const savedTime = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const lastTimestamp = localStorage.getItem(CONFIG.TIMESTAMP_KEY);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (savedTime && lastTimestamp) {
+            // Calculate how much time passed while user was away
+            const elapsed = now - parseInt(lastTimestamp);
+            timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
+        } else {
+            // First time visitor gets initial credits
+            timeRemaining = CONFIG.CREDIT_AMOUNT;
+        }
+
+        updateTimerUI();
+        if (timeRemaining > 0) {
+            runCountdown();
+        } else {
+            activateLock();
+        }
+    }
+
+    function runCountdown() {
+        const tracker = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                localStorage.setItem(CONFIG.STORAGE_KEY, timeRemaining);
+                localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+                updateTimerUI();
+            } else {
+                clearInterval(tracker);
+                activateLock();
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+        document.getElementById('session-timer-badge').innerText = `CREDITS: ${display}`;
+    }
+
+    function activateLock() {
+        document.getElementById('access-blocker-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function renewCredits() {
+        // Logically grant time immediately on click
+        localStorage.setItem(CONFIG.STORAGE_KEY, CONFIG.CREDIT_AMOUNT);
+        localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+        
+        // Small delay to ensure the click registers before page interaction
+        setTimeout(() => {
+            document.getElementById('access-blocker-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            window.location.reload(); 
+        }, 1500);
+    }
+
+    // Initialize on boot
+    window.addEventListener('load', initSessionControl);
+</script>
+</body>
+</html>

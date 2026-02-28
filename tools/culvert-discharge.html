@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FlowMatrix Pro | Enterprise Hydraulic Culvert Analyst</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@800;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: { 
+                inlineMath: [['$', '$'], ['\\(', '\\)']], 
+                displayMath: [['$$', '$$']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            options: { 
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                renderActions: { addMenu: [] }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        /* ========================================================================
+           PART 1: FLOWMATRIX GLOBAL CSS ARCHITECTURE (500+ LINES MATRIX)
+           Project: Industrial Culvert Discharge & Hydraulic Analytics
+           Theme: Deep Hydraulic Blue / Concrete Slate / Flow Cyan
+           Version: 2026.31 Stable Build
+           ======================================================================== */
+
+        /* --- 1. DESIGN SYSTEM TOKENS (Hydraulic Protocol) --- */
+        :root {
+            /* Palette: Water, Concrete & Pressure */
+            --primary: #0f172a;           /* Asphalt Dark */
+            --primary-soft: #1e293b;      /* Muted Slate */
+            --water: #0c4a6e;             /* Deep Hydraulic Blue */
+            --water-light: #0ea5e9;       /* Surface Water Blue */
+            
+            /* Accents: Cyan Velocity & Warning Safety */
+            --accent: #22d3ee;            /* Velocity Cyan */
+            --accent-glow: rgba(34, 211, 238, 0.35);
+            --concrete: #64748b;          /* Structure Grey */
+            --warning: #f59e0b;           /* Scour Risk Gold */
+            
+            /* Functional Status Indicators */
+            --success: #10b981;           /* Laminar Flow */
+            --danger: #ef4444;            /* Turbulent / Overtopping */
+            --info: #6366f1;              /* Data Matrix */
+
+            /* Surface Elevations */
+            --bg-master: #f1f5f9;         /* Lab Background */
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-ui: #e2e8f0;
+
+            /* Geometric Principles */
+            --radius-extreme: 65px;
+            --radius-xl: 45px;
+            --radius-lg: 30px;
+            --sidebar-width: 550px;
+            
+            /* Motion Physics */
+            --curve-pro: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: 550ms var(--curve-pro);
+            --anim-reveal: revealUp 0.9s var(--curve-pro) forwards;
+        }
+
+        /* --- 2. GLOBAL RESET & INDUSTRIAL FOUNDATION --- */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; outline: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100vw !important; height: 100%;
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background-color: var(--bg-master);
+            color: var(--text-main);
+            overflow-x: hidden !important;
+            line-height: 1.8;
+        }
+
+        /* --- 3. ABSOLUTE TOP PROGRESS BAR (8px Cyan Flow) --- */
+        #master-scroll-bar {
+            position: fixed !important;
+            top: 0 !important; left: 0 !important;
+            width: 0%; height: 8px !important;
+            background: linear-gradient(90deg, var(--water) 0%, var(--accent) 50%, var(--water) 100%) !important;
+            z-index: 2000005 !important;
+            box-shadow: 0 0 25px var(--accent-glow);
+            transition: width 0.15s var(--curve-pro);
+        }
+
+        /* --- 4. ULTRA-WIDE INDUSTRIAL SCROLLBAR (25px Matrix) --- */
+        ::-webkit-scrollbar { width: 25px !important; height: 25px !important; }
+        ::-webkit-scrollbar-track { background: var(--primary) !important; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, var(--water) 0%, var(--accent) 100%) !important; 
+            border: 6px solid var(--primary) !important;
+            border-radius: 50px !important;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #ffffff !important; }
+
+        /* --- 5. MASTER NAVIGATION (Stationary Symmetry) --- */
+        .master-nav {
+            background: var(--primary) !important;
+            height: 95px !important;
+            padding: 0 60px !important;
+            border-bottom: 8px solid var(--water) !important;
+            position: fixed !important;
+            top: 0; left: 0; right: 0;
+            z-index: 100000 !important;
+            display: flex !important;
+            justify-content: center !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4) !important;
+        }
+
+        .nav-inner {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+
+        .nav-logo {
+            grid-column: 2 !important;
+            text-decoration: none !important;
+            color: #fff !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 28px !important;
+            font-weight: 950 !important;
+            letter-spacing: 7px !important;
+            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important; gap: 20px;
+        }
+        .nav-logo span { color: var(--accent) !important; }
+        .nav-logo i { font-size: 2.2rem; color: var(--accent); filter: drop-shadow(0 0 15px var(--accent-glow)); }
+
+        .nav-back-link {
+            grid-column: 1 !important;
+            justify-self: start !important;
+            color: #94a3b8 !important; text-decoration: none !important;
+            font-size: 0.9rem !important; font-weight: 800 !important;
+            text-transform: uppercase !important; display: flex !important;
+            align-items: center !important; gap: 15px; transition: var(--transition);
+        }
+        .nav-back-link:hover { color: var(--accent) !important; transform: translateX(-5px); }
+
+        /* --- 6. FULL-WIDTH WORKSTATION LAYOUT --- */
+        .master-layout {
+            display: grid !important;
+            grid-template-columns: var(--sidebar-width) 1fr !important;
+            gap: 60px !important;
+            padding: 150px 60px 80px !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin: 0 !important;
+            min-height: 100vh;
+            padding-right: 35px !important; /* Offset for 25px scrollbar */
+        }
+
+        @media (max-width: 1450px) {
+            .master-layout { grid-template-columns: 1fr !important; padding: 130px 30px 70px !important; }
+        }
+
+        /* --- 7. INDUSTRIAL SIDEBAR & COMPONENT MATRIX --- */
+        .sidebar-controls { display: flex; flex-direction: column; gap: 50px; }
+
+        .flow-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 3.5px solid var(--border-ui);
+            box-shadow: 0 45px 90px -20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: var(--transition);
+            animation: var(--anim-reveal);
+        }
+        .flow-card:hover { border-color: var(--water); transform: translateY(-12px); }
+
+        .card-header-pro {
+            background: var(--primary); padding: 45px 55px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 8px solid var(--water);
+        }
+        .card-header-pro h3 {
+            color: #fff; font-size: 1.3rem;
+            text-transform: uppercase; letter-spacing: 7px;
+            display: flex; align-items: center; gap: 25px; font-weight: 950;
+        }
+
+        .card-body-pro { padding: 55px; }
+
+        .input-node { margin-bottom: 45px; }
+        .label-pro {
+            display: block; font-size: 0.95rem; font-weight: 950;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 5px; margin-bottom: 25px;
+        }
+        .label-pro i { color: var(--water); margin-right: 20px; }
+
+        .field-pro {
+            width: 100%; background: #f8fafc;
+            border: 4px solid var(--border-ui);
+            border-radius: 22px; padding: 26px 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem; font-weight: 800;
+            color: var(--primary); transition: var(--transition);
+        }
+        .field-pro:focus { background: #fff; border-color: var(--water); box-shadow: 0 0 0 20px rgba(12, 74, 110, 0.1); }
+
+        /* --- 8. VIEWPORT TERMINAL ARCHITECTURE --- */
+        #flow-terminal {
+            width: 100%; min-height: 950px;
+            background: #020617; border-radius: 75px;
+            border: 6px solid var(--border-ui);
+            box-shadow: 0 65px 130px rgba(0,0,0,0.3);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        .industrial-grid-overlay {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(14, 165, 233, 0.05) 2px, transparent 0);
+            background-size: 85px 85px;
+            pointer-events: none; z-index: 5;
+        }
+
+        /* --- 9. ANIMATIONS & UTILITIES --- */
+        @keyframes revealUp { from { opacity: 0; transform: translateY(90px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .u-weight-950 { font-weight: 950; }
+        .u-text-water { color: var(--water); }
+        .u-font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Massive Action Button */
+        .btn-massive-pro {
+            width: 100%; background: var(--primary);
+            color: #fff; padding: 32px; border-radius: 25px;
+            border: none; font-weight: 950; text-transform: uppercase;
+            letter-spacing: 6px; cursor: pointer; transition: 0.4s var(--curve-pro);
+            display: flex; align-items: center; justify-content: center; gap: 25px;
+        }
+        .btn-massive-pro:hover { background: #000; transform: translateY(-5px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .btn-massive-pro i { color: var(--accent); font-size: 1.8rem; }
+
+    </style>
+</head>
+<body>
+
+    <div id="master-scroll-bar"></div>
+
+    <nav class="master-nav">
+        <div class="nav-inner">
+             <a href="../find.html" class="nav-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to TOOLS</span>
+            </a>
+            <a href="../index.html" class="nav-logo">
+                
+                CIVIL<span>CALC</span>PRO
+            </a>
+        </div>
+    </nav>
+
+    
+
+    <div class="master-layout">
+        
+        <aside class="sidebar-controls">
+            
+            <div class="flow-card">
+                <div class="card-header-pro">
+                    <h3><i class="fas fa-shapes"></i> Geometry</h3>
+                    <div class="u-text-water u-font-mono" style="font-size: 0.8rem; font-weight: 950; letter-spacing: 2.5px; color:var(--accent);">SYNC: LIVE</div>
+                </div>
+                <div class="card-body-pro">
+                    
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-vector-square"></i> Section Type</label>
+                        <select id="culvert-type" class="field-pro" onchange="triggerFlowSync()">
+                            <option value="circular">Circular Pipe</option>
+                            <option value="box">Box Culvert</option>
+                        </select>
+                    </div>
+
+                    <div class="input-node">
+                        <label class="label-pro"><i class="fas fa-ruler-horizontal"></i> Dim (D or W) (m)</label>
+                        <input type="number" id="culvert-dim" class="field-pro" value="1.2" step="0.1" oninput="triggerFlowSync()">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="flow-card">
+                <div class="card-header-pro" style="background: var(--primary-soft);">
+                    <h3><i class="fas fa-sliders"></i> Coefficients</h3>
+                </div>
+                <div class="card-body-pro">
+                    
+                    <div class="input-node">
+                        <label class="label-pro">Manning's Roughness ($n$)</label>
+                        <select id="manning-n" class="field-pro" onchange="triggerFlowSync()">
+                            <option value="0.013">Concrete (0.013)</option>
+                            <option value="0.024">Corrugated Metal (0.024)</option>
+                            <option value="0.011">Smooth PVC (0.011)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-node">
+                        <label class="label-pro">Bed Slope ($S$ m/m)</label>
+                        <input type="number" id="bed-slope" class="field-pro" value="0.01" step="0.001" oninput="triggerFlowSync()">
+                    </div>
+
+                    <button class="btn-massive-pro" onclick="pushToVaultRegistry()">
+                        <i class="fas fa-database"></i> COMMIT HYDRAULIC FIX
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="flow-card" style="border-left: 20px solid var(--water);">
+                <div class="card-body-pro">
+                    <h4 class="label-pro" style="color:var(--primary); margin-bottom:28px;">
+                        <i class="fas fa-microchip"></i> Recursive AI Logic
+                    </h4>
+                    <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 2.5; font-weight: 500;">
+                        Discharge ($Q$) is realized via Manning's: $Q = \frac{1}{n} A R^{2/3} S^{1/2}$. 
+                        System assumes **Full Flow Condition** for peak capacity analysis.
+                    </p>
+                </div>
+            </div>
+
+        </aside>
+
+        <main class="viewport-hub">
+            
+            <div id="flow-terminal">
+                <div class="industrial-grid-overlay"></div>
+                
+                <div id="flow-boot-terminal" style="position:absolute; inset:0; background:var(--primary); z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: 1.6s var(--curve-pro);">
+                    <div style="width:140px; height:140px; border:14px solid rgba(255,255,255,0.03); border-top:14px solid var(--water); border-radius:50%; animation: spin 0.85s linear infinite; margin-bottom:65px;"></div>
+                    <p style="font-family:'JetBrains Mono'; font-size:1.4rem; color:var(--accent); letter-spacing:14px; text-transform:uppercase; font-weight:950;">Synchronizing Fluid Matrix</p>
+                    <p style="font-size:1rem; color:rgba(255,255,255,0.3); margin-top:45px; font-weight:800; letter-spacing:8px;">STATION-CORE-01 | FLOW REALIZED 2026</p>
+                </div>
+
+                <div id="flow-canvas-mount" style="flex:1; position:relative;"></div>
+
+            </div>
+
+            <div id="results-stack-point" style="display:flex; flex-direction:column; gap:65px; width:100%; margin-top:65px;">
+                </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        /**
+         * FLOWMATRIX PRO MASTER CORE v1.0
+         * Part 1: Infrastructure & Boot Sequence
+         * logic: Handles global workstation state and station initialization.
+         */
+
+        window.FlowState = {
+            type: 'circular',
+            dimension: 1.2,
+            n: 0.013,
+            slope: 0.01,
+            results: { discharge: 0, velocity: 0, area: 0, status: 'Laminar' }
+        };
+
+        // Absolute Top Scroll Progress (User request: top:0)
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const indicator = document.getElementById("master-scroll-bar");
+            if(indicator) indicator.style.width = scrolled + "%";
+        });
+
+        // Professional Boot Sequence
+        window.addEventListener('load', () => {
+            console.log("%c [SYSTEM] FlowMatrix Pro Synchronized. Station: CORE-01. ", "background: #0f172a; color: #22d3ee; font-weight: bold; padding: 15px; border-radius: 12px;");
+            
+            setTimeout(() => {
+                const boot = document.getElementById('flow-boot-terminal');
+                if(boot) {
+                    boot.style.opacity = '0';
+                    setTimeout(() => boot.style.display = 'none', 1600);
+                }
+                
+                // Initialize Part 2 Handshake
+                if(window.triggerFlowSync) window.triggerFlowSync();
+            }, 2500);
+        });
+
+        // UI Feedback Suppression
+        window.triggerToastFeedback = function(message) {
+            if (message.includes("Operational")) return; 
+            console.log("[FLOW-LOG]: " + message);
+        };
+    </script>
+<style>
+        /* ========================================================================
+           PART 2: COMPACT DASHBOARD UI & HORIZONTAL HYDRAULIC STYLING
+           Target: One-Line Results Ribbon, Manning's Logic & Velocity Flow
+           Theme: Hydraulic Blue / Flow Cyan / Concrete Slate
+           Privacy: STATION-CORE-01 Protocol (100% Anonymous)
+           ======================================================================== */
+
+        /* 1. RESULTS HORIZONTAL RIBBON (Hydro-Industrial Architecture) */
+        .results-horizontal-ribbon {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important; /* Forces 3-Column Single Row on Desktop */
+            gap: 35px !important;
+            width: 100% !important;
+            margin-top: 55px;
+            animation: var(--anim-reveal);
+        }
+
+        /* Responsive Breakpoint for Tablet/Mobile Viewport */
+        @media (max-width: 1250px) {
+            .results-horizontal-ribbon { grid-template-columns: 1fr !important; }
+        }
+
+        .result-node-compact {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            border: 3.5px solid var(--border-ui);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.55s var(--curve-pro);
+            min-height: 340px; /* Physically reduced height for dashboard compactness */
+            border-bottom: 12px solid var(--primary-soft);
+            box-shadow: 0 35px 70px rgba(15, 23, 42, 0.05);
+        }
+
+        .result-node-compact:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 55px 110px -25px rgba(12, 74, 110, 0.2);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Compact Metadata & Labeling Matrix */
+        .res-header-node {
+            display: flex;
+            align-items: center; justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .res-label-compact {
+            font-size: 0.85rem; font-weight: 950;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 5px; display: flex; align-items: center; gap: 15px;
+        }
+        .res-label-compact i { color: var(--water); font-size: 1.4rem; }
+
+        /* Dashboard Typography (Optimized for One-Line Layout) */
+        .res-val-ribbon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.8rem; font-weight: 950;
+            color: var(--primary); line-height: 1.1;
+            margin-bottom: 25px; letter-spacing: -4px;
+            display: flex; align-items: baseline; gap: 20px;
+        }
+        .res-unit-ribbon { font-size: 1.6rem; color: var(--text-muted); letter-spacing: 0; font-weight: 700; }
+
+        .res-desc-compact {
+            font-size: 1.1rem; color: var(--text-muted);
+            font-weight: 500; line-height: 1.9;
+            margin-bottom: 30px; display: -webkit-box;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 2. DYNAMIC WATERMARK MATH (Compact Ribbon Edition) */
+        .watermark-math-ribbon {
+            position: absolute; bottom: 35px; right: 35px;
+            font-family: 'JetBrains Mono'; font-size: 1rem;
+            color: var(--water); opacity: 0.12;
+            text-align: right; pointer-events: none;
+            line-height: 1.8; font-weight: 800;
+            transform: rotate(-4deg); transition: 0.45s var(--curve-pro);
+        }
+        .result-node-compact:hover .watermark-math-ribbon { opacity: 0.5; transform: rotate(0) scale(1.15); }
+
+        /* 3. MINI STATUS PILLS (Hydraulic Performance Indicators) */
+        .status-strip-compact {
+            display: flex; gap: 20px;
+            margin-top: auto;
+        }
+
+        .mini-status-pill {
+            padding: 15px 25px; border-radius: 70px;
+            font-size: 0.8rem; font-weight: 950;
+            text-transform: uppercase; letter-spacing: 3px;
+            display: inline-flex; align-items: center; gap: 15px;
+            transition: 0.35s;
+        }
+
+        .pill-flow { background: rgba(34, 211, 238, 0.08); color: var(--accent); border: 2.5px solid var(--accent); }
+        .pill-sync { background: rgba(12, 74, 110, 0.08); color: var(--water-light); border: 2.5px solid var(--water-light); }
+        .pill-warn { background: rgba(245, 158, 11, 0.08); color: var(--warning); border: 2.5px solid var(--warning); }
+        .pill-danger { background: rgba(239, 68, 68, 0.08); color: var(--danger); border: 2.5px solid var(--danger); }
+
+        /* 4. COMPONENT BOTTOM ACCENTS */
+        .node-discharge { border-bottom-color: var(--water); }
+        .node-velocity { border-bottom-color: var(--accent); }
+        .node-radius { border-bottom-color: var(--concrete); }
+
+        /* Internal Spacing Suppressions */
+        .legacy-stack, .old-results, .junk-container, .empty-spacer { display: none !important; }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * FLOWMATRIX PRO ANALYTICS ENGINE (COMPACT v2.0)
+         * Part 2: Compact Dashboard Ribbon & Manning's Logic
+         * logic: Orchestrates Hydraulic Discharge calculations in a horizontal matrix.
+         */
+
+        /**
+         * INITIALIZE COMPACT RESULTS RIBBON
+         * logic: Dynamically constructs the 3-column grid into the Part 1 viewport hub.
+         */
+        function injectPart2Results() {
+            const container = document.getElementById('results-stack-point');
+            if (!container) return;
+
+            // Define the compact 3-column horizontal architecture
+            container.innerHTML = `
+                <div class="results-horizontal-ribbon" id="flow-ribbon-row">
+                    
+                    <div class="result-node-compact node-discharge">
+                        <div class="watermark-math-ribbon">DISCHARGE<br>Q = (1/n) A R^(2/3) S^(1/2)</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-water"></i> Total Discharge ($Q$)</span>
+                            <div class="precision-pill" style="font-size:0.65rem; padding:8px 18px;">SECURE</div>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-q-val">0.00 <span class="res-unit-ribbon">m³/s</span></div>
+                        <p class="res-desc-compact">Total volumetric flow rate under full-flow conditions considering culvert roughness and slope.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-status-pill pill-sync" id="badge-q-state">REALIZED</div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-compact node-velocity">
+                        <div class="watermark-math-ribbon">VELOCITY<br>V = Q / Area</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-bolt"></i> Flow Velocity ($V$)</span>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-v-val">0.00 <span class="res-unit-ribbon">m/s</span></div>
+                        <p class="res-desc-compact">Calculated mean velocity of flow used to evaluate erosion risks and downstream scour protection.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-status-pill pill-flow" id="badge-v-state">STABLE</div>
+                        </div>
+                    </div>
+
+                    <div class="result-node-compact node-radius">
+                        <div class="watermark-math-ribbon">HYD RADIUS<br>R = Area / Perimeter</div>
+                        <div class="res-header-node">
+                            <span class="res-label-compact"><i class="fas fa-vector-square"></i> Hyd. Radius ($R$)</span>
+                        </div>
+                        <div class="res-val-ribbon" id="ribbon-r-val">0.00 <span class="res-unit-ribbon">m</span></div>
+                        <p class="res-desc-compact">The ratio of the wetted area to its wetted perimeter, indicating the hydraulic efficiency of the section.</p>
+                        <div class="status-strip-compact">
+                            <div class="mini-status-pill pill-sync" id="badge-r-state">ISO SYNCED</div>
+                        </div>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        /**
+         * MASTER FLOW CALCULATOR (Compact Handshake)
+         * logic: Physically orchestrates Manning's calculations and pushes to compact ribbon.
+         */
+        window.triggerFlowSync = function() {
+            // 1. Data acquisition from Sidebar inputs (from Part 1)
+            const typeNode = document.getElementById('culvert-type');
+            const dimNode = document.getElementById('culvert-dim');
+            const nNode = document.getElementById('manning-n');
+            const sNode = document.getElementById('bed-slope');
+
+            if(!typeNode || !dimNode || !nNode || !sNode) return;
+
+            const type = typeNode.value;
+            const D = parseFloat(dimNode.value) || 0;
+            const n = parseFloat(nNode.value) || 0.013;
+            const S = parseFloat(sNode.value) || 0.01;
+
+            // 2. CORE HYDRAULIC MATH (Full Flow Assumption)
+            let Area = 0;
+            let Perimeter = 0;
+
+            if (type === 'circular') {
+                // Circular Pipe: Area = pi * D^2 / 4, P = pi * D
+                Area = (Math.PI * Math.pow(D, 2)) / 4;
+                Perimeter = Math.PI * D;
+            } else {
+                // Box Culvert (Assuming Square for base dim): Area = D * D, P = 4D
+                Area = D * D;
+                Perimeter = 4 * D;
+            }
+
+            const HydRadius = Area / Perimeter;
+
+            // Manning's Formula: Q = (1/n) * A * R^(2/3) * S^(1/2)
+            const Q = (1 / n) * Area * Math.pow(HydRadius, 2/3) * Math.pow(S, 0.5);
+            const V = Q / Area;
+
+            // 3. Update Global Station State
+            window.FlowState = {
+                type: type,
+                dimension: D,
+                n: n,
+                slope: S,
+                results: {
+                    discharge: Q.toFixed(3),
+                    velocity: V.toFixed(2),
+                    radius: HydRadius.toFixed(3),
+                    area: Area.toFixed(2)
+                }
+            };
+
+            // 4. PHYSICALLY SYNC DASHBOARD RIBBON
+            updateCompactRibbonUI();
+
+            // Handshake with Simulation Viewport (Part 3)
+            if (window.drawFlowSimulation) window.drawFlowSimulation();
+
+            // Refresh MathJax LaTeX renders
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        };
+
+        /**
+         * RIBBON UI REALIZATION
+         * logic: Physically pushes calculated hydraulic data into compact UI elements.
+         */
+        function updateCompactRibbonUI() {
+            const rs = window.FlowState.results;
+
+            const valQ = document.getElementById('ribbon-q-val');
+            const valV = document.getElementById('ribbon-v-val');
+            const valR = document.getElementById('ribbon-r-val');
+
+            if (!valQ) return; // Guard against early calls
+
+            // Update massive metrics
+            valQ.innerHTML = `${rs.discharge} <span class="res-unit-ribbon">m³/s</span>`;
+            valV.innerHTML = `${rs.velocity} <span class="res-unit-ribbon">m/s</span>`;
+            valR.innerHTML = `${rs.radius} <span class="res-unit-ribbon">m</span>`;
+            
+            // Dynamic Status Logic
+            const vBadge = document.getElementById('badge-v-state');
+            const vel = parseFloat(rs.velocity);
+
+            if (vel > 3.0) {
+                vBadge.innerText = "SCOUR RISK HIGH";
+                vBadge.className = "mini-status-pill pill-danger";
+            } else if (vel < 0.6) {
+                vBadge.innerText = "SEDIMENTATION RISK";
+                vBadge.className = "mini-status-pill pill-warn";
+            } else {
+                vBadge.innerText = "STABLE FLOW";
+                vBadge.className = "mini-status-pill pill-flow";
+            }
+        }
+
+        /**
+         * MESSAGE SUPPRESSION PROTOCOL (STATION-SILENCE)
+         * logic: Blocks repetitive strings to maintain industrial aesthetic.
+         */
+        (function bootSilenceMatrix() {
+            const originalToast = window.triggerToastFeedback;
+            window.triggerToastFeedback = function(message) {
+                const suppressed = ["Operational", "Synchronized", "Active", "Booting", "Initial", "Handshake"];
+                if (suppressed.some(t => message.includes(t))) return;
+                if (typeof originalToast === 'function') originalToast(message);
+            };
+        })();
+
+        /**
+         * DATA VAULT BRIDGE (Part 4 Persistence)
+         * logic: captures current snapshot for geodetic storage.
+         */
+        window.pushToVaultRegistry = function() {
+            if (window.addToSessionLog) {
+                window.addToSessionLog();
+            } else {
+                if (window.triggerToastFeedback) window.triggerToastFeedback("Synchronizing hydraulic fix to session vault...");
+                console.log("[STATION-BRIDGE]: Handshake with browser storage initialized.");
+            }
+        };
+
+        // Initialize Part 2 on Boot Sequence
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectPart2Results();
+                window.triggerFlowSync();
+                console.log("%c [DASHBOARD] Flow Ribbon Realized. Station-ID: CORE-01. ", "background: #0f172a; color: #22d3ee; font-weight: bold; padding: 10px; border-radius: 8px;");
+            }, 1800);
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3: VIEWPORT HUD & HYDRAULIC SIMULATION STYLING
+           Target: Cross-Section Realization, Fluid Animation & Precision HUD
+           Theme: Hydraulic Blue / Flow Cyan / Concrete Slate
+           Privacy: STATION-CORE-01 Protocol (100% Anonymous)
+           ======================================================================== */
+
+        #flow-analysis-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: radial-gradient(circle at center, #0c4a6e 0%, #020617 100%);
+            cursor: crosshair;
+            border-radius: 65px;
+        }
+
+        /* 1. TACTICAL VIEWPORT HUD (Floating Hydraulic Deck) */
+        .flow-action-matrix {
+            position: absolute;
+            top: 45px; left: 45px;
+            z-index: 900;
+            display: flex; gap: 20px;
+            animation: slideInLeft 0.6s var(--curve-pro);
+        }
+
+        .cmd-node-flow {
+            width: 75px; height: 75px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2.5px solid rgba(34, 211, 238, 0.3);
+            color: #fff; border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .cmd-node-flow:hover { 
+            background: var(--primary-soft); color: var(--accent); 
+            transform: translateY(-8px) scale(1.05); 
+            border-color: var(--accent);
+            box-shadow: 0 20px 45px var(--accent-glow);
+        }
+        .cmd-node-flow.active { background: var(--accent); color: #000; box-shadow: 0 0 40px var(--accent-glow); }
+
+        /* 2. PRECISION TELEMETRY DECK (Upper Right) */
+        .flow-telemetry-deck {
+            position: absolute;
+            top: 45px; right: 45px;
+            width: 460px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(45px);
+            border: 2.5px solid rgba(34, 211, 238, 0.2);
+            border-radius: 45px;
+            padding: 55px;
+            z-index: 900;
+            animation: slideInRight 0.7s var(--curve-pro);
+            box-shadow: 0 60px 120px rgba(0,0,0,0.7);
+        }
+
+        .flow-tel-row {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 22px;
+        }
+        .flow-tel-row:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        .flow-lbl-pro { font-size: 0.95rem; font-weight: 950; color: #94a3b8; text-transform: uppercase; letter-spacing: 5px; }
+        .flow-val-pro { font-family: 'JetBrains Mono'; font-size: 1.5rem; color: #fff; font-weight: 800; }
+
+        /* 3. DYNAMIC ANNOTATION LABELS (Canvas Overlays) */
+        .flow-geo-tag {
+            position: absolute;
+            font-size: 0.85rem; font-weight: 950;
+            color: var(--accent);
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 150;
+            background: rgba(2, 6, 23, 0.95);
+            padding: 12px 25px; border-radius: 15px;
+            border: 2px solid var(--accent-glow);
+            transition: 0.6s var(--curve-pro);
+            letter-spacing: 4px;
+            white-space: nowrap;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+        }
+
+        /* 4. PERFORMANCE GAUGE MATRIX (Bottom Left) */
+        .flow-gauge-matrix {
+            position: absolute;
+            bottom: 50px; left: 50px;
+            display: flex; gap: 35px; z-index: 900;
+        }
+        .flow-gauge-node {
+            width: 130px; height: 130px;
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 50%; border: 4px solid var(--primary-light);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; color: var(--accent);
+            transition: var(--transition);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .flow-gauge-node:hover { border-color: var(--accent); transform: scale(1.18) rotate(5deg); }
+
+        /* 5. STATION STATUS MONITOR (Bottom Center) */
+        .flow-status-tag {
+            position: absolute;
+            bottom: 50px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid rgba(34, 211, 238, 0.3);
+            padding: 22px 60px; border-radius: 80px;
+            color: #cbd5e1; font-family: 'JetBrains Mono';
+            font-size: 0.95rem; font-weight: 800;
+            letter-spacing: 12px; z-index: 850;
+            display: flex; align-items: center; gap: 40px;
+            backdrop-filter: blur(15px);
+        }
+        .flow-pulse-node { width: 22px; height: 22px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 35px var(--accent); animation: fluidPulse 2s infinite; }
+
+        @keyframes fluidPulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.8); opacity: 0.3; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-80px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * FLOWMATRIX PRO VISUALIZATION ENGINE (v3.5)
+         * Part 3: Cross-Section Realization & Hydraulic Simulation
+         * logic: Orchestrates dynamic canvas drawing for fluid analytics.
+         */
+
+        (function() {
+            let canvas, ctx;
+            let showVectors = true;
+            let showLabels = true;
+            let viewportZoom = 1.0;
+            let flowPhase = 0;
+            let particles = [];
+            let isAnimating = true;
+
+            const PARTICLE_COUNT = 120;
+
+            /**
+             * INITIALIZE SIMULATION CENTER
+             * logic: Physically mounts the HUD and starts the high-res render loop.
+             */
+            window.initFlowVisualizer = function() {
+                const mount = document.getElementById('flow-canvas-mount');
+                if (!mount) return;
+
+                mount.innerHTML = `
+                    <div class="flow-action-matrix">
+                        <div class="cmd-node-flow active" id="btn-vec-flow" onclick="toggleFlowVectors()" title="Toggle Velocity Vectors"><i class="fas fa-water"></i></div>
+                        <div class="cmd-node-flow active" id="btn-label-flow" onclick="toggleFlowLabels()" title="Toggle Hydraulic Tags"><i class="fas fa-tags"></i></div>
+                        <div class="cmd-node-flow" onclick="toggleFlowSim()" id="btn-play-flow" title="Pause Fluid Engine"><i class="fas fa-pause"></i></div>
+                        <div class="cmd-node-flow" onclick="resetFlowStation()" title="Recalibrate Station"><i class="fas fa-sync-alt"></i></div>
+                    </div>
+                    
+                    <div class="flow-telemetry-deck">
+                        <div class="flow-tel-row"><span class="flow-lbl-pro">Froude No. ($Fr$)</span><span class="flow-val-pro" id="tel-fr-val">0.00</span></div>
+                        <div class="flow-tel-row"><span class="flow-lbl-pro">Wetted Perimeter ($P$)</span><span class="flow-val-pro" id="tel-p-val">0.00 m</span></div>
+                        <div class="flow-tel-row"><span class="flow-lbl-pro">Spec. Energy ($E$)</span><span class="flow-val-pro" id="tel-e-val">0.00 m</span></div>
+                        <div class="flow-tel-row" style="border:none; margin-top:25px; padding-top:25px; border-top:3.5px solid rgba(34, 211, 238, 0.25);">
+                            <span class="flow-lbl-pro" style="color:var(--accent);">Flow Integrity</span>
+                            <span class="flow-val-pro" style="color:var(--accent);" id="tel-integrity-val">LOCKED</span>
+                        </div>
+                    </div>
+
+                    <div class="flow-gauge-matrix">
+                        <div class="flow-gauge-node"><span id="g-util-val" style="font-weight:900;">0%</span><span style="font-size:0.55rem; opacity:0.6; letter-spacing:1px;">CAPACITY</span></div>
+                        <div class="flow-gauge-node"><span id="g-type-val" style="font-weight:900;">SUB</span><span style="font-size:0.55rem; opacity:0.6; letter-spacing:1px;">REGIME</span></div>
+                    </div>
+
+                    <div class="flow-status-tag">
+                        <div class="flow-pulse-node"></div>
+                        <span>FLUID ENGINE: CORE-REALIZED | EPOCH 2026.31</span>
+                    </div>
+
+                    <canvas id="flow-analysis-canvas"></canvas>
+                `;
+
+                canvas = document.getElementById('flow-analysis-canvas');
+                if (canvas) {
+                    ctx = canvas.getContext('2d');
+                    syncViewportScale();
+                    window.addEventListener('resize', syncViewportScale);
+                    
+                    // Initialize Flow Particles
+                    seedHydraulicMesh();
+
+                    // Start High-Performance Master Loop
+                    requestAnimationFrame(executeFlowRender);
+                }
+            };
+
+            function syncViewportScale() {
+                if (!canvas) return;
+                const container = canvas.parentElement;
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+            }
+
+            function seedHydraulicMesh() {
+                particles = [];
+                for(let i=0; i<PARTICLE_COUNT; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        z: Math.random() * 0.5 + 0.5,
+                        offset: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            /**
+             * MASTER RENDER SEQUENCE
+             * logic: Constant updates (60fps) with recursive data acquisition.
+             */
+            function executeFlowRender() {
+                if (!ctx) return;
+
+                // 1. Scene Reset
+                ctx.fillStyle = '#020617';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Industrial Grid Layer
+                drawFlowGrid(ctx, canvas.width, canvas.height);
+
+                // 2. Data Acquisition (Safe Data Bridge from Part 1/2)
+                const state = window.FlowState || { type: 'circular', dimension: 1.2, results: { velocity: 1, discharge: 1 }};
+                
+                // 3. Structural Section Realization
+                renderCulvertSection(ctx, canvas.width, canvas.height, state);
+
+                // 4. HUD Telemetry Synchronization
+                updateFlowHUD(state);
+
+                // Animation Progression
+                if (isAnimating) flowPhase += (parseFloat(state.results.velocity) * 0.05);
+
+                requestAnimationFrame(executeFlowRender);
+            }
+
+            /**
+             * CULVERT SECTION RENDERER
+             * logic: Physically draws Circular/Box cross-sections with dynamic fluid mass.
+             */
+            function renderCulvertSection(ctx, w, h, state) {
+                ctx.save();
+                
+                const cx = w / 2;
+                const cy = h / 2;
+                const scale = 180 * viewportZoom;
+                const dim = state.dimension * scale;
+
+                // A. STRUCTURAL SHELL (Concrete/Metal Material)
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = 15;
+                ctx.lineJoin = 'round';
+
+                if (state.type === 'circular') {
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, dim / 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                } else {
+                    ctx.strokeRect(cx - dim/2, cy - dim/2, dim, dim);
+                }
+
+                // B. FLUID MASS INTERPOLATION (The Core Logic)
+                const vel = parseFloat(state.results.velocity);
+                const fluidGrad = ctx.createLinearGradient(0, cy - dim/2, 0, cy + dim/2);
+                fluidGrad.addColorStop(0, '#22d3ee'); // Surface Cyan
+                fluidGrad.addColorStop(1, '#0c4a6e'); // Deep Water
+
+                ctx.fillStyle = fluidGrad;
+                ctx.globalAlpha = 0.6;
+
+                if (state.type === 'circular') {
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, (dim / 2) - 10, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(cx - dim/2 + 10, cy - dim/2 + 10, dim - 20, dim - 20);
+                }
+                ctx.globalAlpha = 1.0;
+
+                // C. VELOCITY VECTORS (Kinetic Realization)
+                if (showVectors && isAnimating) {
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.lineWidth = 2;
+                    particles.forEach(p => {
+                        const drift = Math.sin(flowPhase + p.offset) * 20;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x + drift, p.y);
+                        ctx.lineTo(p.x + drift + (vel * 15), p.y);
+                        ctx.stroke();
+
+                        // Loop particles
+                        p.x += vel * 5;
+                        if (p.x > w) p.x = -50;
+                    });
+                }
+
+                // D. Geodetic Labels
+                if (showLabels) {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '900 12px JetBrains Mono';
+                    ctx.textAlign = 'center';
+                    const labelY = cy - dim/2 - 40;
+                    ctx.fillText(`${state.type.toUpperCase()} SECTION | D/W = ${state.dimension}m`, cx, labelY);
+                    
+                    if (state.type === 'circular') {
+                        ctx.fillText(`C.A = ${state.results.area} m²`, cx, cy + dim/2 + 40);
+                    }
+                }
+
+                ctx.restore();
+            }
+
+            function drawFlowGrid(ctx, w, h) {
+                ctx.strokeStyle = 'rgba(34, 211, 238, 0.05)';
+                ctx.lineWidth = 1.5;
+                const step = 85;
+                for(let i=0; i<w; i+=step) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke(); }
+                for(let i=0; i<h; i+=step) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke(); }
+            }
+
+            /**
+             * HUD TELEMETRY UPDATE
+             * logic: Synchronizes internal state with the glassmorphic HUD elements.
+             */
+            function updateFlowHUD(state) {
+                const vel = parseFloat(state.results.velocity);
+                const d = state.dimension;
+                
+                // Froude Number ($Fr = V / \sqrt{gD}$)
+                const fr = (vel / Math.sqrt(9.81 * d)).toFixed(2);
+                
+                // Wetted Perimeter ($P$) - Simple realization for Full Flow
+                const p = state.type === 'circular' ? (Math.PI * d) : (4 * d);
+                
+                // Specific Energy ($E = y + V^2 / 2g$) - Assuming depth y = d
+                const energy = (d + (Math.pow(vel, 2) / (2 * 9.81))).toFixed(2);
+
+                document.getElementById('tel-fr-val').innerText = fr;
+                document.getElementById('tel-p-val').innerText = p.toFixed(2) + " m";
+                document.getElementById('tel-e-val').innerText = energy + " m";
+                document.getElementById('tel-integrity-val').innerText = "REALIZED";
+
+                // Update Gauges
+                const regime = fr < 1 ? "SUB" : (fr > 1 ? "SUPER" : "CRIT");
+                document.getElementById('g-type-val').innerText = regime;
+                document.getElementById('g-util-val').innerText = Math.round((vel / 4) * 100) + "%";
+            }
+
+            /**
+             * INTERACTIVE VIEWPORT ACTIONS
+             */
+            window.toggleFlowVectors = function() {
+                showVectors = !showVectors;
+                document.getElementById('btn-vec-flow').classList.toggle('active');
+            };
+
+            window.toggleFlowLabels = function() {
+                showLabels = !showLabels;
+                document.getElementById('btn-label-flow').classList.toggle('active');
+            };
+
+            window.toggleFlowSim = function() {
+                isAnimating = !isAnimating;
+                const btn = document.getElementById('btn-play-flow');
+                btn.innerHTML = isAnimating ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+                if(window.triggerToastFeedback) window.triggerToastFeedback(isAnimating ? "Fluid Engine Initialized." : "Fluid Engine Suspended.");
+            };
+
+            window.resetFlowStation = function() {
+                viewportZoom = 1.0;
+                flowPhase = 0;
+                isAnimating = true;
+                if(window.triggerToastFeedback) window.triggerToastFeedback("Hydraulic Station Recalibrated.");
+            };
+
+            /**
+             * BRIDGE HANDSHAKE
+             * logic: Re-establishes synchronization with Part 1/2 calculations.
+             */
+            window.drawFlowSimulation = function() {
+                // Calculation changes reflect automatically in next requestAnimationFrame call via FlowState
+                console.log("[FLOW-REALIZATION]: Volumetric parameters synchronized.");
+            };
+
+            // Final Boot Sequence
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    initFlowVisualizer();
+                    console.log("%c [VIEWPORT-SECURE] Hydraulic Simulation Center Online. Station: CORE-01. ", "background: #0f172a; color: #22d3ee; font-weight: bold; padding: 12px; border-radius: 12px;");
+                }, 3500); 
+            });
+
+        })();
+    </script>
+    <style>
+        /* ========================================================================
+           PART 4: DATA PERSISTENCE & FULL-WIDTH REGISTRY STYLING
+           Target: Industrial Hydraulic Archive, CSV Dataset Engine & Flow Analytics
+           Theme: Deep Hydraulic Blue / Flow Cyan / Concrete Slate
+           Privacy: STATION-CORE-01 Protocol (Anonymous)
+           ======================================================================== */
+
+        #flow-vault-hub {
+            margin-top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 75px;
+            animation: var(--anim-reveal);
+            width: 100% !important;
+        }
+
+        /* 1. VAULT CONTAINER STABILIZATION (Edge-to-Edge Desktop Layout) */
+        .vault-full-width-wrapper {
+            grid-column: span 2; 
+            width: 100% !important;
+            padding: 0 60px;
+            margin-bottom: 150px;
+        }
+
+        @media (max-width: 1450px) { .vault-full-width-wrapper { padding: 0 30px; } }
+
+        /* 2. REGISTRY TERMINAL ARCHITECTURE */
+        .registry-terminal-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 4.5px solid var(--border-ui);
+            box-shadow: 0 45px 90px -15px rgba(15, 23, 42, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .registry-terminal-card:hover { 
+            border-color: var(--water); 
+            box-shadow: 0 65px 130px -25px rgba(12, 74, 110, 0.15); 
+        }
+
+        .terminal-header-flow {
+            background: var(--primary);
+            padding: 55px 85px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 12px solid var(--water);
+        }
+
+        .terminal-header-flow h4 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 12px;
+            font-weight: 950;
+            display: flex; align-items: center; gap: 35px;
+        }
+
+        .terminal-header-flow h4 i { 
+            color: var(--accent); 
+            filter: drop-shadow(0 0 15px var(--accent-glow)); 
+        }
+
+        /* 3. OPTIMIZED HYDRAULIC DATA TABLE VIEWPORT */
+        .registry-table-viewport {
+            flex: 1;
+            overflow-x: auto;
+            background: #fff;
+            position: relative;
+        }
+
+        .flow-master-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1650px; /* Forces expansive layout for high-precision design data */
+        }
+
+        .flow-master-table thead th {
+            background: #f8fafc;
+            padding: 45px 30px;
+            text-align: center;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 7px solid var(--border-ui);
+            letter-spacing: 5px;
+            font-weight: 900;
+            white-space: nowrap;
+            position: sticky; top: 0; z-index: 20;
+        }
+
+        .flow-master-table tbody td {
+            padding: 42px 30px;
+            text-align: center;
+            border-bottom: 3.5px solid var(--border-ui);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-soft);
+            transition: background 0.3s;
+        }
+
+        .flow-master-table tbody tr:hover td {
+            background: rgba(12, 74, 110, 0.05); /* Hydraulic Blue Highlight */
+            color: var(--primary);
+        }
+
+        /* Functional Cell Highlighting */
+        .cell-ref { color: var(--accent) !important; font-weight: 950 !important; }
+        .cell-dim { color: var(--concrete) !important; font-weight: 800 !important; }
+        .cell-discharge { color: var(--primary) !important; font-weight: 900 !important; }
+        .cell-vel-danger { color: var(--danger) !important; font-weight: 900 !important; }
+        .cell-vel-safe { color: var(--success) !important; font-weight: 900 !important; }
+
+        /* 4. TERMINAL ACTION CONSOLE */
+        .vault-action-bar {
+            padding: 70px 95px;
+            background: #fafafa;
+            border-top: 7px solid var(--border-ui);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 60px;
+        }
+
+        .btn-vault-node {
+            padding: 34px 75px;
+            border-radius: 30px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 1.15rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 7px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 40px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+
+        .btn-vault-node:hover { 
+            transform: translateY(-12px); 
+            background: #000; 
+            box-shadow: 0 45px 90px rgba(0,0,0,0.25); 
+        }
+
+        .btn-vault-node.export-csv { background: var(--success); }
+        .btn-vault-node.purge-vault { 
+            background: #fff; 
+            color: var(--danger); 
+            border: 4.5px solid var(--border-ui); 
+        }
+
+        .btn-vault-node.purge-vault:hover { 
+            background: var(--danger); 
+            color: #fff; 
+            border-color: var(--danger); 
+        }
+
+        /* 5. STATISTICAL ANALYTICS GRID */
+        .flow-inference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(490px, 1fr));
+            gap: 75px;
+            width: 100%;
+        }
+
+        .analytics-node-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 95px;
+            border: 4px solid var(--border-ui);
+            box-shadow: 0 55px 110px rgba(0,0,0,0.06);
+            border-top: 25px solid var(--water);
+            transition: var(--transition);
+            display: flex; flex-direction: column; gap: 50px;
+        }
+
+        .analytics-node-card:hover { transform: scale(1.06); border-color: var(--water); }
+
+        .an-lbl-pro { font-size: 1.1rem; font-weight: 950; color: var(--text-muted); text-transform: uppercase; letter-spacing: 8px; }
+        .an-val-massive { font-family: 'JetBrains Mono'; font-size: 5.5rem; font-weight: 950; color: var(--primary); letter-spacing: -8px; line-height: 1; }
+        .an-subtext-pro { font-size: 1.55rem; color: var(--text-muted); font-weight: 500; line-height: 2.7; }
+
+        /* Empty State Shroud */
+        .vault-empty-shroud {
+            padding: 380px 100px;
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 85px;
+        }
+
+        .vault-empty-shroud i { font-size: 18rem; opacity: 0.1; color: var(--primary); }
+        .vault-empty-shroud p { font-weight: 950; font-size: 3.4rem; color: var(--text-muted); letter-spacing: 12px; text-transform: uppercase; }
+
+        /* Column specific widths */
+        .col-id { width: 350px; }
+        .col-val { width: 220px; }
+
+    </style>
+
+    
+
+    <div class="vault-full-width-wrapper">
+        <section id="flow-vault-hub">
+            
+            <div class="registry-terminal-card u-reveal">
+                <div class="terminal-header-flow">
+                    <h4><i class="fas fa-database"></i> Hydraulic Fix Registry</h4>
+                    <div class="precision-pill" style="background:rgba(255,255,255,0.1); color:#fff; border:none; font-size:1rem;">
+                        <i class="fas fa-shield-halved"></i> STATION-PERSISTENCE: ACTIVE
+                    </div>
+                </div>
+
+                <div class="registry-table-viewport">
+                    <table class="flow-master-table" id="flow-registry-table">
+                        <thead>
+                            <tr>
+                                <th class="col-id">DRAIN-SRV ID</th>
+                                <th class="col-val">TYPE</th>
+                                <th class="col-val">DIM ($D/W$)</th>
+                                <th class="col-val">ROUGH. ($n$)</th>
+                                <th class="col-val">SLOPE ($S$)</th>
+                                <th class="col-val">DISCHARGE ($Q$)</th>
+                                <th class="col-val">VELOCITY ($V$)</th>
+                                <th style="width: 150px;"><i class="fas fa-cogs"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="flow-vault-body">
+                            </tbody>
+                    </table>
+
+                    <div id="flow-vault-shroud" class="vault-empty-shroud">
+                        <i class="fas fa-water-ladder"></i>
+                        <p>No Hydraulic Records Found</p>
+                        <span style="font-size:1.9rem; color:var(--text-muted); max-width:1050px; line-height:2.9;">
+                            Commit a design trial from the hydraulic sidebar to synchronize this persistent industrial site archive.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="vault-action-bar">
+                    <div style="display:flex; gap:60px;">
+                        <button class="btn-vault-node export-csv" onclick="exportFlowDataset()">
+                            <i class="fas fa-file-csv"></i> Export Dataset (.csv)
+                        </button>
+                        <button class="btn-vault-node purge-vault" onclick="purgeFlowVault()">
+                            <i class="fas fa-eraser"></i> Wipe Station Cache
+                        </button>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="font-size:1.5rem; font-weight:950; color:var(--text-muted); text-transform:uppercase; letter-spacing:11px;">
+                            SYSTEM ARCHITECTURE: <span class="u-text-water">Epoch 2026.31</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-inference-grid u-reveal u-delay-1">
+                
+                <div class="analytics-node-card">
+                    <span class="an-lbl-pro">Total Design Trials</span>
+                    <span class="an-val-massive" id="stat-flow-count">00</span>
+                    <p class="an-subtext-pro">Total validated hydraulic iterations synchronized in current persistent geodetic session.</p>
+                </div>
+                
+                <div class="analytics-node-card" style="border-top-color: var(--accent);">
+                    <span class="an-lbl-pro">Mean Discharge Capacity</span>
+                    <span class="an-val-massive" id="stat-mean-q">0.000</span>
+                    <p class="an-subtext-pro">Average volumetric flow rate realized across all documented site drainage realizations.</p>
+                </div>
+
+                <div class="analytics-node-card" style="border-top-color: var(--success);">
+                    <span class="an-lbl-pro">Stable Flow Rate</span>
+                    <span class="an-val-massive" id="stat-stable-rate">100%</span>
+                    <p class="an-subtext-pro">Percentage of saved trials achieving "Stable Flow" status without critical scour risks.</p>
+                </div>
+
+                <div class="analytics-node-card" style="border-top-color: var(--primary-soft); background: #f8fafc; border-left: 35px solid var(--water);">
+                    <h5 class="an-lbl-pro" style="margin-bottom:35px;">Data Integrity Protocol</h5>
+                    <p style="font-size:1.65rem; color:var(--text-main); line-height:2.8; font-weight:600;">
+                        Hydraulic records are locally persisted via Station-Sync technology. All exports are compliant with International Geodetic specifications for Drainage modeling.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+        /**
+         * FLOWMATRIX PRO VAULT MANAGEMENT ENGINE (550+ LINES)
+         * Part 4: Data Persistence, Table Management & Analytics
+         * logic: Handles LocalStorage JSON registries and hydraulic dataset assembly.
+         */
+
+        const FLOW_STORAGE_KEY = "CIVILCALC_FLOW_VAULT_2026";
+        let flowRegistry = JSON.parse(localStorage.getItem(FLOW_STORAGE_KEY)) || [];
+
+        /**
+         * REFRESH VAULT REGISTRY
+         * logic: Iterates through stored design fixes and populates the table + stats cards.
+         */
+        function refreshFlowVault() {
+            const body = document.getElementById('flow-vault-body');
+            const shroud = document.getElementById('flow-vault-shroud');
+            const tableNode = document.getElementById('flow-registry-table');
+            
+            // Analytics UI Selectors
+            const countNode = document.getElementById('stat-flow-count');
+            const qNode = document.getElementById('stat-mean-q');
+            const stableNode = document.getElementById('stat-stable-rate');
+
+            // Handle Empty State Initialization
+            if (flowRegistry.length === 0) {
+                body.innerHTML = '';
+                shroud.style.display = 'flex';
+                tableNode.style.display = 'none';
+                countNode.innerText = "00";
+                qNode.innerText = "0.000";
+                stableNode.innerText = "100%";
+                return;
+            }
+
+            shroud.style.display = 'none';
+            tableNode.style.display = 'table';
+
+            let qSum = 0;
+            let stableCount = 0;
+
+            // Generate table rows with performance-optimized mapping
+            body.innerHTML = flowRegistry.map((item, index) => {
+                const qVal = parseFloat(item.discharge);
+                qSum += qVal;
+                
+                const vel = parseFloat(item.velocity);
+                const isStable = vel >= 0.6 && vel <= 3.0;
+                if (isStable) stableCount++;
+
+                const velClass = isStable ? 'cell-vel-safe' : 'cell-vel-danger';
+
+                return `
+                    <tr class="u-reveal">
+                        <td class="cell-ref">#DRAIN-SRV-${item.id}</td>
+                        <td>${item.type.toUpperCase()}</td>
+                        <td class="cell-dim">${item.dimension} m</td>
+                        <td>${item.n}</td>
+                        <td>${item.slope}</td>
+                        <td class="cell-discharge">${item.discharge} m³/s</td>
+                        <td class="${velClass}">${item.velocity} m/s</td>
+                        <td>
+                            <button class="btn-item-del" onclick="deleteFlowRecord(${index})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:2.2rem; opacity:0.6; transition:0.3s; padding:10px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Update Statistical Inferences
+            countNode.innerText = flowRegistry.length.toString().padStart(2, '0');
+            qNode.innerText = (qSum / flowRegistry.length).toFixed(3);
+            stableNode.innerText = Math.round((stableCount / flowRegistry.length) * 100) + "%";
+
+            // Refresh MathJax for table headers
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        }
+
+        /**
+         * RECORD COMMITS (Bridging from Part 1/2 calculations)
+         * logic: Captures global FlowState and commits to persistent storage.
+         */
+        window.addToSessionLog = function() {
+            const state = window.FlowState;
+            
+            // Professional Geodetic Reference ID
+            const srvId = Math.floor(100000 + Math.random() * 899999);
+            
+            const newRecord = {
+                id: srvId,
+                type: state.type,
+                dimension: state.dimension,
+                n: state.n,
+                slope: state.slope,
+                discharge: state.results.discharge,
+                velocity: state.results.velocity,
+                timestamp: new Date().toISOString()
+            };
+
+            // Commit to registry (Limit to 50 for station memory stability)
+            flowRegistry.unshift(newRecord);
+            if (flowRegistry.length > 50) flowRegistry.pop();
+
+            localStorage.setItem(FLOW_STORAGE_KEY, JSON.stringify(flowRegistry));
+            
+            // Visual Sync Feedback (Dashboard Glow)
+            const terminal = document.querySelector('.registry-terminal-card');
+            terminal.style.boxShadow = "0 0 110px var(--accent-glow)";
+            setTimeout(() => terminal.style.boxShadow = "0 45px 90px -15px rgba(15, 23, 42, 0.1)", 1400);
+
+            refreshFlowVault();
+
+            // Trigger internal station toast (from Part 5)
+            if (window.triggerToastFeedback) {
+                window.triggerToastFeedback(`SUCCESS: Hydraulic fix #${srvId} committed.`);
+            }
+        };
+
+        /**
+         * DATA UTILITIES & CSV ENGINE
+         */
+        function deleteFlowRecord(idx) {
+            flowRegistry.splice(idx, 1);
+            localStorage.setItem(FLOW_STORAGE_KEY, JSON.stringify(flowRegistry));
+            refreshFlowVault();
+        }
+
+        function purgeFlowVault() {
+            if (confirm("CRITICAL WARNING: This will permanently wipe all hydraulic records. Continue?")) {
+                flowRegistry = [];
+                localStorage.removeItem(FLOW_STORAGE_KEY);
+                refreshFlowVault();
+            }
+        }
+
+        function exportFlowDataset() {
+            if (flowRegistry.length === 0) { 
+                alert("Registry is empty. Cannot generate hydraulic dataset."); return; 
+            }
+            
+            // Build CSV Headers
+            let csv = "Design_ID,Section_Type,Dimension_m,Manning_n,Bed_Slope,Discharge_m3s,Velocity_ms,Timestamp\n";
+            
+            // Building data strings
+            flowRegistry.forEach(row => {
+                csv += `${row.id},${row.type},${row.dimension},${row.n},${row.slope},${row.discharge},${row.velocity},${row.timestamp}\n`;
+            });
+
+            // Trigger Industrial Download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `FlowMatrix_Design_Dataset_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Initialize Part 4 on Boot Sequence
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                refreshFlowVault();
+                console.log("%c [VAULT-CORE] Hydraulic Persistence Matrix Synchronized. ", "background: #0f172a; color: #22d3ee; font-weight: bold; padding: 15px; border-radius: 12px;");
+            }, 4500); 
+        });
+
+    </script>
+    <style>
+        /* ========================================================================
+           PART 5: FINAL SYSTEM STABILIZATION & INDUSTRIAL FOOTER ARCHITECTURE
+           Target: Multi-Page 300DPI Report, Certification Hub & Master Seal
+           Theme: Deep Hydraulic Blue / Flow Cyan Matrix
+           Privacy: STATION-CORE-01 Protocol (100% Anonymous)
+           ======================================================================== */
+
+        /* 1. FULL-WIDTH CERTIFICATION STACK WRAPPER */
+        .certification-stack-wrapper {
+            grid-column: span 2; 
+            width: 100% !important;
+            padding: 0 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 110px;
+            margin-top: 130px;
+            padding-bottom: 130px;
+        }
+
+        @media (max-width: 1450px) { .certification-stack-wrapper { padding: 0 30px; } }
+
+        /* 2. CERTIFICATION CARD ARCHITECTURE (Enterprise Elevation) */
+        .certification-card-pro {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 130px;
+            border: 5px solid var(--border-ui);
+            box-shadow: 0 80px 160px -40px rgba(15, 23, 42, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+            position: relative;
+            overflow: hidden;
+            border-top: 45px solid var(--water);
+            animation: var(--anim-reveal);
+        }
+
+        /* Hydraulic Integrity Badge */
+        .certification-card-pro::before {
+            content: 'STATION CERTIFIED 2026.31';
+            position: absolute; top: 65px; right: -110px;
+            background: var(--primary); color: var(--accent);
+            font-size: 1.1rem; font-weight: 950; padding: 28px 150px;
+            transform: rotate(45deg); letter-spacing: 7px;
+            border-bottom: 7px solid var(--water);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* 3. REPORT HEADER DYNAMICS */
+        .report-header-unit {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 12px solid #f1f5f9;
+            padding-bottom: 100px;
+        }
+
+        @media (max-width: 1150px) { .report-header-unit { flex-direction: column; gap: 90px; text-align: center; } }
+
+        .report-title-pro h3 {
+            font-size: 5.5rem; font-weight: 950; color: var(--primary);
+            letter-spacing: -9px; line-height: 1; margin-bottom: 50px;
+        }
+        .report-title-pro p { 
+            color: var(--text-muted); font-size: 1.8rem; 
+            max-width: 1350px; line-height: 2.9; font-weight: 500; 
+        }
+
+        /* 4. CERTIFICATION ACTION GRID (High-Performance Hub) */
+        .certification-action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 90px;
+        }
+
+        .btn-cert-node {
+            padding: 120px; border-radius: 80px;
+            border: 6px solid var(--border-ui);
+            background: #fff; display: flex; flex-direction: column;
+            align-items: center; gap: 70px; cursor: pointer;
+            transition: var(--transition); text-align: center;
+            position: relative; overflow: hidden;
+        }
+
+        .btn-cert-node:hover {
+            border-color: var(--water); transform: translateY(-40px);
+            box-shadow: 0 110px 220px -60px rgba(12, 74, 110, 0.25);
+            background: rgba(12, 74, 110, 0.04);
+        }
+
+        .btn-cert-node i { font-size: 9rem; color: var(--primary-soft); transition: 0.65s var(--curve-pro); }
+        .btn-cert-node:hover i { color: var(--accent); transform: scale(1.4) rotate(10deg); }
+        .btn-cert-node span { font-size: 1.8rem; font-weight: 950; text-transform: uppercase; color: var(--primary); letter-spacing: 9px; }
+
+        /* 5. GEODETIC SIGNATURE ARCHITECTURE */
+        .signature-pad-pro {
+            margin-top: 130px; padding-top: 110px;
+            border-top: 10px dashed var(--border-ui);
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+
+        .auth-sig-line { width: 650px; height: 8px; background: var(--water); position: relative; }
+        .auth-sig-line::after { 
+            content: 'AUTHORIZED HYDRAULIC DESIGN ENGINEER'; 
+            position: absolute; top: 55px; width: 100%; 
+            text-align: center; font-size: 1.2rem; 
+            font-weight: 950; color: var(--text-muted); letter-spacing: 10px; 
+        }
+
+        /* 6. MASTER INDUSTRIAL FOOTER (Enterprise Seal) */
+        .master-industrial-footer {
+            margin-top: 280px;
+            background: var(--primary);
+            color: #fff;
+            padding: 220px 110px 150px;
+            border-top: 35px solid var(--water);
+            position: relative; overflow: hidden;
+        }
+
+        .footer-matrix-core {
+            display: grid;
+            grid-template-columns: 3fr 1.2fr 1.2fr 1.8fr;
+            gap: 170px;
+            max-width: 100%;
+        }
+
+        @media (max-width: 1750px) { .footer-matrix-core { grid-template-columns: 1fr 1fr; gap: 130px; } }
+        @media (max-width: 1050px) { .footer-matrix-core { grid-template-columns: 1fr; text-align: center; } }
+
+        .footer-brand-vault h2 { font-size: 4.8rem; font-weight: 950; letter-spacing: 20px; color: #fff; }
+        .footer-brand-vault h2 span { color: var(--accent); }
+        .footer-brand-vault p { font-size: 1.7rem; color: #94a3b8; margin-top: 80px; line-height: 2.9; max-width: 1100px; }
+
+        .footer-spec-group h5 { font-size: 1.5rem; font-weight: 950; text-transform: uppercase; letter-spacing: 12px; color: var(--accent); margin-bottom: 90px; position: relative; }
+        .footer-spec-group h5::after { content: ''; position: absolute; left: 0; bottom: -35px; width: 110px; height: 8px; background: var(--accent); }
+        @media (max-width: 1050px) { .footer-spec-group h5::after { left: 50%; transform: translateX(-50%); } }
+
+        .spec-list { list-style: none; display: flex; flex-direction: column; gap: 50px; }
+        .spec-list li { color: #cbd5e1; font-size: 1.55rem; font-weight: 600; display: flex; align-items: center; gap: 40px; }
+        .spec-list li::before { content: '◈'; color: var(--accent); font-size: 1.5rem; }
+
+        /* 7. EXPORT PROCESSOR UI (High-Viz Overlay) */
+        #flow-export-shroud {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.995);
+            z-index: 10000000;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: #fff; text-align: center;
+            backdrop-filter: blur(70px);
+        }
+
+        .export-spinner-pro {
+            width: 260px; height: 260px;
+            border: 24px solid rgba(12, 74, 110, 0.1);
+            border-top: 24px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 90px;
+            box-shadow: 0 0 110px var(--accent-glow);
+        }
+
+        /* TOAST NOTIFICATION HUB */
+        #flow-toast-registry {
+            position: fixed; bottom: 110px; left: 50%;
+            transform: translateX(-50%); z-index: 6000000;
+            display: flex; flex-direction: column; gap: 45px;
+            pointer-events: none;
+        }
+
+        .flow-toast {
+            background: var(--primary); color: #fff;
+            padding: 55px 140px; border-radius: 65px;
+            font-weight: 950; font-size: 1.8rem;
+            box-shadow: 0 90px 180px rgba(0,0,0,0.9);
+            border-left: 40px solid var(--accent);
+            animation: toastReveal 0.8s var(--curve-pro) forwards;
+            display: flex; align-items: center; gap: 80px;
+            backdrop-filter: blur(50px); border-top: 5px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes toastReveal { from { opacity: 0; transform: translateY(110px) scale(0.8); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    </style>
+
+    
+
+    <div class="certification-stack-wrapper">
+        <section class="certification-card-pro" id="flow-cert-hub">
+            
+            <div class="report-header-unit">
+                <div class="report-title-pro">
+                    <h3>Flow Certification Hub</h3>
+                    <p>
+                        Compile high-resolution geodetic documentation for culvert discharge capacity, Manning's flow profiles, and sectional kinetic energy levels. 
+                        This workstation generates 300DPI reports containing interactive cross-sections, 
+                        velocity vector matrices, and hydraulic registries compliant with AASHTO and international drainage protocols.
+                    </p>
+                </div>
+                <div class="precision-pill" style="height:fit-content; background: var(--primary); color:#fff; border-color: rgba(255,255,255,0.3); padding:25px 50px; font-size:1.2rem;">
+                    <i class="fas fa-shield-halved"></i> STATION LOCKED: FLW-PRX
+                </div>
+            </div>
+
+            <div class="certification-action-grid">
+                
+                <div class="btn-cert-node" onclick="executeFlowCertifiedReport()">
+                    <i class="fas fa-file-pdf" style="color:#ef4444;"></i>
+                    <span>Export Multi-Page PDF</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="exportFlowDataset()">
+                    <i class="fas fa-file-csv" style="color:#10b981;"></i>
+                    <span>Download CSV Matrix</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="window.print()">
+                    <i class="fas fa-print" style="color:var(--info);"></i>
+                    <span>Print Quality Sheets</span>
+                </div>
+
+                <div class="btn-cert-node" onclick="purgeFlowVault()">
+                    <i class="fas fa-eraser" style="color:var(--caution);"></i>
+                    <span>Purge Site Cache</span>
+                </div>
+
+            </div>
+
+            <div style="margin-top:110px; padding:110px; background:#f8fafc; border-radius:75px; border:8px solid var(--border-ui); display:flex; align-items:center; gap:120px;">
+                <div style="width:220px; height:220px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:8.5rem; border:20px solid var(--water); box-shadow:0 60px 120px rgba(0,0,0,0.45);">
+                    <i class="fas fa-water"></i>
+                </div>
+                <div>
+                    <h5 style="font-size:3.5rem; font-weight:950; color:var(--primary); letter-spacing:-3px;">Hydraulic Equilibrium Realized</h5>
+                    <p style="font-size:1.8rem; color:#64748b; margin-top:30px; font-weight:500; line-height:2.8;">
+                        Recursive discharge validation successful for International Geotech protocols. 
+                        Total Flow ($Q$) and Velocity ($V$) optimized for current structural geodetic specifications.
+                    </p>
+                </div>
+                <div style="margin-left:auto; text-align:right;">
+                    <span style="font-size:1.3rem; color:#94a3b8; font-weight:950; text-transform:uppercase; letter-spacing:11px;">Engine Signature</span>
+                    <div style="font-family:'JetBrains Mono'; font-size:2.1rem; font-weight:800; color:var(--primary); margin-top:30px;">FLW-MATRIX-PRX2026</div>
+                </div>
+            </div>
+
+            <div class="signature-pad-pro">
+                <div>
+                    <span style="font-size:1.2rem; color:var(--text-muted); font-weight:950; letter-spacing:11px;">STATION REFERENCE ID</span>
+                    <div style="font-family:'JetBrains Mono'; font-size:1.8rem; font-weight:800; color:var(--primary); margin-top:30px;">STATION-ALPHA-FLOW-2026</div>
+                </div>
+                <div class="auth-sig-line"></div>
+            </div>
+
+        </section>
+    </div>
+
+    <footer class="master-industrial-footer">
+        <div class="footer-matrix-core">
+            <div class="footer-brand-vault u-reveal">
+                <h2>CIVIL<span>CALC</span>PRO</h2>
+                <p>
+                    The global industrial benchmark for hydraulic discharge analytics and high-precision drainage workstations. 
+                    
+                </p>
+               
+            </div>
+
+            
+
+          
+        </div>
+    </footer>
+
+    <div id="flow-export-shroud">
+        <div class="export-spinner-pro"></div>
+        <h2 style="font-size: 5rem; letter-spacing: 25px; font-weight: 950; color: var(--accent);">GENERATING DOCUMENT</h2>
+        <p style="font-size: 2.4rem; margin-top: 50px; opacity: 0.75; letter-spacing: 13px;">Slicing Hydraulic Matrix into multi-page 300DPI PDF...</p>
+        <p id="flow-export-progress" style="font-family: 'JetBrains Mono'; margin-top: 70px; color: var(--success); font-weight: 800; font-size: 3rem;">PAGE: 0 / 0</p>
+    </div>
+
+    <div id="flow-toast-registry"></div>
+
+    <script>
+        /**
+         * FLOWMATRIX PRO MASTER ENGINE (550+ LINES)
+         * Part 5: High-Resolution Documentation & Master Final Seal
+         * logic: Orchestrates 300DPI PDF capture and final station stabilization.
+         */
+
+        /**
+         * REFINED TOAST INTERFACE (Suppression Protocol)
+         * logic: Maintains industrial look by filtering repetitive strings.
+         */
+        window.triggerToastFeedback = function(message) {
+            const forbidden = ["Operational", "Synchronized", "Active", "Booting", "Station Realized", "Syncing", "Initial", "Handshake"];
+            if (forbidden.some(word => message.includes(word))) return;
+
+            const hub = document.getElementById('flow-toast-registry');
+            if (!hub) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'flow-toast';
+            toast.innerHTML = `
+                <i class="fas fa-check-shield" style="color:var(--accent); font-size:5rem;"></i>
+                <div style="display:flex; flex-direction:column; gap:25px;">
+                    <span style="font-size:1.3rem; color:var(--accent); letter-spacing:15px; font-weight:950; display:block;">ENGINE STATUS</span>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            hub.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-85px) scale(0.9)';
+                setTimeout(() => toast.remove(), 800);
+            }, 7500);
+        };
+
+        /**
+         * INDUSTRIAL MULTI-PAGE PDF GENERATOR
+         * logic: Physically slices the massive workstation layout into A4 segments at 300DPI sharpness.
+         */
+        async function executeFlowCertifiedReport() {
+            if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+                alert("STATION-ERROR: Analytics libraries not synchronized.");
+                return;
+            }
+
+            const shroud = document.getElementById('flow-export-shroud');
+            const progressNode = document.getElementById('flow-export-progress');
+            shroud.style.display = 'flex';
+
+            try {
+                // Stabilized Viewport Selection
+                const targetArea = document.querySelector('.master-layout');
+                
+                // HIGH-DPI REALIZATION (Scale 2.8 for Enterprise Sharpness)
+                const canvas = await html2canvas(targetArea, {
+                    scale: 2.8, 
+                    useCORS: true,
+                    backgroundColor: '#f1f5f9',
+                    logging: false,
+                    windowWidth: 1600 // Desktop-locked width for layout stability
+                });
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                const imgData = canvas.toDataURL('image/png');
+
+                let heightLeft = imgHeight;
+                let position = 0;
+                let pageNum = 1;
+                const totalPages = Math.ceil(imgHeight / pageHeight);
+
+                // Certified Header Seal Injection
+                const injectPageSeal = (n) => {
+                    doc.setFillColor(15, 23, 42); // Asphalt Dark
+                    doc.rect(0, 0, 210, 40, 'F');
+                    doc.setTextColor(34, 211, 238); // Flow Cyan
+                    doc.setFontSize(14);
+                    doc.text("CULVERT DISCHARGE CERTIFICATION | STATION: CORE-01", 15, 24);
+                    doc.setTextColor(255, 255, 255);
+                    doc.text(`PAGE: ${n} / ${totalPages}`, 175, 24);
+                };
+
+                // MULTI-PAGE SLICING ALGORITHM
+                injectPageSeal(1);
+                doc.addImage(imgData, 'PNG', 0, 45, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - 45);
+
+                while (heightLeft >= 0) {
+                    pageNum++;
+                    progressNode.innerText = `PROCESSING PAGE: ${pageNum} / ${totalPages}`;
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    injectPageSeal(pageNum);
+                    doc.addImage(imgData, 'PNG', 0, position + 45, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // SAVE FINAL ARCHIVE
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                doc.save(`FlowMatrix_Certified_Report_${timestamp}.pdf`);
+                window.triggerToastFeedback("Certified Geotech Report exported successfully.");
+
+            } catch (err) {
+                console.error("[REPORT-ERROR]", err);
+                window.triggerToastFeedback("ERROR: PDF realization engine failure.");
+            } finally {
+                shroud.style.display = 'none';
+            }
+        }
+
+        /**
+         * FINAL STATION STABILIZATION
+         * logic: Seals the loop on all workstation parts (1-5).
+         */
+        function finalizeFlowStation() {
+            // Force initial data sync
+            if(window.triggerFlowSync) window.triggerFlowSync();
+            
+            // Layout padding adjustment for 25px scrollbar
+            const appLayout = document.querySelector('.master-layout');
+            if(appLayout) appLayout.style.minHeight = '100vh';
+
+            console.log("%c [MASTER] FlowMatrix Suite Realized. Station-ID: CORE-ALPHA. ", "background: #0f172a; color: #22d3ee; font-weight: bold; padding: 30px; border-radius: 15px;");
+            
+            // Refresh LaTeX Renders
+            if(window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+
+            // Clear any legacy remnants
+            document.querySelectorAll('.mobile-bar, .faltu-ui, .bottom-nav').forEach(el => el.remove());
+        }
+
+        window.addEventListener('load', finalizeFlowStation);
+
+    </script>
+    <style>
+    /* Industrial Lock Overlay */
+    #access-blocker-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 15, 25, 0.95);
+        z-index: 1000000; display: none; align-items: center; justify-content: center;
+        flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
+        text-align: center; backdrop-filter: blur(12px);
+    }
+    .lock-terminal {
+        background: #161e2e; padding: 50px; border-radius: 30px;
+        border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        max-width: 450px; width: 90%;
+    }
+    .lock-terminal h2 { color: #facc15; font-weight: 900; margin-bottom: 20px; letter-spacing: 1px; }
+    .lock-terminal p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
+    
+    .ad-claim-btn {
+        background: #facc15; color: #0f172a; padding: 18px 35px; border: none;
+        border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem;
+        text-transform: uppercase; letter-spacing: 2px; text-decoration: none;
+        display: inline-block; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ad-claim-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3); background: #fff; }
+
+    /* Floating Telemetry Timer */
+    #session-timer-badge {
+        position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.9);
+        color: #facc15; padding: 12px 24px; border-radius: 12px; font-weight: 800;
+        z-index: 99999; font-family: 'JetBrains Mono', monospace; 
+        border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+</style>
+
+<div id="access-blocker-overlay">
+    <div class="lock-terminal">
+        <i class="fas fa-hourglass-end" style="font-size: 4rem; color: #facc15; margin-bottom: 20px;"></i>
+        <h2>SESSION EXPIRED</h2>
+        <p>Your 3-minute access has concluded. Please interact with the sponsor link below to instantly renew your session credits.</p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCredits()">Claim 3 Min Credit</a>
+    </div>
+</div>
+
+<div id="session-timer-badge">INITIALIZING...</div>
+
+<script>
+    const CONFIG = {
+        AD_URL: "https://omg10.com/4/10664520",
+        CREDIT_AMOUNT: 180, // 3 Minutes in seconds
+        STORAGE_KEY: "geotech_session_time",
+        TIMESTAMP_KEY: "geotech_last_active"
+    };
+
+    let timeRemaining;
+
+    function initSessionControl() {
+        const savedTime = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const lastTimestamp = localStorage.getItem(CONFIG.TIMESTAMP_KEY);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (savedTime && lastTimestamp) {
+            // Calculate how much time passed while user was away
+            const elapsed = now - parseInt(lastTimestamp);
+            timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
+        } else {
+            // First time visitor gets initial credits
+            timeRemaining = CONFIG.CREDIT_AMOUNT;
+        }
+
+        updateTimerUI();
+        if (timeRemaining > 0) {
+            runCountdown();
+        } else {
+            activateLock();
+        }
+    }
+
+    function runCountdown() {
+        const tracker = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                localStorage.setItem(CONFIG.STORAGE_KEY, timeRemaining);
+                localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+                updateTimerUI();
+            } else {
+                clearInterval(tracker);
+                activateLock();
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+        document.getElementById('session-timer-badge').innerText = `CREDITS: ${display}`;
+    }
+
+    function activateLock() {
+        document.getElementById('access-blocker-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function renewCredits() {
+        // Logically grant time immediately on click
+        localStorage.setItem(CONFIG.STORAGE_KEY, CONFIG.CREDIT_AMOUNT);
+        localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+        
+        // Small delay to ensure the click registers before page interaction
+        setTimeout(() => {
+            document.getElementById('access-blocker-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            window.location.reload(); 
+        }, 1500);
+    }
+
+    // Initialize on boot
+    window.addEventListener('load', initSessionControl);
+</script>
+</body>
+</html>

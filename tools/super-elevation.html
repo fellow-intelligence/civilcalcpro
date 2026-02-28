@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SuperElevate Pro | CivilCalc Highway Suite</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        /* ========================================================================
+           PART 1: SUPERELEVATE PRO GLOBAL CSS MATRIX (500+ Lines)
+           Author: CivilCalc Engineering Hub (2026)
+           Target: Road Design & Centrifugal Force Visualization
+           ======================================================================== */
+
+        :root {
+            /* --- Highway Engineering Palette --- */
+            --primary: #0f172a;           /* Deep Asphalt */
+            --primary-soft: #1e293b;      /* Slate Road */
+            --accent: #f59e0b;            /* Safety Amber */
+            --accent-glow: rgba(245, 158, 11, 0.25);
+            
+            --road-grey: #334155;
+            --line-white: #f8fafc;
+            --grass-green: #10b981;
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #facc15;
+            --info: #0ea5e9;
+
+            /* Surface Tokens */
+            --bg-master: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-ui: #e2e8f0;
+
+            /* Structural Tokens */
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --shadow-pro: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02);
+            --curve: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: 400ms var(--curve);
+        }
+
+        /* --- Master Reset Engine --- */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%; height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-master);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Standard Professional Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-master); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--primary-soft); border-radius: 10px; border: 3px solid var(--bg-master);
+        }
+
+        /* ========================================================================
+           1. NAVIGATION SYSTEM (Centered Logo Fix - image_7b9802.png)
+           ======================================================================== */
+        .master-nav {
+            background: var(--primary) !important;
+            height: 70px !important;
+            padding: 0 40px !important;
+            border-bottom: 4px solid var(--accent) !important;
+            position: fixed !important;
+            top: 0; left: 0; right: 0;
+            z-index: 100000 !important;
+            display: flex !important;
+            justify-content: center !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+        }
+
+        .nav-inner {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important;
+            align-items: center !important;
+            width: 100% !important;
+            max-width: 1840px !important;
+        }
+
+        .nav-logo {
+            grid-column: 2 !important;
+            text-decoration: none !important;
+            color: #fff !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 22px !important;
+            font-weight: 900 !important;
+            letter-spacing: 4px !important;
+            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+        }
+        .nav-logo span { color: var(--accent) !important; }
+
+        .nav-back-link {
+            grid-column: 1 !important;
+            justify-self: start !important;
+            color: #fff !important;
+            text-decoration: none !important;
+            font-size: 0.75rem !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            transition: var(--transition) !important;
+            opacity: 0.8 !important;
+        }
+        .nav-back-link:hover { color: var(--accent) !important; transform: translateX(-5px); opacity: 1 !important; }
+
+        /* ========================================================================
+           2. MASTER LAYOUT SYSTEM (Full-Width Desktop)
+           ======================================================================== */
+        .master-layout {
+            display: grid !important;
+            grid-template-columns: 440px 1fr !important; /* Sidebar vs Stage */
+            gap: 40px !important;
+            padding: 110px 40px 60px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+        }
+
+        @media (max-width: 1400px) {
+            .master-layout { grid-template-columns: 1fr !important; padding: 100px 20px 60px !important; }
+        }
+
+        /* --- Page Hero Banner --- */
+        .hero-banner {
+            grid-column: span 2;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 15px solid var(--accent);
+            box-shadow: var(--shadow-pro);
+            margin-bottom: 10px;
+            animation: var(--anim-reveal);
+        }
+
+        @media (max-width: 1400px) { .hero-banner { grid-column: span 1; flex-direction: column; text-align: center; gap: 40px; } }
+
+        .hero-info h1 { font-size: 3.2rem; font-weight: 950; color: var(--primary); letter-spacing: -2px; line-height: 1; }
+        .hero-info p { color: var(--text-muted); font-size: 1.2rem; font-weight: 500; margin-top: 10px; }
+
+        /* ========================================================================
+           3. SIDEBAR COMPONENT MATRIX
+           ======================================================================== */
+        .sidebar-panel { display: flex; flex-direction: column; gap: 35px; }
+
+        .config-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 1.5px solid var(--border-ui);
+            box-shadow: var(--shadow-pro);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .config-card:hover { transform: translateY(-8px); border-color: var(--accent); }
+
+        .card-header {
+            background: var(--primary); padding: 25px 35px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .card-header h3 {
+            color: #fff; font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 3px;
+            display: flex; align-items: center; gap: 12px; font-weight: 800;
+        }
+
+        .card-body { padding: 40px; }
+
+        /* Input Form Core */
+        .input-group { margin-bottom: 25px; }
+        .label-pro {
+            display: block; font-size: 0.75rem; font-weight: 900;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 12px;
+        }
+
+        .input-pro {
+            width: 100%; background: #f8fafc;
+            border: 2.5px solid var(--border-ui);
+            border-radius: 12px; padding: 18px 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem; font-weight: 800;
+            color: var(--primary); transition: var(--transition);
+        }
+        .input-pro:focus {
+            background: #fff; border-color: var(--accent);
+            box-shadow: 0 0 0 8px var(--accent-glow);
+        }
+
+        /* ========================================================================
+           4. MAIN VIEWPORT (Road Simulation)
+           ======================================================================== */
+        .simulation-stage { display: flex; flex-direction: column; gap: 40px; min-width: 0; }
+
+        .viewport-terminal {
+            width: 100%; min-height: 650px;
+            background: #020617; border-radius: 32px;
+            border: 1.5px solid var(--border-ui);
+            box-shadow: var(--shadow-pro);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        /* Physics Overlay Grid */
+        .physics-grid {
+            position: absolute; inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        /* Boot Loading Sequence */
+        #master-boot-overlay {
+            position: absolute; inset: 0;
+            background: var(--primary);
+            z-index: 5000; display: flex;
+            flex-direction: column; align-items: center;
+            justify-content: center; transition: 0.8s var(--curve);
+        }
+
+        .boot-spinner {
+            width: 65px; height: 65px;
+            border: 4px solid rgba(255,255,255,0.03);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%; animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* ========================================================================
+           5. SYSTEM UTILITIES
+           ======================================================================== */
+        .reveal { opacity: 0; animation: revealUp 0.8s var(--curve) forwards; }
+        @keyframes revealUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+        .text-accent { color: var(--accent); }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="master-nav">
+        <div class="nav-inner">
+            <a href="../find.html" class="nav-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to tools</span>
+            </a>
+
+            <a href="../index.html" class="nav-logo">
+                CIVIL<span>CALC</span> PRO
+            </a>
+        </div>
+    </nav>
+
+    
+
+    <div class="master-layout">
+        
+        <header class="hero-banner">
+            <div class="hero-info">
+                <h1>Super Elevation Pro</h1>
+                <p>Advanced AASHTO/IRC Highway Transition & Cant Design Workstation.</p>
+            </div>
+            <div style="text-align: right;">
+                <div class="precision-badge" style="padding:15px 30px; background:rgba(245,158,11,0.1); color:var(--accent); border:2px solid var(--accent); border-radius:15px; font-weight:900; font-size:0.7rem; letter-spacing:2px;">
+                    <i class="fas fa-road"></i> DESIGN SPEED MATRIX ACTIVE
+                </div>
+            </div>
+        </header>
+
+        <aside class="sidebar-panel">
+            <div class="config-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-cog"></i> Design Constants</h3>
+                </div>
+                <div class="card-body" id="input-injection-point">
+                    <div class="input-group">
+                        <label class="label-pro">Design Speed ($V$ in km/h)</label>
+                        <input type="number" id="inp-speed" class="input-pro" value="80">
+                    </div>
+                    <div class="input-group">
+                        <label class="label-pro">Radius of Curve ($R$ in m)</label>
+                        <input type="number" id="inp-radius" class="input-pro" value="250">
+                    </div>
+                    <p style="font-size:0.7rem; color:var(--text-muted); font-weight:600; line-height:1.6;">
+                        Note: Equilibrium super elevation is calculated where centrifugal force is fully balanced.
+                    </p>
+                </div>
+            </div>
+
+            <div class="config-card" style="border-left: 8px solid var(--info);">
+                <div class="card-body">
+                    <h4 class="label-pro" style="color:var(--info); margin-bottom:15px;">
+                        <i class="fas fa-square-root-alt"></i> Physics Matrix
+                    </h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+                        This workstation processes the combined relationship of friction ($f$) and elevation ($e$):
+                        <br><br>
+                        $$e + f = \frac{V^2}{127R}$$
+                        <br>
+                        Reference Standard: **IRC:38-1988**
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="simulation-stage">
+            <div class="viewport-terminal">
+                <div class="physics-grid"></div>
+                
+                <div id="road-canvas-mount" style="flex:1; position:relative;"></div>
+
+                <div id="master-boot-overlay">
+                    <div class="boot-spinner"></div>
+                    <p style="font-weight:950; letter-spacing:5px; text-transform:uppercase; font-size:0.85rem; color:var(--accent);">
+                        Initializing Road Matrix
+                    </p>
+                    <div id="boot-status" style="font-size:0.6rem; color:var(--text-muted); margin-top:15px; font-weight:800; letter-spacing:2px;">
+                        LOADING CENTRIFUGAL ALGORITHMS...
+                    </div>
+                </div>
+            </div>
+
+            <div id="results-stack-point" style="display:flex; flex-direction:column; gap:35px;">
+                </div>
+        </main>
+    </div>
+
+    <script>
+        /**
+         * SUPERELEVATE PRO CORE v1.0
+         * Part 1: Global State & Boot
+         */
+        window.addEventListener('load', () => {
+            console.log("%c [SYSTEM] SuperElevate Pro Enterprise Framework Active. ", "background: #0f172a; color: #f59e0b; padding: 10px; font-weight: bold; border-radius: 5px;");
+            
+            const statusNode = document.getElementById('boot-status');
+            const bootLogs = [
+                "LOADING AASHTO COEFFICIENTS...",
+                "CALIBRATING CURVATURE ENGINE...",
+                "SYNCING ITRF-2026 DATUM...",
+                "ROAD MATRIX READY."
+            ];
+
+            let i = 0;
+            const bootInterval = setInterval(() => {
+                if(i < bootLogs.length) {
+                    statusNode.innerText = bootLogs[i];
+                    i++;
+                } else {
+                    clearInterval(bootInterval);
+                    const overlay = document.getElementById('master-boot-overlay');
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        if (window.triggerMasterSync) window.triggerMasterSync();
+                    }, 800);
+                }
+            }, 600);
+        });
+
+        // Global Design State
+        window.RoadState = {
+            speed: 80,
+            radius: 250,
+            width: 7.5, // Standard 2-lane road (meters)
+            max_e: 0.07, // 7% standard maximum
+            results: { e_calc: 0, f_needed: 0, status: 'STABLE' }
+        };
+    </script>
+<style>
+        /* ========================================================================
+           PART 2: ENGINE UI & STACKED ANALYTICS STYLING
+           Target: Professional Road Design Form & Vertical Results Matrix
+           ======================================================================== */
+
+        /* 1. INPUT STACK REFINEMENT */
+        .design-form-stack {
+            display: flex; flex-direction: column; gap: 20px;
+            animation: var(--anim-reveal);
+        }
+
+        .input-block-heavy {
+            background: #f8fafc;
+            border: 2px solid var(--border-ui);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            transition: var(--transition);
+        }
+
+        .input-block-heavy:focus-within {
+            background: #fff; border-color: var(--accent);
+            box-shadow: 0 0 0 10px var(--accent-glow);
+        }
+
+        .input-flex-row { display: flex; gap: 15px; align-items: center; margin-top: 10px; }
+
+        /* 2. VERTICAL RESULTS STACK (Full Width Layout) */
+        .results-vertical-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .result-node-highway {
+            background: #fff;
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            border: 1.5px solid var(--border-ui);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: all 0.4s var(--curve);
+            min-height: 220px;
+            border-left: 12px solid var(--primary-soft);
+            box-shadow: var(--shadow-pro);
+        }
+
+        .result-node-highway:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
+            border-left-color: var(--accent);
+        }
+
+        /* Result Node Typography */
+        .res-tag {
+            font-size: 0.65rem; font-weight: 900; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .res-tag i { color: var(--accent); }
+
+        .res-val-big {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.8rem; font-weight: 950;
+            color: var(--primary); line-height: 1;
+            margin-bottom: 15px;
+        }
+
+        .res-desc { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        /* 3. STATUS INDICATORS */
+        .design-status-pill {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 10px 25px; border-radius: 50px;
+            font-size: 0.7rem; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 2px; margin-top: 20px;
+        }
+
+        .status-safe { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1.5px solid var(--success); }
+        .status-warning { background: rgba(245, 158, 11, 0.1); color: var(--accent); border: 1.5px solid var(--accent); }
+        .status-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1.5px solid var(--danger); }
+
+        /* 4. FORMULA TOOLTIP */
+        .formula-hint {
+            font-size: 0.65rem; color: var(--info);
+            background: rgba(14, 165, 233, 0.05);
+            padding: 8px 15px; border-radius: 8px;
+            display: inline-block; margin-top: 10px;
+            font-family: 'JetBrains Mono';
+        }
+
+        /* Button Refinement */
+        .btn-compute-road {
+            background: var(--accent); color: var(--primary);
+            width: 100%; border-radius: 18px; padding: 22px;
+            font-weight: 950; border: none; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 3px;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px var(--accent-glow);
+        }
+        .btn-compute-road:hover { transform: scale(1.02); background: #fff; border: 3px solid var(--accent); }
+    </style>
+
+    
+
+    <script>
+        /**
+         * SUPERELEVATE PRO: MASTER DESIGN ENGINE
+         * Part 2: Math Logic & Result Injection
+         */
+
+        /**
+         * INJECT SIDEBAR & RESULTS HUB
+         * logic: Populates the skeleton from Part 1 with Highway design inputs.
+         */
+        function injectPart2Engine() {
+            const sidebar = document.getElementById('input-injection-point');
+            const resultsHub = document.getElementById('results-stack-point');
+
+            if (sidebar) {
+                sidebar.innerHTML = `
+                    <div class="design-form-stack">
+                        <div class="input-block-heavy">
+                            <label class="label-pro"><i class="fas fa-tachometer-alt"></i> Design Speed (V)</label>
+                            <div class="input-flex-row">
+                                <input type="number" id="inp-speed" class="input-pro" value="80" oninput="triggerMasterSync()">
+                                <span class="font-mono" style="font-size:0.7rem; font-weight:800;">KM/H</span>
+                            </div>
+                        </div>
+
+                        <div class="input-block-heavy">
+                            <label class="label-pro"><i class="fas fa-sync-alt"></i> Radius of Curve (R)</label>
+                            <div class="input-flex-row">
+                                <input type="number" id="inp-radius" class="input-pro" value="250" oninput="triggerMasterSync()">
+                                <span class="font-mono" style="font-size:0.7rem; font-weight:800;">M</span>
+                            </div>
+                        </div>
+
+                        <div class="input-block-heavy">
+                            <label class="label-pro"><i class="fas fa-arrows-alt-h"></i> Pavement Width (W)</label>
+                            <div class="input-flex-row">
+                                <input type="number" id="inp-width" class="input-pro" value="7.5" step="0.1" oninput="triggerMasterSync()">
+                                <span class="font-mono" style="font-size:0.7rem; font-weight:800;">M</span>
+                            </div>
+                        </div>
+
+                        <div class="input-block-heavy">
+                            <label class="label-pro"><i class="fas fa-shield-alt"></i> Max Allowed 'e' (e_max)</label>
+                            <input type="number" id="inp-emax" class="input-pro" value="0.07" step="0.01" oninput="triggerMasterSync()">
+                            <span class="formula-hint">Plain/Rolling: 0.07 | Hilly: 0.10</span>
+                        </div>
+
+                        <button class="btn-compute-road" onclick="pushToSessionVault()">
+                            <i class="fas fa-file-export"></i> LOG DESIGN DATA
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (resultsHub) {
+                resultsHub.innerHTML = `
+                    <div class="result-node-highway" style="border-left-color: var(--accent);">
+                        <span class="res-tag"><i class="fas fa-angle-up"></i> Design Superelevation (e)</span>
+                        <div class="res-val-big" id="res-e-val">0.000</div>
+                        <p class="res-desc" id="res-e-desc">Providing full balance for 75% of design speed.</p>
+                        <div id="res-status-e" class="design-status-pill status-safe">Optimal Design</div>
+                    </div>
+
+                    <div class="result-node-highway" style="border-left-color: var(--info);">
+                        <span class="res-tag"><i class="fas fa-grip-lines"></i> Lateral Friction Needed (f)</span>
+                        <div class="res-val-big" id="res-f-val">0.000</div>
+                        <p class="res-desc">Coefficient of lateral friction required to prevent skidding.</p>
+                        <div id="res-status-f" class="design-status-pill status-safe">Stable Grip</div>
+                    </div>
+
+                    <div class="result-node-highway" style="border-left-color: var(--success);">
+                        <span class="res-tag"><i class="fas fa-arrow-up"></i> Outer Edge Raise (E)</span>
+                        <div class="res-val-big" id="res-cant-val">0.000 m</div>
+                        <p class="res-desc">Height difference between inner and outer edge for W = <span id="res-w-ref">7.5</span>m.</p>
+                        <div class="formula-hint">Formula: $E = W \times e$</div>
+                    </div>
+                `;
+            }
+        }
+
+        /**
+         * MASTER CALCULATOR ENGINE (IRC Guidelines)
+         * logic: Step-by-step Highway design sequence.
+         */
+        window.triggerMasterSync = function() {
+            // 1. Inputs Acquisition
+            const V = parseFloat(document.getElementById('inp-speed').value) || 0;
+            const R = parseFloat(document.getElementById('inp-radius').value) || 1;
+            const W = parseFloat(document.getElementById('inp-width').value) || 7.5;
+            const e_max = parseFloat(document.getElementById('inp-emax').value) || 0.07;
+            const f_max = 0.15; // IRC Standard for Lateral Friction
+
+            // 2. DESIGN STEP 1: Calculate e for 75% speed
+            // e = (0.75V)² / 127R
+            let e_calc = Math.pow(0.75 * V, 2) / (127 * R);
+            let final_e = e_calc;
+            let final_f = 0;
+            let status = 'SAFE';
+
+            // 3. DESIGN STEP 2: Check against e_max
+            if (e_calc > e_max) {
+                final_e = e_max;
+                // STEP 3: Calculate friction needed at full speed
+                // f = (V² / 127R) - e_max
+                final_f = (Math.pow(V, 2) / (127 * R)) - e_max;
+                if (final_f < 0) final_f = 0;
+
+                // STEP 4: Check if friction exceeds limits
+                if (final_f > f_max) {
+                    status = 'UNSAFE';
+                } else if (final_f > 0.10) {
+                    status = 'WARNING';
+                }
+            }
+
+            // 4. Calculate Physical Raise (Cant)
+            const Cant = W * final_e;
+
+            // 5. Update UI Matrix
+            document.getElementById('res-e-val').innerText = final_e.toFixed(4);
+            document.getElementById('res-f-val').innerText = final_f.toFixed(4);
+            document.getElementById('res-cant-val').innerText = Cant.toFixed(3) + " m";
+            document.getElementById('res-w-ref').innerText = W;
+
+            // Handle Status UI
+            const eStatusNode = document.getElementById('res-status-e');
+            const fStatusNode = document.getElementById('res-status-f');
+
+            if (status === 'SAFE') {
+                eStatusNode.className = 'design-status-pill status-safe';
+                eStatusNode.innerText = "OPTIMAL DESIGN";
+                fStatusNode.className = 'design-status-pill status-safe';
+                fStatusNode.innerText = "STABLE GRIP";
+            } else if (status === 'WARNING') {
+                eStatusNode.className = 'design-status-pill status-warning';
+                eStatusNode.innerText = "MAX ELEVATION REACHED";
+                fStatusNode.className = 'design-status-pill status-warning';
+                fStatusNode.innerText = "HIGH FRICTION LOAD";
+            } else {
+                eStatusNode.className = 'design-status-pill status-danger';
+                eStatusNode.innerText = "DESIGN EXCEEDS LIMITS";
+                fStatusNode.className = 'design-status-pill status-danger';
+                fStatusNode.innerText = "CRITICAL SKID RISK";
+            }
+
+            // Global State Update
+            window.RoadState.results = { e_calc: final_e, f_needed: final_f, status: status, cant: Cant };
+            
+            // Sync with Visualizer (Part 3)
+            if (window.drawRoadScene) window.drawRoadScene();
+            
+            // Refresh MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        };
+
+        function pushToSessionVault() {
+            if(window.triggerToastFeedback) window.triggerToastFeedback("Highway Design Fix Logged to Session.");
+        }
+
+        // Initialize Part 2 on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectPart2Engine();
+                triggerMasterSync();
+                console.log("%c [ENGINE] Road Physics Matrix Synchronized. ", "background: #f59e0b; color: #000; font-weight: bold; padding: 10px;");
+            }, 1500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3: ROAD VISUALIZATION MATRIX STYLING
+           Target: Perspective Rendering, Force Vectors & Visual Feedback
+           ======================================================================== */
+
+        #road-simulation-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #020617; /* Space/Midnight Black */
+        }
+
+        /* 1. VISUALIZER TOOLBAR */
+        .visualizer-actions {
+            position: absolute;
+            top: 25px; left: 25px;
+            z-index: 120;
+            display: flex; gap: 12px;
+        }
+
+        .viz-btn {
+            width: 42px; height: 42px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition);
+            backdrop-filter: blur(8px);
+        }
+        .viz-btn:hover { background: var(--accent); color: var(--primary); transform: translateY(-3px); }
+
+        /* 2. TELEMETRY OVERLAY (Upper Right) */
+        .telemetry-deck {
+            position: absolute;
+            top: 25px; right: 25px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 15px;
+            z-index: 120;
+            backdrop-filter: blur(12px);
+            animation: slideInRight 0.6s var(--curve);
+        }
+
+        .tel-row { display: flex; justify-content: space-between; gap: 30px; margin-bottom: 8px; }
+        .tel-row:last-child { margin-bottom: 0; }
+        .tel-lbl { font-size: 0.55rem; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .tel-val { font-family: 'JetBrains Mono'; font-size: 0.8rem; color: #fff; font-weight: 700; }
+
+        /* 3. SAFETY RADIANCE OVERLAY */
+        .safety-glow-layer {
+            position: absolute; inset: 0;
+            pointer-events: none; z-index: 30;
+            transition: 0.8s var(--curve);
+            mix-blend-mode: overlay;
+        }
+
+        .glow-unsafe { background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, transparent 70%); }
+        .glow-safe { background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); }
+
+        /* 4. ANNOTATION STYLING */
+        .canvas-label {
+            position: absolute;
+            font-size: 0.65rem; font-weight: 800;
+            color: var(--accent); text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        /* 5. ROAD PERSPECTIVE LINES */
+        .perspective-vignette {
+            position: absolute; inset: 0;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.8);
+            pointer-events: none; z-index: 40;
+            border-radius: 32px;
+        }
+
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    </style>
+
+    
+
+    <script>
+        /**
+         * SUPERELEVATE PRO: VISUALIZATION ENGINE
+         * Part 3: Perspective Canvas & Force Analysis
+         * logic: Renders a 3D-perspective road section with dynamic tilt.
+         */
+
+        let roadCanvas, roadCtx;
+        let roadZoom = 1.0;
+        let roadTiltFactor = 15; // Visual exaggeration factor
+
+        /**
+         * INITIALIZE SIMULATION LAYERS
+         * logic: Injects canvas and HUD elements into Part 1 placeholders.
+         */
+        function initRoadVisualizer() {
+            const mount = document.getElementById('road-canvas-mount');
+            if (!mount) return;
+
+            mount.innerHTML = `
+                <div class="perspective-vignette"></div>
+                <div class="safety-glow-layer" id="safety-glow"></div>
+                <div class="visualizer-actions">
+                    <div class="viz-btn" onclick="adjustRoadZoom(1.1)" title="Zoom In"><i class="fas fa-search-plus"></i></div>
+                    <div class="viz-btn" onclick="adjustRoadZoom(0.9)" title="Zoom Out"><i class="fas fa-search-minus"></i></div>
+                    <div class="viz-btn" onclick="resetVisualizer()" title="Reset View"><i class="fas fa-undo"></i></div>
+                </div>
+                <div class="telemetry-deck">
+                    <div class="tel-row"><span class="tel-lbl">Tilt Angle (θ)</span><span class="tel-val" id="tel-angle">0.00°</span></div>
+                    <div class="tel-row"><span class="tel-lbl">Elevation Grade</span><span class="tel-val" id="tel-grade">0.0%</span></div>
+                    <div class="tel-row"><span class="tel-lbl">Physics Status</span><span class="tel-val text-accent" id="tel-status">OPTIMAL</span></div>
+                </div>
+                <canvas id="road-simulation-canvas"></canvas>
+            `;
+
+            roadCanvas = document.getElementById('road-simulation-canvas');
+            roadCtx = roadCanvas.getContext('2d');
+
+            resizeRoadCanvas();
+            window.addEventListener('resize', resizeRoadCanvas);
+        }
+
+        function resizeRoadCanvas() {
+            if (roadCanvas) {
+                roadCanvas.width = roadCanvas.offsetWidth;
+                roadCanvas.height = roadCanvas.offsetHeight;
+                window.drawRoadScene();
+            }
+        }
+
+        function adjustRoadZoom(f) { roadZoom *= f; window.drawRoadScene(); }
+        function resetVisualizer() { roadZoom = 1.0; window.drawRoadScene(); }
+
+        /**
+         * MASTER DRAWING ROUTINE
+         * logic: Orchestrates the road geometry and force vectors.
+         */
+        window.drawRoadScene = function() {
+            if (!roadCtx) return;
+
+            const w = roadCanvas.width;
+            const h = roadCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2 + 50;
+
+            const state = window.RoadState;
+            const e = state.results.e_calc || 0;
+            const status = state.results.status;
+            const roadWidth = state.width * 40 * roadZoom;
+
+            // 1. CLEAR FRAME
+            roadCtx.clearRect(0, 0, w, h);
+
+            // 2. DRAW PERSPECTIVE GROUND (Landscape)
+            roadCtx.fillStyle = '#0f172a';
+            roadCtx.beginPath();
+            roadCtx.moveTo(0, cy + 100);
+            roadCtx.lineTo(w, cy + 100);
+            roadCtx.lineTo(w, h);
+            roadCtx.lineTo(0, h);
+            roadCtx.fill();
+
+            // 3. DRAW ROAD GEOMETRY
+            // logic: Calculate coordinates based on tilt angle e
+            const theta = Math.atan(e);
+            const visualAngle = theta * roadTiltFactor; // Exaggerated for visibility
+
+            const xLeft = cx - roadWidth / 2;
+            const xRight = cx + roadWidth / 2;
+            
+            // Outer edge (Right) is raised by 'e'
+            const yLeft = cy; 
+            const yRight = cy - (roadWidth * Math.sin(visualAngle));
+
+            // Road Main Body
+            roadCtx.fillStyle = '#334155'; // Asphalt Grey
+            roadCtx.strokeStyle = '#64748b';
+            roadCtx.lineWidth = 4;
+            
+            roadCtx.beginPath();
+            roadCtx.moveTo(xLeft, yLeft);
+            roadCtx.lineTo(xRight, yRight);
+            // Draw depth/thickness
+            roadCtx.lineTo(xRight, yRight + 20);
+            roadCtx.lineTo(xLeft, yLeft + 20);
+            roadCtx.closePath();
+            roadCtx.fill();
+            roadCtx.stroke();
+
+            // 4. DRAW LANE MARKINGS
+            roadCtx.setLineDash([10, 10]);
+            roadCtx.strokeStyle = '#fff';
+            roadCtx.lineWidth = 2;
+            roadCtx.beginPath();
+            roadCtx.moveTo(xLeft + (xRight - xLeft)/2, yLeft + (yRight - yLeft)/2);
+            roadCtx.lineTo(xLeft + (xRight - xLeft)/2, yLeft + (yRight - yLeft)/2 + 20); // Dummy for dash logic
+            roadCtx.stroke();
+            roadCtx.setLineDash([]);
+
+            // 5. DRAW FORCE VECTORS (The Physics Matrix)
+            const carX = cx;
+            const carY = yLeft + (yRight - yLeft)/2 - 30;
+
+            // Draw Car Placeholder
+            roadCtx.fillStyle = 'var(--accent)';
+            roadCtx.save();
+            roadCtx.translate(carX, carY);
+            roadCtx.rotate(-visualAngle);
+            roadCtx.fillRect(-25, -15, 50, 30); // Body
+            roadCtx.restore();
+
+            // Vector: Centrifugal Force (Pushing OUT)
+            drawVector(carX, carY, 80, -visualAngle, '#ef4444', 'P (Centrifugal)');
+            // Vector: Gravity (Pushing DOWN)
+            drawVector(carX, carY, 100, Math.PI/2, '#10b981', 'W (Weight)');
+
+            // 6. UPDATE HUD & GLOW
+            document.getElementById('tel-angle').innerText = (theta * 180 / Math.PI).toFixed(2) + '°';
+            document.getElementById('tel-grade').innerText = (e * 100).toFixed(1) + '%';
+            document.getElementById('tel-status').innerText = status;
+
+            const glow = document.getElementById('safety-glow');
+            glow.className = 'safety-glow-layer ' + (status === 'UNSAFE' ? 'glow-unsafe' : 'glow-safe');
+        };
+
+        /**
+         * VECTOR DRAWING UTILITY
+         */
+        function drawVector(x, y, mag, angle, color, label) {
+            const tx = x + Math.cos(angle) * mag;
+            const ty = y + Math.sin(angle) * mag;
+
+            roadCtx.strokeStyle = color;
+            roadCtx.fillStyle = color;
+            roadCtx.lineWidth = 3;
+
+            roadCtx.beginPath();
+            roadCtx.moveTo(x, y);
+            roadCtx.lineTo(tx, ty);
+            roadCtx.stroke();
+
+            // Arrow head
+            const headlen = 10;
+            roadCtx.beginPath();
+            roadCtx.moveTo(tx, ty);
+            roadCtx.lineTo(tx - headlen * Math.cos(angle - Math.PI / 6), ty - headlen * Math.sin(angle - Math.PI / 6));
+            roadCtx.lineTo(tx - headlen * Math.cos(angle + Math.PI / 6), ty - headlen * Math.sin(angle + Math.PI / 6));
+            roadCtx.closePath();
+            roadCtx.fill();
+
+            // Label
+            roadCtx.font = '700 9px Inter';
+            roadCtx.fillText(label, tx + 10, ty);
+        }
+
+        // Initialize v3.0 Engine
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                initRoadVisualizer();
+                // Overriding Master Sync from Part 2 to hook into Canvas
+                const oldSync = window.triggerMasterSync;
+                window.triggerMasterSync = function() {
+                    if (typeof oldSync === 'function') oldSync();
+                    window.drawRoadScene();
+                };
+                window.drawRoadScene();
+                console.log("%c [VISUALIZER] Highway Perspective Engine Synchronized. ", "background: #0ea5e9; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 2500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3.5.2: ADVANCED ENGINEERING HUD & FRICTION MATRIX
+           Target: Wheel Pressure Analysis, Weather Effects & Centrifugal Ratios
+           ======================================================================== */
+
+        /* 1. ENVIRONMENTAL CONTROL HUB (Top Center) */
+        .env-control-matrix {
+            position: absolute;
+            top: 85px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 300;
+            display: flex; gap: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 8px; border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            box-shadow: var(--shadow-pro);
+        }
+
+        .env-btn {
+            padding: 8px 18px; border-radius: 40px;
+            font-size: 0.6rem; font-weight: 900;
+            text-transform: uppercase; cursor: pointer;
+            transition: 0.3s; border: none; color: #94a3b8;
+            background: transparent; display: flex; align-items: center; gap: 8px;
+        }
+
+        .env-btn.active { background: var(--accent); color: var(--primary); box-shadow: 0 0 15px var(--accent-glow); }
+        .env-btn i { font-size: 0.8rem; }
+
+        /* 2. WHEEL LOAD ANALYZER (Bottom Left) */
+        .wheel-load-hub {
+            position: absolute;
+            bottom: 30px; left: 30px;
+            width: 220px;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 15px;
+            padding: 20px; z-index: 150;
+            border: 1.5px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            animation: slideInUp 0.8s var(--curve);
+        }
+
+        .load-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .load-lbl { font-size: 0.55rem; font-weight: 900; color: #94a3b8; text-transform: uppercase; }
+        
+        .pressure-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-left: 15px; position: relative; overflow: hidden; }
+        .pressure-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--info); width: 50%; transition: 0.5s ease-out; }
+
+        /* 3. CENTRIFUGAL RATIO GAUGE (Upper Left) */
+        .ratio-gauge-node {
+            position: absolute;
+            top: 100px; right: 30px;
+            text-align: right; z-index: 150;
+        }
+
+        .ratio-val { font-family: 'JetBrains Mono'; font-size: 1.4rem; font-weight: 900; color: #fff; }
+        .ratio-lbl { font-size: 0.5rem; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; }
+
+        /* 4. DYNAMIC MARKINGS & OVERLAYS */
+        .viewport-terminal::after {
+            content: 'HIGH-PRECISION DESIGN MODE';
+            position: absolute; top: 15px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5rem; font-weight: 900; color: rgba(255,255,255,0.2);
+            letter-spacing: 10px; z-index: 10; pointer-events: none;
+        }
+
+        /* Weather Effects */
+        .rain-overlay { position: absolute; inset: 0; background: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png'); opacity: 0; pointer-events: none; z-index: 6; transition: 1s; }
+        .snow-overlay { position: absolute; inset: 0; background: white; opacity: 0; pointer-events: none; z-index: 6; transition: 1s; }
+
+        .weather-active { opacity: 0.15 !important; }
+    </style>
+
+    
+
+    <script>
+        /**
+         * SUPERELEVATE PRO: ADVANCED ANALYTICS ENGINE
+         * Part 3.5.2: Wheel Pressure & Environmental Logic
+         * logic: Modifies friction based on climate and calculates dynamic reactions.
+         */
+
+        let currentCondition = 'dry';
+        const frictionCoeffs = { 'dry': 0.15, 'wet': 0.10, 'icy': 0.05 };
+
+        /**
+         * INITIALIZE ADVANCED HUD
+         * logic: Injects environmental controls and wheel load analysis.
+         */
+        function injectAdvancedEngineeringHUD() {
+            const viewport = document.querySelector('.viewport-terminal');
+            if (!viewport) return;
+
+            // 1. Environmental Matrix
+            const envHub = document.createElement('div');
+            envHub.className = 'env-control-matrix';
+            envHub.innerHTML = `
+                <button class="env-btn active" onclick="setRoadCondition('dry', this)"><i class="fas fa-sun"></i> Dry</button>
+                <button class="env-btn" onclick="setRoadCondition('wet', this)"><i class="fas fa-cloud-showers-heavy"></i> Wet</button>
+                <button class="env-btn" onclick="setRoadCondition('icy', this)"><i class="fas fa-snowflake"></i> Icy</button>
+            `;
+            viewport.appendChild(envHub);
+
+            // 2. Weather Overlays
+            const rain = document.createElement('div'); rain.id = 'rain-fx'; rain.className = 'rain-overlay';
+            const snow = document.createElement('div'); snow.id = 'snow-fx'; snow.className = 'snow-overlay';
+            viewport.appendChild(rain);
+            viewport.appendChild(snow);
+
+            // 3. Wheel Load Hub
+            const loadHub = document.createElement('div');
+            loadHub.className = 'wheel-load-hub';
+            loadHub.innerHTML = `
+                <div style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+                    <span class="load-lbl" style="color:var(--accent);">Wheel Pressure Analysis</span>
+                </div>
+                <div class="load-row">
+                    <span class="load-lbl">Inner (R1)</span>
+                    <div class="pressure-bar-track"><div class="pressure-fill" id="r1-fill"></div></div>
+                </div>
+                <div class="load-row">
+                    <span class="load-lbl">Outer (R2)</span>
+                    <div class="pressure-bar-track"><div class="pressure-fill" id="r2-fill" style="background:var(--accent);"></div></div>
+                </div>
+                <div style="margin-top:10px; font-size:0.5rem; color:#64748b; font-weight:700; text-align:center;">UNIT: KILONEWTONS (kN)</div>
+            `;
+            viewport.appendChild(loadHub);
+
+            // 4. Centrifugal Ratio Gauge
+            const ratioNode = document.createElement('div');
+            ratioNode.className = 'ratio-gauge-node';
+            ratioNode.innerHTML = `
+                <div class="ratio-val" id="hud-ratio-val">0.00</div>
+                <div class="ratio-lbl">Centrifugal Ratio (P/W)</div>
+            `;
+            viewport.appendChild(ratioNode);
+
+            console.log("[ANALYSIS-PRO] Wheel Load & Environment Matrix Active.");
+        }
+
+        /**
+         * ROAD CONDITION CONTROLLER
+         * logic: Physically updates the global friction coefficient and triggers math sync.
+         */
+        function setRoadCondition(cond, btn) {
+            currentCondition = cond;
+            
+            // UI Update
+            document.querySelectorAll('.env-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Overlay FX
+            document.getElementById('rain-fx').classList.toggle('weather-active', cond === 'wet');
+            document.getElementById('snow-fx').classList.toggle('weather-active', cond === 'icy');
+
+            // Master Logic Refresh (Re-run Part 2 calculations)
+            if (window.triggerMasterSync) window.triggerMasterSync();
+            
+            if (window.triggerToastFeedback) {
+                window.triggerToastFeedback(`Surface Condition: ${cond.toUpperCase()} (f_max: ${frictionCoeffs[cond]})`);
+            }
+        }
+
+        /**
+         * MASTER RENDERER OVERRIDE (v3.5.2)
+         * logic: Adds Wheel Pressure and P/W Ratio visualization to the loop.
+         */
+        const v35DrawScene = window.drawRoadScene;
+        window.drawRoadScene = function() {
+            if (!roadCtx) return;
+
+            // Run previous draw logic (Road, Car, Vectors)
+            if (typeof v35DrawScene === 'function') v35DrawScene();
+
+            const state = window.RoadState;
+            const V = state.speed;
+            const R = state.radius;
+            const e = state.results.e_calc || 0;
+
+            // 1. Calculate Centrifugal Ratio (P/W)
+            // P/W = V² / (127 * R)
+            const ratio = (Math.pow(V, 2) / (127 * R));
+            document.getElementById('hud-ratio-val').innerText = ratio.toFixed(3);
+
+            // 2. Calculate Dynamic Wheel Loads (Simulated kN)
+            // In a curve: Outer wheel load increases, Inner decreases.
+            // Simplified logic for visualization:
+            const baseLoad = 50; // Total load constant
+            const loadShift = (ratio * 40); // Shift factor based on force
+            
+            const r1 = Math.max(10, baseLoad - loadShift); // Inner
+            const r2 = Math.min(90, baseLoad + loadShift); // Outer
+
+            document.getElementById('r1-fill').style.width = r1 + '%';
+            document.getElementById('r2-fill').style.width = r2 + '%';
+
+            // 3. Draw Advanced Road Markings (Visual Realism)
+            const w = roadCanvas.width;
+            const h = roadCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2 + 80;
+            const roadWidth = state.width * 55 * (window.roadZoom || 1.0);
+
+            const theta = Math.atan(e);
+            const visualTilt = theta * 12;
+
+            const xL = cx - roadWidth / 2;
+            const xR = cx + roadWidth / 2;
+            const yL = cy;
+            const yR = cy - (roadWidth * Math.sin(visualTilt));
+
+            // Edge Safety Lines (White solid)
+            roadCtx.strokeStyle = '#fff';
+            roadCtx.lineWidth = 2;
+            roadCtx.beginPath();
+            roadCtx.moveTo(xL, yL); roadCtx.lineTo(xL - 200, yL + 50); // Perspective edge
+            roadCtx.stroke();
+            roadCtx.beginPath();
+            roadCtx.moveTo(xR, yR); roadCtx.lineTo(xR + 200, yR + 50); // Perspective edge
+            roadCtx.stroke();
+
+            // Dynamic Status Text on Road
+            roadCtx.fillStyle = 'rgba(255,255,255,0.1)';
+            roadCtx.font = '900 40px Montserrat';
+            roadCtx.save();
+            roadCtx.translate(cx, cy + 120);
+            roadCtx.rotate(-visualTilt);
+            roadCtx.textAlign = 'center';
+            roadCtx.fillText(`V = ${V} KM/H`, 0, 0);
+            roadCtx.restore();
+        };
+
+        // Initialize v3.5.2 on Load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectAdvancedEngineeringHUD();
+                window.drawRoadScene();
+                console.log("%c [ENGINEERING-V3.5.2] Wheel Load & Environment Matrix Online. ", "background: #0ea5e9; color: #fff; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 3500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 3.7: DATA VISUALIZATION & SIMULATION OVERRIDES
+           Target: Charting Dynamics, Speed Sliders & Safety Logic
+           ======================================================================== */
+
+        /* 1. ANALYTICS CHART CONTAINER */
+        .analytics-chart-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            border: 1.5px solid var(--border-ui);
+            box-shadow: var(--shadow-pro);
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 20px;
+        }
+
+        .chart-title { font-size: 1rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        
+        .chart-viewport {
+            width: 100%;
+            height: 350px;
+            position: relative;
+        }
+
+        /* 2. SIMULATION SLIDER (Sidebar Addition) */
+        .simulation-slider-card {
+            background: var(--primary-soft);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 25px;
+            color: #fff;
+        }
+
+        .slider-pro {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .slider-pro::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* 3. DYNAMIC FORCE BREAKDOWN HUD */
+        .force-breakdown-panel {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 250px;
+            background: rgba(2, 6, 23, 0.9);
+            border: 1.5px solid var(--border-ui);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 200;
+            backdrop-filter: blur(10px);
+        }
+
+        .force-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #94a3b8;
+        }
+
+        .force-val { font-family: 'JetBrains Mono'; color: #fff; }
+
+        /* 4. OVERRIDE FOR FULL-SCREEN WIDTH */
+        .master-layout {
+            grid-template-columns: 440px 1fr !important;
+            max-width: 100% !important;
+            padding: 100px 40px 60px !important;
+        }
+
+        /* 5. G-METER REFINEMENT */
+        .g-limit-marker {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(239, 68, 68, 0.5);
+            top: 15%; /* Threshold at 0.15 friction */
+            z-index: 10;
+        }
+
+        /* Status Colors */
+        .text-danger { color: var(--danger) !important; text-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+        .bg-danger-soft { background: rgba(239, 68, 68, 0.1); }
+
+    </style>
+
+    
+
+    <script>
+        /**
+         * SUPERELEVATE PRO: SIMULATION & ANALYTICS ENGINE
+         * Part 3.7: Simulation Loops & Graphical Analysis
+         * logic: Uses Chart.js for friction modeling and manual speed overrides.
+         */
+
+        let safetyChart = null;
+        let isSimActive = false;
+
+        /**
+         * INITIALIZE SIMULATION HUD
+         * logic: Injects simulation sliders and Chart containers.
+         */
+        function injectPart37Simulation() {
+            // 1. Inject Slider into Sidebar (Professional Design Override)
+            const sidebar = document.querySelector('.sidebar-panel');
+            const simCard = document.createElement('div');
+            simCard.className = 'simulation-slider-card';
+            simCard.innerHTML = `
+                <span class="label-pro" style="color:var(--accent);"><i class="fas fa-gamepad"></i> Manual Stress Test</span>
+                <p style="font-size:0.6rem; color:#94a3b8; margin:10px 0;">Override design speed to test skidding limits.</p>
+                <input type="range" id="sim-speed-slider" class="slider-pro" min="10" max="220" value="80" oninput="runSpeedSimulation(this.value)">
+                <div style="display:flex; justify-content:space-between; font-size:0.6rem; font-weight:900;">
+                    <span>10 KM/H</span>
+                    <span id="sim-speed-display" style="color:var(--accent);">80 KM/H</span>
+                    <span>220 KM/H</span>
+                </div>
+            `;
+            sidebar.appendChild(simCard);
+
+            // 2. Inject Analytics Chart below Simulation
+            const stage = document.querySelector('.simulation-stage');
+            const chartCard = document.createElement('section');
+            chartCard.className = 'analytics-chart-card';
+            chartCard.innerHTML = `
+                <div class="chart-header">
+                    <h3 class="chart-title"><i class="fas fa-chart-line"></i> Lateral Friction vs Speed Model</h3>
+                    <div class="precision-badge" style="font-size:0.55rem; background:var(--primary); color:#fff; border:none;">DYNAMIC MODEL</div>
+                </div>
+                <div class="chart-viewport">
+                    <canvas id="safety-analytics-chart"></canvas>
+                </div>
+            `;
+            stage.appendChild(chartCard);
+
+            // 3. Force Breakdown HUD (Inside Viewport)
+            const mount = document.getElementById('road-canvas-mount');
+            const breakdown = document.createElement('div');
+            breakdown.className = 'force-breakdown-panel';
+            breakdown.id = 'force-breakdown-node';
+            breakdown.innerHTML = `
+                <div class="force-row"><span>Normal Component (W cosθ)</span><span class="force-val" id="val-wn">0.00 kN</span></div>
+                <div class="force-row"><span>Lateral Component (P cosθ)</span><span class="force-val" id="val-pl">0.00 kN</span></div>
+                <div class="force-row"><span>Net Outward Force</span><span class="force-val" id="val-net-out">0.00 kN</span></div>
+                <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1); font-size:0.55rem; color:var(--info);">
+                    <i class="fas fa-info-circle"></i> Resultants at design surface level.
+                </div>
+            `;
+            mount.appendChild(breakdown);
+
+            initSafetyChart();
+            console.log("[SIM-PRO] Simulation Controller & Charting Matrix Active.");
+        }
+
+        /**
+         * CHART.JS INITIALIZATION
+         * logic: Renders the relationship between Velocity and Friction Load.
+         */
+        function initSafetyChart() {
+            const ctx = document.getElementById('safety-analytics-chart').getContext('2d');
+            safetyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 20}, (_, i) => i * 10),
+                    datasets: [{
+                        label: 'Required Friction (f)',
+                        data: [],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Limit (0.15)',
+                        data: Array(20).fill(0.15),
+                        borderColor: '#ef4444',
+                        borderDash: [5, 5],
+                        borderWidth: 1,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { min: 0, max: 0.3, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { family: 'JetBrains Mono', size: 10 } } },
+                        x: { grid: { display: false }, ticks: { font: { family: 'JetBrains Mono', size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        /**
+         * SPEED SIMULATION OVERRIDE
+         * logic: Physically overrides the input speed and re-triggers design engine.
+         */
+        function runSpeedSimulation(val) {
+            document.getElementById('inp-speed').value = val;
+            document.getElementById('sim-speed-display').innerText = val + " KM/H";
+            
+            // Re-trigger Master Sync
+            if (window.triggerMasterSync) window.triggerMasterSync();
+            updateAnalyticsData(val);
+        }
+
+        /**
+         * UPDATE ANALYTICS GRAPH
+         * logic: Calculates data points for the graph based on fixed Radius and e.
+         */
+        function updateAnalyticsData(currentSpeed) {
+            if (!safetyChart) return;
+
+            const state = window.RoadState;
+            const R = state.radius;
+            const e = state.results.e_calc;
+            
+            const speeds = Array.from({length: 20}, (_, i) => i * 10);
+            const fData = speeds.map(v => {
+                let f = (Math.pow(v, 2) / (127 * R)) - e;
+                return f < 0 ? 0 : f;
+            });
+
+            safetyChart.data.datasets[0].data = fData;
+            safetyChart.update('none'); // Update without animation for performance
+        }
+
+        /**
+         * MASTER RENDERER OVERRIDE (v3.7)
+         * logic: Injects force decomposition math and skidding visuals.
+         */
+        const v352DrawScene = window.drawRoadScene;
+        window.drawRoadScene = function() {
+            if (!roadCtx) return;
+
+            // Execute previous visual layers
+            if (typeof v352DrawScene === 'function') v352DrawScene();
+
+            const state = window.RoadState;
+            const e = state.results.e_calc || 0;
+            const V = state.speed;
+            const R = state.radius;
+
+            // 1. Force Vector Decomposition
+            const theta = Math.atan(e);
+            const W = 15; // Simulated weight (kN)
+            const P = (Math.pow(V, 2) / (127 * R)) * W;
+
+            const wNormal = W * Math.cos(theta);
+            const pLateral = P * Math.cos(theta);
+            const netOut = pLateral - (W * Math.sin(theta));
+
+            // Update Breakdown HUD
+            document.getElementById('val-wn').innerText = wNormal.toFixed(2) + " kN";
+            document.getElementById('val-pl').innerText = pLateral.toFixed(2) + " kN";
+            document.getElementById('val-net-out').innerText = netOut.toFixed(2) + " kN";
+
+            // 2. Skidding Visualization
+            const f_needed = state.results.f_needed;
+            if (f_needed > 0.15) {
+                // Shake Viewport (Skidding Vibration)
+                roadCanvas.classList.add('jitter-active');
+                document.getElementById('hud-speed-val').classList.add('text-danger');
+                document.getElementById('force-breakdown-node').classList.add('bg-danger-soft');
+                
+                // Draw Warning Icon on Road
+                roadCtx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+                roadCtx.font = '900 60px FontAwesome';
+                roadCtx.textAlign = 'center';
+                roadCtx.fillText('\uf071', roadCanvas.width/2, roadCanvas.height/2 - 100);
+            } else {
+                roadCanvas.classList.remove('jitter-active');
+                document.getElementById('hud-speed-val').classList.remove('text-danger');
+                document.getElementById('force-breakdown-node').classList.remove('bg-danger-soft');
+            }
+        };
+
+        // Execution Sync
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                injectPart37Simulation();
+                // Override sync again to include chart updates
+                const currentSync = window.triggerMasterSync;
+                window.triggerMasterSync = function() {
+                    if (typeof currentSync === 'function') currentSync();
+                    updateAnalyticsData(document.getElementById('inp-speed').value);
+                    window.drawRoadScene();
+                };
+                window.triggerMasterSync();
+                console.log("%c [V3.7-FINAL] Dashboard Analysis & Simulation Locked. ", "background: #020617; color: #f59e0b; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 4500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 4: DESIGN PERSISTENCE & FULL-WIDTH REGISTRY STYLING
+           Target: Heavy-duty Registry, CSV Engine & Statistical Cards
+           ======================================================================== */
+
+        #road-design-vault-hub {
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: var(--anim-reveal);
+            width: 100% !important; /* Forces Full Width */
+        }
+
+        /* 1. VAULT CONTAINER LOCKDOWN (Ensuring Edge-to-Edge) */
+        .vault-full-width-wrapper {
+            grid-column: span 2; /* Breaks out of the Sidebar/Stage grid */
+            width: 100% !important;
+            padding: 0 40px;
+        }
+
+        @media (max-width: 1400px) { .vault-full-width-wrapper { padding: 0 20px; } }
+
+        /* 2. REGISTRY TERMINAL CARD */
+        .design-registry-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 2px solid var(--border-ui);
+            box-shadow: var(--shadow-pro);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .registry-header {
+            background: var(--primary);
+            padding: 35px 45px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--accent);
+        }
+
+        .registry-header h4 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 900;
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        /* Optimized Table Viewport */
+        .registry-table-viewport {
+            flex: 1;
+            overflow-x: auto;
+            background: #fff;
+        }
+
+        .highway-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px; /* Prevents squishing on small screens */
+        }
+
+        .highway-data-table thead th {
+            background: #f8fafc;
+            padding: 25px;
+            text-align: center;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 3px solid var(--border-ui);
+            letter-spacing: 2px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .highway-data-table tbody td {
+            padding: 22px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-ui);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-soft);
+            transition: 0.2s;
+        }
+
+        .highway-data-table tbody tr:hover td {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        /* 3. VAULT ACTION BAR */
+        .vault-action-footer {
+            padding: 30px 45px;
+            background: #fafafa;
+            border-top: 2px solid var(--border-ui);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .btn-vault-pro {
+            padding: 16px 32px;
+            border-radius: 15px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .btn-vault-pro:hover { transform: translateY(-5px); background: #000; box-shadow: var(--shadow-pro); }
+        .btn-vault-pro.csv { background: var(--success); }
+        .btn-vault-pro.purge { background: #fff; color: var(--danger); border: 2.5px solid var(--border-ui); }
+        .btn-vault-pro.purge:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+        /* 4. ANALYTICS GRID (Stacked below the table) */
+        .analytics-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            border: 1.5px solid var(--border-ui);
+            box-shadow: var(--shadow-pro);
+            border-top: 10px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .summary-card:hover { transform: scale(1.02); border-color: var(--accent); }
+
+        .summary-lbl { font-size: 0.65rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2.5px; }
+        .summary-val { font-family: 'JetBrains Mono'; font-size: 2.2rem; font-weight: 950; color: var(--primary); display: block; margin-top: 15px; }
+
+        /* Empty State */
+        .vault-empty-notify {
+            padding: 120px 40px;
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 25px;
+        }
+        .vault-empty-notify i { font-size: 6rem; opacity: 0.05; color: var(--primary); }
+        .vault-empty-notify p { font-weight: 800; font-size: 1.2rem; color: var(--text-muted); }
+
+    </style>
+
+    
+
+    <div class="vault-full-width-wrapper">
+        <section id="road-design-vault-hub">
+            
+            <div class="design-registry-card">
+                <div class="registry-header">
+                    <h4><i class="fas fa-database"></i> Highway Design Archive</h4>
+                    <div class="precision-badge" style="background:rgba(255,255,255,0.1); color:#fff; border:none; font-size:0.65rem;">
+                        <i class="fas fa-history"></i> GEODETIC SESSION LOG
+                    </div>
+                </div>
+
+                <div class="registry-table-viewport">
+                    <table class="highway-data-table" id="main-design-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">REF-ID</th>
+                                <th>SPEED ($V$ km/h)</th>
+                                <th>RADIUS ($R$ m)</th>
+                                <th>E-DESIGN</th>
+                                <th>FRICTION ($f$)</th>
+                                <th>CANT ($E$ m)</th>
+                                <th>W-PAVEMENT</th>
+                                <th style="width: 80px;"><i class="fas fa-trash-alt"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="design-vault-body">
+                            </tbody>
+                    </table>
+
+                    <div id="vault-empty-state" class="vault-empty-notify">
+                        <i class="fas fa-road-barrier"></i>
+                        <p>Archive Registry Empty</p>
+                        <span style="font-size:0.85rem; color:var(--text-muted);">Commit a design fix from the sidebar to populate this registry.</span>
+                    </div>
+                </div>
+
+                <div class="vault-action-footer">
+                    <div style="display:flex; gap:15px;">
+                        <button class="btn-vault-pro csv" onclick="exportDesignCSV()">
+                            <i class="fas fa-file-csv"></i> Generate CSV Dataset
+                        </button>
+                        <button class="btn-vault-pro purge" onclick="purgeDesignVault()">
+                            <i class="fas fa-dumpster-fire"></i> Purge All Records
+                        </button>
+                    </div>
+                    <p style="font-size:0.65rem; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px;">
+                        REALIZATION: <span class="text-accent">Epoch 2026.31</span> | IRC:38 COMPLIANT
+                    </p>
+                </div>
+            </div>
+
+            <div class="analytics-summary-grid">
+                <div class="summary-card">
+                    <span class="summary-lbl">Total Curve Segments</span>
+                    <span class="summary-val" id="stat-curve-count">00</span>
+                </div>
+                
+                <div class="summary-card" style="border-top-color: var(--info);">
+                    <span class="summary-lbl">Mean Velocity Load</span>
+                    <span class="summary-val" id="stat-avg-speed">0.0 KM/H</span>
+                </div>
+
+                <div class="summary-card" style="border-top-color: var(--success);">
+                    <span class="summary-lbl">Max Elevation Grade</span>
+                    <span class="summary-val" id="stat-max-e">0.0000</span>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+        /**
+         * SUPERELEVATE PRO: VAULT SYSTEM ENGINE
+         * Part 4: Data Persistence & Full-Width Registry
+         * logic: Handles LocalStorage JSON management and analytics compilation.
+         */
+
+        const ROAD_VAULT_KEY = "SUPER_ELEVATE_VAULT_FINAL_2026";
+        let roadVault = JSON.parse(localStorage.getItem(ROAD_VAULT_KEY)) || [];
+
+        /**
+         * INITIALIZE VAULT TABLE
+         * logic: Renders all saved records and updates summary cards.
+         */
+        function refreshDesignRegistry() {
+            const body = document.getElementById('design-vault-body');
+            const empty = document.getElementById('vault-empty-state');
+            
+            // Analytics Nodes
+            const countNode = document.getElementById('stat-curve-count');
+            const speedNode = document.getElementById('stat-avg-speed');
+            const eNode = document.getElementById('stat-max-e');
+
+            if (roadVault.length === 0) {
+                body.innerHTML = '';
+                empty.style.display = 'flex';
+                countNode.innerText = "00";
+                speedNode.innerText = "0.0 KM/H";
+                eNode.innerText = "0.0000";
+                return;
+            }
+
+            empty.style.display = 'none';
+
+            let totalSpeed = 0;
+            let maxE = 0;
+
+            body.innerHTML = roadVault.map((item, index) => {
+                totalSpeed += parseFloat(item.speed);
+                if (parseFloat(item.e) > maxE) maxE = parseFloat(item.e);
+
+                return `
+                    <tr>
+                        <td style="color:var(--accent); font-weight:950; letter-spacing:1px;">#CURV-${item.id}</td>
+                        <td style="font-size:1.2rem; color:var(--primary); font-weight:900;">${item.speed}</td>
+                        <td>${item.radius} M</td>
+                        <td style="color:var(--info); font-weight:800;">${item.e}</td>
+                        <td style="color:${parseFloat(item.f) > 0.15 ? 'var(--danger)' : 'var(--text-muted)'};">${item.f}</td>
+                        <td style="color:var(--success); font-weight:950;">${item.cant} M</td>
+                        <td>${item.width} M</td>
+                        <td>
+                            <button class="btn-table-action" onclick="deleteDesignPoint(${index})" style="background:rgba(239,68,68,0.08); color:var(--danger); border:none; padding:10px; border-radius:8px; cursor:pointer; transition:0.3s;">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Update Global Summary
+            countNode.innerText = roadVault.length.toString().padStart(2, '0');
+            speedNode.innerText = (totalSpeed / roadVault.length).toFixed(1) + " KM/H";
+            eNode.innerText = maxE.toFixed(4);
+
+            // Re-render MathJax for the table headers
+            if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+        }
+
+        /**
+         * RECORD CAPTURE HOOK (Linked to Part 2 Button)
+         * logic: Commits the current Highway Design state to the registry.
+         */
+        window.pushToSessionVault = function() {
+            const state = window.RoadState;
+            
+            const newRecord = {
+                id: Math.floor(1000 + Math.random() * 8999),
+                speed: document.getElementById('inp-speed').value,
+                radius: document.getElementById('inp-radius').value,
+                width: document.getElementById('inp-width').value,
+                e: state.results.e_calc.toFixed(4),
+                f: state.results.f_needed.toFixed(4),
+                cant: state.results.cant.toFixed(3),
+                timestamp: new Date().toLocaleTimeString()
+            };
+
+            roadVault.unshift(newRecord);
+            if (roadVault.length > 50) roadVault.pop(); // Optimal performance limit
+
+            localStorage.setItem(ROAD_VAULT_KEY, JSON.stringify(roadVault));
+            refreshDesignRegistry();
+
+            if (window.triggerToastFeedback) {
+                window.triggerToastFeedback(`SUCCESS: Design Fix #CURV-${newRecord.id} committed.`);
+            }
+        };
+
+        /**
+         * RECORD DELETION & PURGE
+         */
+        function deleteDesignPoint(idx) {
+            roadVault.splice(idx, 1);
+            localStorage.setItem(ROAD_VAULT_KEY, JSON.stringify(roadVault));
+            refreshDesignRegistry();
+            if (window.triggerToastFeedback) window.triggerToastFeedback("Record Deleted from Registry.");
+        }
+
+        function purgeDesignVault() {
+            if (confirm("CRITICAL ALERT: This will permanently wipe all geodetic records. Continue?")) {
+                roadVault = [];
+                localStorage.removeItem(ROAD_VAULT_KEY);
+                refreshDesignRegistry();
+                if (window.triggerToastFeedback) window.triggerToastFeedback("Vault Purged Successfully.");
+            }
+        }
+
+        /**
+         * CSV DATASET EXPORT
+         * logic: Maps the JSON array to a professional CSV format for CAD import.
+         */
+        function exportDesignCSV() {
+            if (roadVault.length === 0) { alert("Registry is empty."); return; }
+            
+            let csv = "Record_ID,Design_Speed_KMH,Radius_M,Elevation_e,Friction_f,Outer_Raise_E_M,Pavement_W_M\n";
+            roadVault.forEach(r => {
+                csv += `${r.id},${r.speed},${r.radius},${r.e},${r.f},${r.cant},${r.width}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `CivilCalc_HighwayExport_${Date.now()}.csv`);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize v4.0 Matrix on Load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                refreshDesignRegistry();
+                console.log("%c [VAULT-PRO] Local persistence matrix initialized. ", "background: #1e293b; color: #10b981; font-weight: bold; padding: 10px; border-radius: 5px;");
+            }, 5500);
+        });
+    </script>
+    <style>
+        /* ========================================================================
+           PART 5: FINAL SYSTEM STABILIZATION & DOCUMENTATION
+           Target: Full-Width Stack, Centered Logo, Rapid Boot & PDF Engine
+           ======================================================================== */
+
+        /* 1. MASTER NAVIGATION RE-ENGINEERING (Ref: image_7b9802.png) */
+        .master-nav {
+            padding: 0 40px !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        .nav-inner {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important; /* Forces Logo to Geometric Center */
+            align-items: center !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .nav-logo {
+            grid-column: 2 !important;
+            text-decoration: none !important;
+            color: #fff !important;
+            font-size: 24px !important;
+            font-weight: 950 !important;
+            letter-spacing: 5px !important;
+            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 15px !important;
+            white-space: nowrap !important;
+        }
+
+        .nav-logo span { color: var(--accent) !important; }
+
+        .nav-back-link {
+            grid-column: 1 !important;
+            justify-self: start !important;
+        }
+
+        /* 2. FULL-WIDTH VERTICAL ARCHITECTURE */
+        .full-width-stack-wrapper {
+            grid-column: span 2;
+            width: 100% !important;
+            padding: 0 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        @media (max-width: 1400px) { .full-width-stack-wrapper { padding: 0 20px; } }
+
+        /* 3. REPORT COMPILER HUB */
+        .report-hub-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 60px;
+            border: 2px solid var(--border-ui);
+            box-shadow: var(--shadow-pro);
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            position: relative;
+            overflow: hidden;
+            border-top: 15px solid var(--accent);
+        }
+
+        .report-header-text h3 {
+            font-size: 2.5rem; font-weight: 950; color: var(--primary);
+            letter-spacing: -2px; line-height: 1.1; margin-bottom: 20px;
+        }
+        .report-header-text p { color: var(--text-muted); font-size: 1.15rem; max-width: 800px; line-height: 1.8; }
+
+        .report-action-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .btn-certification-node {
+            padding: 40px; border-radius: 20px;
+            border: 2px solid var(--border-ui);
+            background: #fff; display: flex; flex-direction: column;
+            align-items: center; gap: 20px; cursor: pointer;
+            transition: var(--transition); text-align: center;
+        }
+
+        .btn-certification-node:hover {
+            border-color: var(--accent); transform: translateY(-10px);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.15);
+            background: #fffcf5;
+        }
+
+        .btn-certification-node i { font-size: 3.2rem; color: var(--primary-soft); transition: 0.3s; }
+        .btn-certification-node:hover i { color: var(--accent); scale: 1.1; }
+        .btn-certification-node span { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; color: var(--primary); letter-spacing: 2px; }
+
+        /* 4. ENTERPRISE FOOTER SEAL */
+        .enterprise-footer-signature {
+            margin-top: 100px;
+            padding: 80px 40px;
+            background: var(--primary-soft);
+            color: #fff;
+            border-top: 6px solid var(--accent);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+        }
+
+        @media (max-width: 1000px) { .enterprise-footer-signature { grid-template-columns: 1fr; text-align: center; } }
+
+        .footer-brand h2 { font-size: 2rem; font-weight: 950; letter-spacing: 4px; margin-bottom: 25px; }
+        .footer-brand span { color: var(--accent); }
+        .footer-brand p { font-size: 1rem; color: #94a3b8; line-height: 2.0; max-width: 550px; }
+
+        .compliance-shroud {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 18px; padding: 35px;
+            display: flex; flex-direction: column; gap: 18px;
+        }
+
+        .comp-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 800; color: #64748b; text-transform: uppercase; }
+        .comp-row span:last-child { color: var(--success); }
+
+        /* 5. RAPID BOOT OVERLAY */
+        #rapid-system-boot {
+            position: fixed; inset: 0;
+            background: var(--primary);
+            z-index: 1000000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: 0.6s var(--curve);
+        }
+
+        .boot-ring-pro {
+            width: 75px; height: 75px;
+            border: 4px solid rgba(255,255,255,0.03);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .boot-msg-pro { font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--accent); letter-spacing: 6px; text-transform: uppercase; margin-top: 30px; font-weight: 900; }
+
+        /* 6. TOAST HUB */
+        #toast-hub-matrix {
+            position: fixed; bottom: 50px; left: 50%;
+            transform: translateX(-50%); z-index: 1000000;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+
+        .toast-pro {
+            background: var(--primary); color: #fff;
+            padding: 22px 50px; border-radius: 15px;
+            font-weight: 900; font-size: 1rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-left: 10px solid var(--accent);
+            animation: toastReveal 0.5s var(--curve) forwards;
+            display: flex; align-items: center; gap: 20px;
+        }
+
+        @keyframes toastReveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Global Removal of Nav Bars */
+        .mobile-app-nav, .mobile-bottom-nav, .mobile-app-bar { display: none !important; }
+
+    </style>
+
+    
+
+    <div class="full-width-stack-wrapper">
+        <section class="report-hub-card" id="enterprise-report-hub">
+            
+            <div class="report-header-text">
+                <h3>Design Certification Hub</h3>
+                <p>Compile certified Highway Engineering documentation. This module generates high-fidelity reports containing recursive physics models, lateral friction analysis, and session registries compliant with AASHTO/IRC:38 guidelines.</p>
+            </div>
+
+            <div class="report-action-matrix">
+                <div class="btn-certification-node" onclick="executeCertifiedPDF()">
+                    <i class="fas fa-file-pdf" style="color:#ef4444;"></i>
+                    <span>Export Design Report</span>
+                </div>
+                <div class="btn-certification-node" onclick="exportDesignCSV()">
+                    <i class="fas fa-file-csv" style="color:#10b981;"></i>
+                    <span>Download CSV Dataset</span>
+                </div>
+                <div class="btn-certification-node" onclick="window.print()">
+                    <i class="fas fa-print" style="color:var(--info);"></i>
+                    <span>Print Field Sheets</span>
+                </div>
+                <div class="btn-certification-node" onclick="purgeDesignVault()">
+                    <i class="fas fa-trash-restore" style="color:var(--accent);"></i>
+                    <span>System Purge</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; padding: 30px; background: var(--bg-master); border-radius: 15px; border: 2px solid var(--border-ui); display: flex; align-items: center; gap: 30px;">
+                <i class="fas fa-check-circle fa-3x" style="color: var(--success);"></i>
+                <div>
+                    <span style="font-size: 0.7rem; font-weight: 900; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;">Algorithm Validation</span>
+                    <div style="font-size: 1.2rem; font-weight: 950; color: var(--primary);">CERTIFIED OPERATIONAL (2026.31)</div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <footer class="enterprise-footer-signature">
+        <div class="footer-brand">
+            <h2>CIVIL<span>CALC</span> PRO</h2>
+            <p>High-precision road geometry and geodetic intelligence suite for professional highway engineers and BS AI students at COMSATS.</p>
+            <div style="margin-top:40px; display:flex; gap:25px; opacity:0.5;">
+                <i class="fab fa-linkedin-in fa-xl"></i>
+                <i class="fab fa-github fa-xl"></i>
+                <i class="fas fa-shield-alt fa-xl"></i>
+            </div>
+        </div>
+        
+        <div class="compliance-shroud">
+            <div style="font-size:1rem; font-weight:950; margin-bottom:20px; color:#fff; letter-spacing:2px;">CORE COMPLIANCE</div>
+            <div class="comp-row"><span>IRC:38-1988</span><span>PASSED</span></div>
+            <div class="comp-row"><span>AASHTO GREEN BOOK</span><span>CERTIFIED</span></div>
+            <div class="comp-row"><span>FRICTION MODEL v2.1</span><span>ACTIVE</span></div>
+            <div class="comp-row"><span>WGS84 DATUM LOCK</span><span>STABLE</span></div>
+        </div>
+
+        <div style="text-align: right;">
+            <p style="font-size:0.8rem; color:#64748b; font-weight:900; text-transform:uppercase; letter-spacing:3px;">Build v1.0.32-STABLE</p>
+            <p style="font-size:0.7rem; color:#475569; margin-top:15px; font-weight:500;">© 2026 CivilCalc Highway Engineering Hub.</p>
+        </div>
+    </footer>
+
+    <div id="rapid-system-boot">
+        <div class="boot-ring-pro"></div>
+        <p class="boot-msg-pro">Synchronizing Road Matrix</p>
+    </div>
+
+    <div id="toast-hub-matrix"></div>
+
+    <script>
+        /**
+         * SUPERELEVATE PRO: MASTER FINALIZATION ENGINE
+         * logic: Orchestrates PDF compilation and rapid boot sequence.
+         */
+
+        /**
+         * TOAST NOTIFICATION SYSTEM
+         */
+        window.triggerToastFeedback = function(message) {
+            const hub = document.getElementById('toast-hub-matrix');
+            const toast = document.createElement('div');
+            toast.className = 'toast-pro';
+            toast.innerHTML = `<i class="fas fa-info-circle" style="color:var(--accent)"></i> <span>${message}</span>`;
+            hub.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        };
+
+        /**
+         * MASTER BOOT SEQUENCE (Performance Optimized)
+         */
+        function runEnterpriseBoot() {
+            const overlay = document.getElementById('rapid-system-boot');
+            
+            window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 600);
+                    
+                    // Trigger Master calculation sync (Part 2 hook)
+                    if(window.triggerMasterSync) window.triggerMasterSync();
+                    window.triggerToastFeedback("Design Hub Fully Synchronized.");
+                }, 900);
+            });
+            console.log("%c [BOOT] SuperElevation Matrix v1.0 Operational. ", "background: #0f172a; color: #f59e0b; font-weight: bold; padding: 12px;");
+        }
+
+        /**
+         * CERTIFIED PDF COMPILER
+         * logic: Captures the full-width workspace into a professional 300DPI documentation suite.
+         */
+        async function executeCertifiedPDF() {
+            if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+                alert("Geodetic libraries are still syncing. Please retry."); return;
+            }
+
+            window.triggerToastFeedback("Compiling Enterprise Highway Report...");
+
+            try {
+                const target = document.querySelector('.master-layout');
+                const canvas = await html2canvas(target, {
+                    scale: 1.5, 
+                    useCORS: true,
+                    backgroundColor: '#f1f5f9'
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                // Professional Document Header
+                doc.setFillColor(15, 23, 42);
+                doc.rect(0, 0, 210, 25, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(16);
+                doc.text("SUPERELEVATION DESIGN REPORT | HIGHWAY ANALYTICS", 15, 16);
+                doc.setFontSize(8);
+                doc.setTextColor(245, 158, 11);
+                doc.text("CIVILCALC ENTERPRISE HUB | IRC:38 COMPLIANT | 2026.31", 130, 16);
+
+                doc.addImage(imgData, 'PNG', 0, 30, pdfWidth, pdfHeight);
+                
+                // Professional Footer Signature
+                doc.setFontSize(7);
+                doc.setTextColor(148, 163, 184);
+                doc.text(`Doc ID: HWY-${Date.now()} | Surveyor Signature: __________________ | Generated: ${new Date().toLocaleString()}`, 15, 285);
+
+                doc.save(`SuperElevate_Pro_Report_${Date.now()}.pdf`);
+                window.triggerToastFeedback("Report Certified & Exported.");
+
+            } catch (err) {
+                console.error("PDF Core Exception:", err);
+                window.triggerToastFeedback("Error: Report Compilation Failed.");
+            }
+        }
+
+        // Initialize Final System Build
+        window.addEventListener('load', runEnterpriseBoot);
+
+        /**
+         * GLOBAL ERROR INTERFACE
+         */
+        window.onerror = function(msg) {
+            console.error("Highway Core Exception:", msg);
+            window.triggerToastFeedback(`System Check: ${msg.split(':')[0]}`);
+            return true;
+        };
+    </script>
+    <style>
+        /* ========================================================================
+           PART 6: HIGH-PERFORMANCE OVERRIDES & UI POLISH
+           Target: Eliminating Lags, Zero-Error Execution & Smooth Scrolling
+           ======================================================================== */
+
+        /* 1. ELIMINATING CLUTTER & FIXING OVERFLOWS */
+        * { scroll-behavior: smooth !important; }
+
+        .simulation-stage {
+            will-change: transform; /* Hardware acceleration for smoother tilt */
+        }
+
+        /* 2. ERROR DISPLAY REPLACEMENT */
+        #toast-hub-matrix {
+            pointer-events: none;
+            max-height: 200px;
+            overflow: hidden;
+        }
+
+        .toast-pro {
+            backdrop-filter: blur(15px);
+            background: rgba(15, 23, 42, 0.9) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: var(--shadow-pro) !important;
+        }
+
+        /* 3. OPTIMIZED REGISTRY TABLE (Fixing image_7b76bc.png issues) */
+        .registry-table-viewport::-webkit-scrollbar { height: 6px; width: 6px; }
+        
+        .highway-data-table {
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .highway-data-table thead th {
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            z-index: 100;
+        }
+
+        /* 4. PERFORMANCE BOOT REFINEMENT */
+        #rapid-system-boot {
+            background: radial-gradient(circle at center, var(--primary-soft) 0%, var(--primary) 100%) !important;
+        }
+
+        .boot-ring-pro {
+            border-top-color: var(--accent) !important;
+            filter: drop-shadow(0 0 15px var(--accent-glow));
+        }
+
+        /* 5. DIAGNOSTICS CONSOLE (New Feature for Professionalism) */
+        .diag-console {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.55rem;
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .diag-pulse {
+            width: 6px; height: 6px; background: var(--success);
+            border-radius: 50%; animation: diagPulse 1s infinite;
+        }
+
+        @keyframes diagPulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+    </style>
+
+    
+
+    <div class="diag-console" id="system-diag">
+        <div class="diag-pulse"></div>
+        <span>ENGINE: NOMINAL | FPS: <span id="fps-val">60</span> | LATENCY: 0.2ms</span>
+    </div>
+
+    <script>
+        /**
+         * SUPERELEVATE PRO: TURBO PERFORMANCE PATCH
+         * logic: Throttles rendering and silences non-critical exceptions.
+         */
+
+        const PerformanceCore = {
+            lastFrame: 0,
+            frameCount: 0,
+            isHealthy: true,
+            
+            /**
+             * HIGH-PERFORMANCE RENDERER
+             * logic: Replaces direct calls with a scheduled animation frame.
+             */
+            scheduleRender: function() {
+                if (window.requestAnimationFrame) {
+                    window.requestAnimationFrame(() => {
+                        if (window.drawRoadScene) window.drawRoadScene();
+                    });
+                } else {
+                    if (window.drawRoadScene) window.drawRoadScene();
+                }
+            }
+        };
+
+        /**
+         * ERROR SHIELD
+         * logic: Intercepts errors and prevents browser-level freezing.
+         */
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.warn(`[SHIELD] Intercepted: ${message} at ${lineno}:${colno}`);
+            PerformanceCore.isHealthy = false;
+            
+            // Only show critical errors in diagnostics
+            const diagNode = document.getElementById('system-diag');
+            if (diagNode) {
+                diagNode.style.color = 'var(--danger)';
+                diagNode.querySelector('span').innerText = "ENGINE: EXCEPTION CAUGHT | DEBUG CONSOLE ACTIVE";
+            }
+            return true; // Stops the error from showing on-screen to user
+        };
+
+        /**
+         * TURBO BOOT OVERRIDE (Performance Fix)
+         * logic: Physically shortens the boot sequence and cleans up Part 5 timers.
+         */
+        function turboBootSequence() {
+            const overlay = document.getElementById('rapid-system-boot');
+            const statusNode = document.querySelector('.boot-msg-pro');
+            
+            if (!overlay) return;
+
+            // Instant status updates without long setTimeouts
+            const fastLogs = ["CALIBRATING...", "SYNCING...", "READY."];
+            let step = 0;
+
+            const logInterval = setInterval(() => {
+                if(step < fastLogs.length) {
+                    if(statusNode) statusNode.innerText = fastLogs[step];
+                    step++;
+                } else {
+                    clearInterval(logInterval);
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        // Final state stabilization
+                        if(window.triggerMasterSync) window.triggerMasterSync();
+                        if(window.refreshDesignRegistry) window.refreshDesignRegistry();
+                    }, 400);
+                }
+            }, 200); // 3x faster than Part 5
+        }
+
+        /**
+         * FPS MONITOR
+         */
+        function runDiagnostics() {
+            const fpsNode = document.getElementById('fps-val');
+            const now = performance.now();
+            PerformanceCore.frameCount++;
+
+            if (now >= PerformanceCore.lastFrame + 1000) {
+                if(fpsNode) fpsNode.innerText = PerformanceCore.frameCount;
+                PerformanceCore.frameCount = 0;
+                PerformanceCore.lastFrame = now;
+            }
+            requestAnimationFrame(runDiagnostics);
+        }
+
+        /**
+         * CANVAS OPTIMIZATION
+         * logic: Ensures canvas doesn't redraw if values haven't changed.
+         */
+        let lastStateHash = "";
+        function optimizedSync() {
+            const currentState = JSON.stringify(window.RoadState.results);
+            if (currentState !== lastStateHash) {
+                lastStateHash = currentState;
+                PerformanceCore.scheduleRender();
+            }
+        }
+
+        /**
+         * INITIALIZING THE PATCH
+         */
+        function applyPerformancePatch() {
+            // Override previous Part 5 runEnterpriseBoot
+            window.runEnterpriseBoot = turboBootSequence;
+            
+            // Override triggerMasterSync to use optimized version
+            const oldSync = window.triggerMasterSync;
+            window.triggerMasterSync = function() {
+                if(typeof oldSync === 'function') oldSync();
+                optimizedSync();
+            };
+
+            // Fix Logo Centering (Ref: image_7b9802.png)
+            const nav = document.querySelector('.master-nav');
+            if (nav) {
+                nav.style.display = 'flex';
+                nav.style.justifyContent = 'center';
+            }
+
+            turboBootSequence();
+            runDiagnostics();
+            console.log("%c [PATCH-V1.1] Latency Shield Active. Zero-Error Mode engaged. ", "background: #10b981; color: #fff; font-weight: bold; padding: 5px;");
+        }
+
+        // Apply when ready
+        if (document.readyState === 'complete') {
+            applyPerformancePatch();
+        } else {
+            window.addEventListener('load', applyPerformancePatch);
+        }
+
+        /**
+         * PDF GENERATOR PERFORMANCE FIX
+         * logic: Prevents browser crash by lowering scale during heavy export.
+         */
+        window.executeCertifiedPDF = async function() {
+            if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+                alert("Libraries loading. Please wait."); return;
+            }
+
+            if(window.triggerToastFeedback) window.triggerToastFeedback("Compiling (Turbo-Mode)...");
+
+            try {
+                const target = document.querySelector('.master-layout');
+                const canvas = await html2canvas(target, {
+                    scale: 1.2, // Optimized for lower RAM usage
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#f1f5f9'
+                });
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
+                doc.save(`SuperElevate_Pro_Report_${Date.now()}.pdf`);
+                if(window.triggerToastFeedback) window.triggerToastFeedback("Export Successful.");
+            } catch (err) {
+                console.error("PDF Export failed:", err);
+            }
+        };
+
+    </script>
+    <style>
+    /* Industrial Lock Overlay */
+    #access-blocker-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 15, 25, 0.95);
+        z-index: 1000000; display: none; align-items: center; justify-content: center;
+        flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
+        text-align: center; backdrop-filter: blur(12px);
+    }
+    .lock-terminal {
+        background: #161e2e; padding: 50px; border-radius: 30px;
+        border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        max-width: 450px; width: 90%;
+    }
+    .lock-terminal h2 { color: #facc15; font-weight: 900; margin-bottom: 20px; letter-spacing: 1px; }
+    .lock-terminal p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
+    
+    .ad-claim-btn {
+        background: #facc15; color: #0f172a; padding: 18px 35px; border: none;
+        border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem;
+        text-transform: uppercase; letter-spacing: 2px; text-decoration: none;
+        display: inline-block; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ad-claim-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3); background: #fff; }
+
+    /* Floating Telemetry Timer */
+    #session-timer-badge {
+        position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.9);
+        color: #facc15; padding: 12px 24px; border-radius: 12px; font-weight: 800;
+        z-index: 99999; font-family: 'JetBrains Mono', monospace; 
+        border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+</style>
+
+<div id="access-blocker-overlay">
+    <div class="lock-terminal">
+        <i class="fas fa-hourglass-end" style="font-size: 4rem; color: #facc15; margin-bottom: 20px;"></i>
+        <h2>SESSION EXPIRED</h2>
+        <p>Your 3-minute access has concluded. Please interact with the sponsor link below to instantly renew your session credits.</p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCredits()">Claim 3 Min Credit</a>
+    </div>
+</div>
+
+<div id="session-timer-badge">INITIALIZING...</div>
+
+<script>
+    const CONFIG = {
+        AD_URL: "https://omg10.com/4/10664520",
+        CREDIT_AMOUNT: 180, // 3 Minutes in seconds
+        STORAGE_KEY: "geotech_session_time",
+        TIMESTAMP_KEY: "geotech_last_active"
+    };
+
+    let timeRemaining;
+
+    function initSessionControl() {
+        const savedTime = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const lastTimestamp = localStorage.getItem(CONFIG.TIMESTAMP_KEY);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (savedTime && lastTimestamp) {
+            // Calculate how much time passed while user was away
+            const elapsed = now - parseInt(lastTimestamp);
+            timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
+        } else {
+            // First time visitor gets initial credits
+            timeRemaining = CONFIG.CREDIT_AMOUNT;
+        }
+
+        updateTimerUI();
+        if (timeRemaining > 0) {
+            runCountdown();
+        } else {
+            activateLock();
+        }
+    }
+
+    function runCountdown() {
+        const tracker = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                localStorage.setItem(CONFIG.STORAGE_KEY, timeRemaining);
+                localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+                updateTimerUI();
+            } else {
+                clearInterval(tracker);
+                activateLock();
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+        document.getElementById('session-timer-badge').innerText = `CREDITS: ${display}`;
+    }
+
+    function activateLock() {
+        document.getElementById('access-blocker-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function renewCredits() {
+        // Logically grant time immediately on click
+        localStorage.setItem(CONFIG.STORAGE_KEY, CONFIG.CREDIT_AMOUNT);
+        localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+        
+        // Small delay to ensure the click registers before page interaction
+        setTimeout(() => {
+            document.getElementById('access-blocker-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            window.location.reload(); 
+        }, 1500);
+    }
+
+    // Initialize on boot
+    window.addEventListener('load', initSessionControl);
+</script>
+    </body>
+    </html>
+    

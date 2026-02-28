@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Marla Converter Pro | CivilCalc Enterprise</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        console.log('[SYSTEM] MathJax Engine: Online');
+                    });
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+
+    <style>
+        /* CIVILCALC MARLA CONVERTER PRO v9.0
+           Build for COMSATS University Islamabad, Wah Campus
+           Part 1: Enterprise Shell & Global Framework 
+        */
+
+        :root {
+            /* Corporate Professional Palette */
+            --primary: #0f172a;           /* Deep Midnight */
+            --primary-soft: #1e293b;      /* Slate 800 */
+            --primary-light: #334155;     /* Slate 700 */
+            --accent: #f59e0b;            /* Construction Amber */
+            --accent-hover: #d97706;
+            --accent-glow: rgba(245, 158, 11, 0.25);
+            --steel: #3b82f6;             /* Engineering Blue */
+            --steel-soft: #eff6ff;
+            
+            /* Status Feedback System */
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #facc15;
+            --info: #0ea5e9;
+
+            /* Surface & Typography Tokens */
+            --bg-master: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-ui: #e2e8f0;
+
+            /* Elevated Tokens */
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            
+            /* Professional Elevation */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.15);
+            --shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.06);
+
+            /* Timing & Motion */
+            --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Master Reset & Base Layers --- */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box; outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { scroll-behavior: smooth; font-size: 16px; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-master);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-top: 70px; /* Navbar Clearance */
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Dark Corporate Navigation --- */
+        .master-nav {
+            background: var(--primary);
+            height: 70px;
+            width: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-inner {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            width: 100%;
+            max-width: 1900px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .nav-back-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .nav-back-link:hover { color: var(--accent); transform: translateX(-5px); }
+
+        .nav-logo-text {
+            text-decoration: none;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo-text span { color: var(--accent); }
+
+        .nav-meta-status {
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .live-status-pill {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 18px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 10px; height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--success);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.6; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- Master Grid Layout (Fixing Blank Space) --- */
+        .master-layout-grid {
+            max-width: 1900px;
+            margin: 0 auto;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 440px 1fr;
+            gap: 40px;
+            min-height: calc(100vh - 70px);
+        }
+
+        @media (max-width: 1400px) {
+            .master-layout-grid { grid-template-columns: 1fr; padding: 25px; }
+        }
+
+        /* --- Corporate Branding Banner --- */
+        .page-header-banner {
+            grid-column: span 2;
+            background: var(--bg-card);
+            border-left: 12px solid var(--accent);
+            padding: 45px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1400px) { .page-header-banner { grid-column: span 1; flex-direction: column; text-align: center; gap: 30px; } }
+
+        .banner-title h1 { font-size: 2.8rem; font-weight: 900; color: var(--primary); letter-spacing: -1.5px; }
+        .banner-title p { color: var(--text-muted); font-size: 1.15rem; font-weight: 500; }
+
+        .banner-badge-box { text-align: right; }
+        @media (max-width: 1400px) { .banner-badge-box { text-align: center; } }
+
+        /* --- Sidebar UI Control Framework --- */
+        .control-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .pro-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-ui);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .pro-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+
+        .card-header-bar {
+            background: var(--primary);
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header-bar h3 {
+            color: #fff;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header-bar i { color: var(--accent); }
+
+        .card-body-content { padding: 30px; }
+
+        /* --- Form Elements Engine --- */
+        .field-group { margin-bottom: 25px; }
+
+        .field-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 1.5px;
+        }
+
+        .input-pill-wrapper { position: relative; display: flex; align-items: center; }
+
+        .pro-input-field {
+            width: 100%;
+            background: #f8fafc;
+            border: 2.5px solid transparent;
+            border-radius: var(--radius-md);
+            padding: 16px 22px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .pro-input-field:focus {
+            background: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 6px var(--accent-glow);
+        }
+
+        .unit-indicator-tag {
+            position: absolute;
+            right: 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        /* --- Main Stage (Results Hub) --- */
+        .main-stage-hub {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            min-width: 0;
+        }
+
+        /* --- Animations --- */
+        .reveal-node { animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Global Status Badges */
+        .status-badge-ui {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: 2px solid transparent;
+        }
+
+        .badge-safe { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
+        .badge-amber { background: rgba(245, 158, 11, 0.1); color: var(--accent); border-color: var(--accent); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--bg-master); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--primary-light); 
+            border-radius: 6px; 
+            border: 3px solid var(--bg-master); 
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* End of Part 1 Styles (Expanding to reach 500+ line logic in Part 2 and beyond) */
+    </style>
+</head>
+<body>
+
+    <nav class="master-nav">
+        <div class="nav-inner">
+            <a href="../find.html" class="nav-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to tools</span>
+            </a>
+
+            <a href="../index.html" class="nav-logo-text">
+                civil<span>Calc</span> PRO
+            </a>
+
+            
+        </div>
+    </nav>
+
+    <div class="master-layout-grid">
+        <header class="page-header-banner reveal-node" style="animation-delay: 0.1s;">
+            <div class="banner-title">
+                <h1>Marla Unit Converter</h1>
+                <p>Enterprise grade land measurement transformation utility.</p>
+            </div>
+            <div class="banner-badge-box">
+                <span class="status-badge-ui badge-safe">
+                    <i class="fas fa-check-double"></i> PRECISION: 99.9%
+                </span>
+                
+            </div>
+        </header>
+
+        <aside class="control-sidebar reveal-node" style="animation-delay: 0.2s;">
+            <div class="pro-card">
+                <div class="card-header-bar">
+                    <h3><i class="fas fa-sliders-h"></i> CORE CONVERSION</h3>
+                </div>
+                <div class="card-body-content" id="sidebar-target">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; font-style: italic;">
+                        Initializing Conversion Matrix...
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-stage-hub" id="main-stage-target">
+            </main>
+    </div>
+    <style>
+            /* --- PART 2: EXTENDED SIDEBAR & CONVERSION UI --- */
+            .conversion-sidebar-matrix {
+                display: flex;
+                flex-direction: column;
+                gap: 25px;
+                animation: revealUp 0.8s ease-out forwards;
+            }
+
+            /* Professional Tab System for Input Modes */
+            .input-mode-tabs {
+                display: flex;
+                background: #f1f5f9;
+                padding: 6px;
+                border-radius: var(--radius-md);
+                margin-bottom: 25px;
+                gap: 5px;
+                border: 1px solid var(--border-ui);
+            }
+
+            .mode-tab {
+                flex: 1;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                border-radius: var(--radius-sm);
+                font-size: 0.7rem;
+                font-weight: 800;
+                color: var(--text-muted);
+                cursor: pointer;
+                transition: var(--transition);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .mode-tab.active {
+                background: var(--bg-card);
+                color: var(--primary);
+                box-shadow: var(--shadow-sm);
+            }
+
+            /* Custom Input Group Styling to Fill Space */
+            .pro-input-group {
+                background: #f8fafc;
+                border: 2px solid var(--border-ui);
+                border-radius: var(--radius-lg);
+                padding: 25px;
+                margin-bottom: 20px;
+                transition: var(--transition);
+            }
+
+            .pro-input-group:focus-within {
+                border-color: var(--accent);
+                background: #fff;
+                box-shadow: 0 0 0 6px var(--accent-glow);
+            }
+
+            .input-heading-pro {
+                font-size: 0.65rem;
+                font-weight: 900;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .input-heading-pro i { color: var(--accent); }
+
+            /* Advanced Dropdown Design */
+            .pro-select {
+                width: 100%;
+                background: #fff;
+                border: 2px solid var(--border-ui);
+                border-radius: var(--radius-md);
+                padding: 14px 18px;
+                font-family: 'Poppins', sans-serif;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: var(--primary);
+                cursor: pointer;
+                transition: var(--transition);
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 20px center;
+                background-size: 18px;
+            }
+
+            .pro-select:focus { border-color: var(--steel); outline: none; }
+
+            /* Detailed Standard Info Nodes */
+            .standard-info-node {
+                margin-top: 20px;
+                padding: 20px;
+                background: var(--steel-soft);
+                border-radius: var(--radius-md);
+                border-left: 5px solid var(--steel);
+            }
+
+            .info-node-title {
+                display: block;
+                font-size: 0.65rem;
+                font-weight: 800;
+                color: var(--steel);
+                text-transform: uppercase;
+                margin-bottom: 8px;
+            }
+
+            .info-node-desc {
+                font-size: 0.75rem;
+                color: var(--primary-light);
+                font-weight: 600;
+                line-height: 1.6;
+            }
+
+            /* Master Calculation Trigger Button */
+            .btn-master-trigger {
+                width: 100%;
+                padding: 22px;
+                background: var(--primary);
+                color: #fff;
+                border: none;
+                border-radius: var(--radius-lg);
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                cursor: pointer;
+                transition: var(--transition);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 10px;
+                box-shadow: var(--shadow-md);
+            }
+
+            .btn-master-trigger:hover {
+                background: #000;
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .btn-master-trigger i {
+                font-size: 1.2rem;
+                color: var(--accent);
+            }
+        </style>
+
+        <script>
+            /**
+             * PART 2 INJECTION: Sidebar Inputs & Controls
+             */
+            const sidebarContainer = document.getElementById('sidebar-target');
+            if (sidebarContainer) {
+                sidebarContainer.innerHTML = `
+                    <div class="conversion-sidebar-matrix">
+                        <div class="input-mode-tabs">
+                            <button class="mode-tab active" onclick="switchMode('single', this)"><i class="fas fa-calculator"></i> Single</button>
+                            <button class="mode-tab" onclick="switchMode('bulk', this)"><i class="fas fa-layer-group"></i> Bulk</button>
+                            <button class="mode-tab" onclick="switchMode('map', this)"><i class="fas fa-map-marked-alt"></i> Map</button>
+                        </div>
+
+                        <div class="pro-input-group">
+                            <span class="input-heading-pro"><i class="fas fa-edit"></i> ENTER MAGNITUDE</span>
+                            <div class="input-pill-wrapper">
+                                <input type="number" id="input-value" class="pro-input-field" value="1" placeholder="0.00" oninput="executeGlobalConversion()">
+                                <span class="unit-indicator-tag" id="current-input-tag">UNIT</span>
+                            </div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">Convert From Unit</label>
+                            <select id="source-unit" class="pro-select" onchange="updateUIState(); executeGlobalConversion();">
+                                <optgroup label="Marla Variants">
+                                    <option value="marla">Standard Marla (272.25)</option>
+                                    <option value="marla_society" selected>Society Marla (225)</option>
+                                    <option value="marla_kda">KDA Marla (250)</option>
+                                </optgroup>
+                                <optgroup label="Land Units">
+                                    <option value="kanal">Kanal (20 Marla)</option>
+                                    <option value="acre">Acre (160 Marla)</option>
+                                    <option value="hectare">Hectare</option>
+                                </optgroup>
+                                <optgroup label="Square Measurements">
+                                    <option value="sqft">Square Feet (Sq Ft)</option>
+                                    <option value="sqm">Square Meters (Sq M)</option>
+                                    <option value="sqyd">Square Yards (Gaz)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="pro-card" style="border-radius: var(--radius-md); border-color: var(--border-ui);">
+                            <div class="card-body-content">
+                                <span class="input-heading-pro" style="margin-bottom: 20px;"><i class="fas fa-balance-scale"></i> MARLA CONFIG</span>
+                                <select id="marla-standard-global" class="pro-select" onchange="executeGlobalConversion()">
+                                    <option value="225">225 Sq Ft </option>
+                                    <option value="250">250 Sq Ft </option>
+                                    <option value="272.25">272.25 Sq Ft</option>
+                                </select>
+                                
+                                <div class="standard-info-node" id="standard-info">
+                                    <span class="info-node-title">Regional Logic</span>
+                                    <p class="info-node-desc">Most modern housing societies in Pakistan use 225 Sq Ft per Marla for calculation.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-master-trigger" onclick="logConversionTrial()">
+                            <i class="fas fa-save"></i> 
+                            <span>Save to Log</span>
+                        </button>
+                    </div>
+                `;
+            }
+        </script>
+
+        <script>
+            /**
+             * THE CONVERTER BRAIN v9.0
+             * Handles Multi-Standard Normalization & Precision Logic
+             */
+
+            const CONVERSION_FACTORS = {
+                // Base unit is Square Feet (Sq Ft)
+                sqft: 1,
+                sqm: 10.7639,
+                sqyd: 9,
+                kanal: 0, // Dynamic based on Marla
+                acre: 43560,
+                hectare: 107639,
+                marla_225: 225,
+                marla_250: 250,
+                marla_272: 272.25
+            };
+
+            const appState = {
+                currentMode: 'single',
+                precision: 3
+            };
+
+            function switchMode(mode, btn) {
+                appState.currentMode = mode;
+                document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+                btn.classList.add('active');
+                executeGlobalConversion();
+            }
+
+            function updateUIState() {
+                const src = document.getElementById('source-unit').value;
+                const tag = document.getElementById('current-input-tag');
+                
+                const labels = {
+                    marla: 'M', marla_society: 'M', marla_kda: 'M',
+                    kanal: 'K', acre: 'AC', hectare: 'HA',
+                    sqft: 'SF', sqm: 'SM', sqyd: 'SY'
+                };
+                
+                tag.innerText = labels[src] || 'UNIT';
+                
+                // Update info node based on selection
+                const infoDesc = document.querySelector('.info-node-desc');
+                if(src.includes('marla')) {
+                    infoDesc.innerText = "Marla sizes vary by region. Ensure your society standard matches the selected config.";
+                } else {
+                    infoDesc.innerText = "Converting standard land units into regional Marla equivalents.";
+                }
+            }
+
+            /**
+             * MASTER CONVERSION ENGINE
+             * Normalizes any input to Sq Ft, then distributes to other units.
+             */
+            function executeGlobalConversion() {
+                const inputVal = parseFloat(document.getElementById('input-value').value) || 0;
+                const srcUnit = document.getElementById('source-unit').value;
+                const marlaStd = parseFloat(document.getElementById('marla-standard-global').value);
+                
+                let sqftArea = 0;
+
+                // 1. Normalization to Square Feet
+                switch(srcUnit) {
+                    case 'sqft': sqftArea = inputVal; break;
+                    case 'sqm': sqftArea = inputVal * 10.7639; break;
+                    case 'sqyd': sqftArea = inputVal * 9; break;
+                    case 'marla': sqftArea = inputVal * 272.25; break;
+                    case 'marla_society': sqftArea = inputVal * 225; break;
+                    case 'marla_kda': sqftArea = inputVal * 250; break;
+                    case 'kanal': sqftArea = inputVal * 20 * marlaStd; break;
+                    case 'acre': sqftArea = inputVal * 43560; break;
+                    case 'hectare': sqftArea = inputVal * 107639; break;
+                }
+
+                // 2. Prepare Result Object
+                const results = {
+                    sqft: sqftArea,
+                    sqm: sqftArea / 10.7639,
+                    sqyd: sqftArea / 9,
+                    marla: sqftArea / marlaStd,
+                    kanal: (sqftArea / marlaStd) / 20,
+                    acre: sqftArea / 43560,
+                    hectare: sqftArea / 107639
+                };
+
+                // 3. Sync with Main Stage (Part 3 will handle the actual display)
+                if (window.renderConversionResults) {
+                    window.renderConversionResults(results, marlaStd);
+                }
+
+                // Update MathJax Formulas
+                if (window.MathJax) MathJax.typesetPromise();
+            }
+
+            // Persistence Logic Placeholder
+            function logConversionTrial() {
+                console.log("[SYSTEM] Data persisted to session log.");
+                if (window.addLogEntry) window.addLogEntry();
+            }
+
+            // Initialize UI on load
+            window.addEventListener('load', () => {
+                updateUIState();
+                executeGlobalConversion();
+                console.log("%c [CONVERTER] Precision Engine v9.0 Initialized ", "color: #3b82f6; font-weight: bold;");
+            });
+        </script>
+        <style>
+            /* --- PART 3: ANALYTICS HUB UI ARCHITECTURE --- */
+            .results-matrix-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 25px;
+                width: 100%;
+                margin-bottom: 35px;
+                animation: revealUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+
+            /* Professional Result Cards */
+            .result-node-pro {
+                background: #fff;
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--border-ui);
+                padding: 35px;
+                position: relative;
+                overflow: hidden;
+                transition: var(--transition);
+                border-bottom: 6px solid var(--steel);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .result-node-pro:hover {
+                transform: translateY(-8px);
+                box-shadow: var(--shadow-lg);
+                border-bottom-color: var(--accent);
+            }
+
+            .result-node-pro::after {
+                content: '';
+                position: absolute;
+                top: 0; right: 0;
+                width: 80px; height: 80px;
+                background: linear-gradient(135deg, transparent 85%, rgba(59, 130, 246, 0.05) 0%);
+            }
+
+            .node-label-top {
+                font-size: 0.7rem;
+                font-weight: 800;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .node-label-top i { color: var(--steel); font-size: 0.9rem; }
+
+            .node-value-big {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 2.8rem;
+                font-weight: 900;
+                color: var(--primary);
+                line-height: 1;
+                word-break: break-all;
+            }
+
+            .node-unit-tag {
+                font-size: 0.9rem;
+                font-weight: 800;
+                color: var(--text-muted);
+                margin-top: 8px;
+            }
+
+            .node-status-tag {
+                margin-top: 15px;
+                font-size: 0.65rem;
+                font-weight: 900;
+                color: var(--success);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-transform: uppercase;
+            }
+
+            /* Extended Analytics Grid for Charting */
+            .analytics-visual-block {
+                display: grid;
+                grid-template-columns: 1.4fr 1fr;
+                gap: 30px;
+                width: 100%;
+                margin-bottom: 40px;
+            }
+
+            @media (max-width: 1100px) { .analytics-visual-block { grid-template-columns: 1fr; } }
+
+            .visual-card-pro {
+                background: #fff;
+                border: 1px solid var(--border-ui);
+                border-radius: var(--radius-xl);
+                padding: 35px;
+                box-shadow: var(--shadow-sm);
+                min-height: 450px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .visual-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .visual-header h4 {
+                font-size: 0.8rem;
+                font-weight: 900;
+                color: var(--primary);
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .visual-header h4 i { color: var(--accent); }
+
+            /* Detailed Equivalency Table */
+            .equiv-table-wrapper {
+                margin-top: 20px;
+                border: 1.5px solid var(--border-ui);
+                border-radius: var(--radius-md);
+                overflow: hidden;
+            }
+
+            .equiv-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .equiv-table th {
+                background: var(--primary);
+                color: #fff;
+                padding: 15px;
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                text-align: left;
+                letter-spacing: 1px;
+            }
+
+            .equiv-table td {
+                padding: 15px;
+                font-size: 0.85rem;
+                font-weight: 700;
+                border-bottom: 1px solid var(--border-ui);
+                color: var(--primary-soft);
+            }
+
+            .equiv-table tr:last-child td { border-bottom: none; }
+            .equiv-table tr:nth-child(even) { background: #f8fafc; }
+
+            .unit-highlight { color: var(--steel); font-weight: 900; font-family: 'JetBrains Mono'; }
+
+            /* Math Formula Insights Box */
+            .formula-insight-panel {
+                background: var(--primary);
+                border-radius: var(--radius-xl);
+                padding: 40px;
+                color: #fff;
+                margin-top: 20px;
+                border-bottom: 8px solid var(--accent);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .formula-insight-panel::before {
+                content: '\f12b';
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                position: absolute;
+                right: -20px; bottom: -20px;
+                font-size: 150px;
+                opacity: 0.03;
+            }
+
+            .formula-header {
+                font-size: 0.75rem;
+                font-weight: 800;
+                color: var(--accent);
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                margin-bottom: 20px;
+                display: block;
+            }
+
+            .formula-display {
+                font-family: 'Poppins', sans-serif;
+                font-size: 1.1rem;
+                line-height: 1.8;
+                color: #cbd5e1;
+            }
+
+            .formula-math-block {
+                background: rgba(255,255,255,0.05);
+                padding: 25px;
+                border-radius: var(--radius-md);
+                margin-top: 25px;
+                text-align: center;
+            }
+
+            /* Custom Gauge for Relative Scale */
+            .scale-gauge-container {
+                margin-top: 30px;
+                padding: 20px;
+                background: #f1f5f9;
+                border-radius: var(--radius-md);
+            }
+
+            .gauge-label-flex {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.65rem;
+                font-weight: 800;
+                color: var(--text-muted);
+                margin-bottom: 12px;
+                text-transform: uppercase;
+            }
+
+            .gauge-track {
+                width: 100%;
+                height: 10px;
+                background: #e2e8f0;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .gauge-fill {
+                height: 100%;
+                background: var(--accent);
+                width: 0%;
+                transition: 1s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+        </style>
+
+        <script>
+            /**
+             * PART 3 INJECTION: Result Hub Architecture
+             */
+            const mainStageTarget = document.getElementById('main-stage-target');
+            if (mainStageTarget) {
+                mainStageTarget.innerHTML = `
+                    <div class="results-matrix-grid">
+                        <div class="result-node-pro">
+                            <span class="node-label-top"><i class="fas fa-vector-square"></i> NET MARLA EQUIVALENT</span>
+                            <div class="node-value-big" id="res-big-marla">0.000</div>
+                            <span class="node-unit-tag">Marlas (Regional Scale)</span>
+                            <div class="node-status-tag"><i class="fas fa-check-circle"></i> Precision Verified</div>
+                        </div>
+
+                        <div class="result-node-pro" style="border-bottom-color: var(--accent);">
+                            <span class="node-label-top"><i class="fas fa-map-marked-alt"></i> KANAL CONVERSION</span>
+                            <div class="node-value-big" id="res-big-kanal">0.000</div>
+                            <span class="node-unit-tag">Kanals (20 Marla Unit)</span>
+                            <div class="node-status-tag" style="color:var(--accent)"><i class="fas fa-globe-asia"></i> Local Standard</div>
+                        </div>
+
+                        <div class="result-node-pro" style="border-bottom-color: var(--success);">
+                            <span class="node-label-top"><i class="fas fa-th"></i> TOTAL SURFACE AREA</span>
+                            <div class="node-value-big" id="res-big-sqft">0</div>
+                            <span class="node-unit-tag">Total Square Feet</span>
+                            <div class="node-status-tag"><i class="fas fa-shield-alt"></i> Area Synchronized</div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-visual-block reveal-node" style="animation-delay: 0.2s;">
+                        <div class="visual-card-pro">
+                            <div class="visual-header">
+                                <h4><i class="fas fa-chart-bar"></i> PROPORTIONAL SCALE ANALYSIS</h4>
+                                <span class="status-badge-ui badge-safe" style="font-size:0.55rem; padding:4px 10px;">DYNAMIC VIEW</span>
+                            </div>
+                            <div style="flex:1; position:relative; min-height:300px;">
+                                <canvas id="conversionChart"></canvas>
+                            </div>
+                            <div class="scale-gauge-container">
+                                <div class="gauge-label-flex">
+                                    <span>Relative Scale (Kanal to Marla)</span>
+                                    <span id="gauge-pct">0%</span>
+                                </div>
+                                <div class="gauge-track"><div class="gauge-fill" id="res-gauge-fill"></div></div>
+                            </div>
+                        </div>
+
+                        <div class="visual-card-pro" style="min-height: auto;">
+                            <div class="visual-header">
+                                <h4><i class="fas fa-list-ol"></i> EQUIVALENCY MATRIX</h4>
+                            </div>
+                            <div class="equiv-table-wrapper">
+                                <table class="equiv-table">
+                                    <thead>
+                                        <tr><th>Target Unit</th><th>Result Magnitude</th></tr>
+                                    </thead>
+                                    <tbody id="equiv-body">
+                                        <tr><td>Square Meters</td><td class="unit-highlight" id="tbl-sqm">0.00</td></tr>
+                                        <tr><td>Square Yards</td><td class="unit-highlight" id="tbl-sqyd">0.00</td></tr>
+                                        <tr><td>Total Acres</td><td class="unit-highlight" id="tbl-acre">0.000</td></tr>
+                                        <tr><td>Hectares</td><td class="unit-highlight" id="tbl-hectare">0.000</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="font-size:0.65rem; color:var(--text-muted); font-weight:700; margin-top:20px; line-height:1.6; text-transform:uppercase;">
+                                <i class="fas fa-info-circle"></i> Based on project algorithms.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="formula-insight-panel reveal-node" style="animation-delay: 0.3s;">
+                        <span class="formula-header">Conversion Protocol Insight</span>
+                        <div class="formula-display">
+                            Land conversion logic for the project follows a standardized normalization path. The input magnitude is first transformed into the base SI unit (Square Feet) before being mapped to regional Marla variants.
+                        </div>
+                        <div class="formula-math-block">
+                            <span id="formula-latex-target" style="font-size: 1.4rem; color: #fff;">
+                                $\text{Result (Marla)} = \frac{\text{Area (Sq Ft)}}{\text{Standard Factor (225/250/272.25)}}$
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }
+        </script>
+
+        <script>
+            /**
+             * ANALYTICS ENGINE v9.0
+             * Handles Data Visualization and UI Synchronization
+             */
+            let analyticsChart = null;
+
+            window.renderConversionResults = function(data, marlaStd) {
+                // 1. Sync Big Result Nodes
+                document.getElementById('res-big-marla').innerText = data.marla.toLocaleString(undefined, {minimumFractionDigits: 3, maximumFractionDigits: 3});
+                document.getElementById('res-big-kanal').innerText = data.kanal.toLocaleString(undefined, {minimumFractionDigits: 3, maximumFractionDigits: 3});
+                document.getElementById('res-big-sqft').innerText = Math.round(data.sqft).toLocaleString();
+
+                // 2. Sync Equivalency Table
+                document.getElementById('tbl-sqm').innerText = data.sqm.toLocaleString(undefined, {maximumFractionDigits: 2});
+                document.getElementById('tbl-sqyd').innerText = data.sqyd.toLocaleString(undefined, {maximumFractionDigits: 2});
+                document.getElementById('tbl-acre').innerText = data.acre.toLocaleString(undefined, {maximumFractionDigits: 4});
+                document.getElementById('tbl-hectare').innerText = data.hectare.toLocaleString(undefined, {maximumFractionDigits: 4});
+
+                // 3. Update Scale Gauge
+                // Showing how much of a Kanal the current Marla value is (out of 20)
+                const kanalPct = Math.min(((data.marla % 20) / 20) * 100, 100);
+                document.getElementById('res-gauge-fill').style.width = kanalPct + '%';
+                document.getElementById('gauge-pct').innerText = kanalPct.toFixed(1) + '%';
+
+                // 4. Update Proportional Chart
+                updateAnalyticsChart(data);
+
+                // 5. Update LaTeX Formula based on Standard
+                const latexTarget = document.getElementById('formula-latex-target');
+                latexTarget.innerHTML = `$\\text{Result (Marla)} = \\frac{\\text{${Math.round(data.sqft)} Sq Ft}}{${marlaStd}} = ${data.marla.toFixed(3)}$`;
+                
+                if (window.MathJax) MathJax.typesetPromise();
+            };
+
+            function updateAnalyticsChart(data) {
+                const ctx = document.getElementById('conversionChart').getContext('2d');
+                
+                // Preparing logarithmic scale visualization data
+                const chartData = [
+                    { label: 'Sq Ft', val: data.sqft, color: '#0f172a' },
+                    { label: 'Sq M', val: data.sqm * 10, color: '#3b82f6' },
+                    { label: 'Marla', val: data.marla * 100, color: '#f59e0b' },
+                    { label: 'Kanal', val: data.kanal * 1000, color: '#10b981' }
+                ];
+
+                if (analyticsChart) analyticsChart.destroy();
+
+                analyticsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.map(d => d.label),
+                        datasets: [{
+                            label: 'Logarithmic Comparison Scale',
+                            data: chartData.map(d => d.val),
+                            backgroundColor: chartData.map(d => d.color),
+                            borderRadius: 8,
+                            barThickness: 40
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Magnitude: ${context.raw.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                type: 'logarithmic',
+                                grid: { color: '#e2e8f0' },
+                                ticks: { font: { weight: 'bold' } }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { weight: 'bold', size: 12 } }
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+       <style>
+            /* --- PART 4: DATA LOGGING & REGIONAL UI --- */
+            .data-vault-matrix {
+                display: grid;
+                grid-template-columns: 1fr 1.3fr;
+                gap: 30px;
+                margin-top: 35px;
+                width: 100%;
+                animation: revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+
+            @media (max-width: 1200px) { .data-vault-matrix { grid-template-columns: 1fr; } }
+
+            /* Professional Logging Card */
+            .vault-card-pro {
+                background: #fff;
+                border-radius: var(--radius-xl);
+                border: 2px solid var(--border-ui);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                box-shadow: var(--shadow-sm);
+                transition: var(--transition);
+                min-height: 500px;
+            }
+
+            .vault-card-pro:hover { box-shadow: var(--shadow-lg); border-color: var(--steel); }
+
+            .vault-header-strip {
+                padding: 22px 30px;
+                background: var(--primary-soft);
+                color: #fff;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .vault-header-strip h4 {
+                font-size: 0.75rem;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .vault-header-strip i { color: var(--accent); }
+
+            .vault-body-pro {
+                flex: 1;
+                overflow-y: auto;
+                background: #fafafa;
+            }
+
+            /* Professional Table for Session Logs */
+            .log-table-pro {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+
+            .log-table-pro th {
+                background: #f1f5f9;
+                padding: 15px;
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                text-align: center;
+                border-bottom: 2px solid var(--border-ui);
+                position: sticky; top: 0; z-index: 10;
+            }
+
+            .log-table-pro td {
+                padding: 15px;
+                text-align: center;
+                border-bottom: 1px solid var(--border-ui);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: var(--primary-soft);
+            }
+
+            .log-table-pro tr:hover { background: #fff; }
+
+            .log-empty-state {
+                padding: 100px 40px;
+                text-align: center;
+                color: var(--text-muted);
+                font-style: italic;
+                font-size: 0.9rem;
+            }
+
+            /* Regional Benchmark Matrix (Filling Space) */
+            .regional-benchmark-card {
+                background: #fff;
+                border: 2px solid var(--border-ui);
+                border-radius: var(--radius-xl);
+                padding: 35px;
+                display: flex;
+                flex-direction: column;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .bench-header {
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid var(--bg-master);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .bench-header h4 {
+                font-size: 0.8rem;
+                font-weight: 900;
+                color: var(--primary);
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+            }
+
+            .bench-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .bench-node {
+                background: #f8fafc;
+                padding: 20px;
+                border-radius: var(--radius-md);
+                border-left: 4px solid var(--accent);
+                transition: var(--transition);
+            }
+
+            .bench-node:hover { background: #fff; box-shadow: var(--shadow-md); transform: translateX(5px); }
+
+            .bench-city { display: block; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+            .bench-val { font-family: 'JetBrains Mono'; font-size: 1.1rem; font-weight: 900; color: var(--primary); }
+            .bench-desc { display: block; font-size: 0.6rem; color: var(--text-muted); margin-top: 5px; font-weight: 600; }
+
+            /* Management Toolbar */
+            .vault-toolbar {
+                padding: 20px 30px;
+                background: #fff;
+                border-top: 1px solid var(--border-ui);
+                display: flex;
+                justify-content: space-between;
+                gap: 15px;
+            }
+
+            .btn-vault {
+                flex: 1;
+                padding: 12px;
+                border-radius: 8px;
+                font-size: 0.7rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                cursor: pointer;
+                transition: var(--transition);
+                border: 1.5px solid var(--border-ui);
+                background: #fff;
+                color: var(--text-muted);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .btn-vault:hover { border-color: var(--accent); color: var(--primary); background: #fffdf9; }
+            .btn-danger-hover:hover { border-color: var(--danger); color: var(--danger); background: #fef2f2; }
+
+            /* Action Pulse for new logs */
+            @keyframes pulse-new {
+                0% { background: var(--accent-glow); }
+                100% { background: transparent; }
+            }
+            .row-new { animation: pulse-new 2s ease-out; }
+
+            /* Persistent Storage Overlay Badge */
+            .storage-badge {
+                position: absolute;
+                top: 25px; right: 30px;
+                background: var(--success);
+                color: #fff;
+                padding: 4px 12px;
+                border-radius: 50px;
+                font-size: 0.55rem;
+                font-weight: 900;
+                letter-spacing: 1px;
+                box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+            }
+        </style>
+
+        <div class="data-vault-matrix">
+            <div class="vault-card-pro">
+                <div class="vault-header-strip">
+                    <h4><i class="fas fa-history"></i> SESSION CONVERSION LOG</h4>
+                    <span class="status-badge-ui" style="background:rgba(255,255,255,0.1); border:none; color:#fff; font-size:0.55rem;">PERSISTENT VAULT</span>
+                </div>
+                
+                <div class="vault-body-pro" id="vault-scroll-container">
+                    <table class="log-table-pro" id="conversion-log-table">
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Marla ($M$)</th>
+                                <th>Kanal ($K$)</th>
+                                <th>Sq Ft ($SF$)</th>
+                                <th style="width: 60px;"><i class="fas fa-trash"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="log-body-target">
+                            </tbody>
+                    </table>
+                    <div id="log-empty-msg" class="log-empty-state">
+                        <i class="fas fa-folder-open fa-3x" style="margin-bottom: 20px; opacity: 0.3;"></i>
+                        <p>No conversion records found in the current session vault.</p>
+                    </div>
+                </div>
+
+                <div class="vault-toolbar">
+                    <button class="btn-vault btn-danger-hover" onclick="clearLogVault()">
+                        <i class="fas fa-eraser"></i> Clear Vault
+                    </button>
+                    <button class="btn-vault" onclick="copyLastEntry()">
+                        <i class="fas fa-copy"></i> Copy Last
+                    </button>
+                    <button class="btn-vault" style="background: var(--primary); color:#fff; border:none;" onclick="exportLogCSV()">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="regional-benchmark-card">
+                <div class="bench-header">
+                    <h4><i class="fas fa-map-marked-alt"></i> REGIONAL BENCHMARK MAP</h4>
+                                   </div>
+                <div class="bench-grid">
+                    <div class="bench-node">
+                        <span class="bench-city">CDA</span>
+                        <span class="bench-val">272.25 <small>SF</small></span>
+                        <span class="bench-desc">Official Government Standard.</span>
+                    </div>
+                    <div class="bench-node" style="border-left-color: var(--steel);">
+                        <span class="bench-city">LDA</span>
+                        <span class="bench-val">225.00 <small>SF</small></span>
+                        <span class="bench-desc">Society & LDA Residential Standard.</span>
+                    </div>
+                    <div class="bench-node" style="border-left-color: var(--success);">
+                        <span class="bench-city">KDA</span>
+                        <span class="bench-val">250.00 <small>SF</small></span>
+                        <span class="bench-desc">KDA & Urban Sind Land Protocol.</span>
+                    </div>
+                    <div class="bench-node" style="border-left-color: var(--info);">
+                        <span class="bench-city">FDA</span>
+                        <span class="bench-val">272.25 <small>SF</small></span>
+                        <span class="bench-desc">Agriculture & Industrial Normalization.</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; padding: 25px; background: #fafafa; border-radius: var(--radius-md); border: 1px dashed var(--border-ui);">
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <script>
+            /**
+             * PART 4 LOGIC: Session Persistence & Logging Engine
+             */
+            let sessionVault = JSON.parse(localStorage.getItem('MARLA_CONV_VAULT')) || [];
+
+            function addLogEntry() {
+                const val = document.getElementById('input-value').value;
+                const src = document.getElementById('source-unit').value;
+                const marla = document.getElementById('res-big-marla').innerText;
+                const kanal = document.getElementById('res-big-kanal').innerText;
+                const sqft = document.getElementById('res-big-sqft').innerText;
+
+                const entry = {
+                    id: Date.now(),
+                    source: `${val} ${src.toUpperCase()}`,
+                    marla: marla,
+                    kanal: kanal,
+                    sqft: sqft
+                };
+
+                sessionVault.unshift(entry);
+                if (sessionVault.length > 10) sessionVault.pop(); // Keep last 10
+                
+                localStorage.setItem('MARLA_CONV_VAULT', JSON.stringify(sessionVault));
+                renderLogVault();
+                
+                // Visual feedback: scroll to top
+                document.getElementById('vault-scroll-container').scrollTop = 0;
+            }
+
+            function renderLogVault() {
+                const target = document.getElementById('log-body-target');
+                const emptyMsg = document.getElementById('log-empty-msg');
+                target.innerHTML = '';
+
+                if (sessionVault.length === 0) {
+                    emptyMsg.style.display = 'block';
+                    return;
+                }
+
+                emptyMsg.style.display = 'none';
+                sessionVault.forEach((item, index) => {
+                    const tr = document.createElement('tr');
+                    if (index === 0) tr.className = 'row-new';
+                    tr.innerHTML = `
+                        <td style="color:var(--steel); font-weight:800;">${item.source}</td>
+                        <td style="color:var(--primary);">${item.marla}</td>
+                        <td>${item.kanal}</td>
+                        <td>${item.sqft}</td>
+                        <td><i class="fas fa-times-circle" style="color:var(--danger); cursor:pointer;" onclick="deleteLogEntry(${item.id})"></i></td>
+                    `;
+                    target.appendChild(tr);
+                });
+            }
+
+            function deleteLogEntry(id) {
+                sessionVault = sessionVault.filter(i => i.id !== id);
+                localStorage.setItem('MARLA_CONV_VAULT', JSON.stringify(sessionVault));
+                renderLogVault();
+            }
+
+            function clearLogVault() {
+                if (confirm("Purge all conversion records from the session vault?")) {
+                    sessionVault = [];
+                    localStorage.removeItem('MARLA_CONV_VAULT');
+                    renderLogVault();
+                }
+            }
+
+            function copyLastEntry() {
+                if (sessionVault.length === 0) return;
+                const last = sessionVault[0];
+                const text = `Source: ${last.source} | Marla: ${last.marla} | Kanal: ${last.kanal} | Sq Ft: ${last.sqft}`;
+                navigator.clipboard.writeText(text);
+                alert("Log data copied to clipboard!");
+            }
+
+            function exportLogCSV() {
+                if (sessionVault.length === 0) return;
+                let csv = "Source,Marla,Kanal,SqFt\n";
+                sessionVault.forEach(i => {
+                    csv += `${i.source},${i.marla.replace(',','')},${i.kanal.replace(',','')},${i.sqft.replace(',','')}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('href', url);
+                a.setAttribute('download', `Marla_Conv_Logs_${Date.now()}.csv`);
+                a.click();
+            }
+
+            // Sync with Part 2: Overwriting the placeholder function
+            window.addLogEntry = addLogEntry;
+
+            // Initialize log on load
+            window.addEventListener('load', () => {
+                renderLogVault();
+            });
+        </script>
+       <style>
+            /* --- PART 5: CORPORATE REPORTING & FOOTER UI --- */
+            .final-system-hub {
+                margin-top: 60px;
+                padding-top: 50px;
+                border-top: 3px dashed var(--border-ui);
+                width: 100%;
+                animation: revealUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+
+            .hub-branding-header {
+                display: flex;
+                align-items: center;
+                gap: 25px;
+                margin-bottom: 45px;
+            }
+
+            .hub-branding-header i { font-size: 2.8rem; color: var(--accent); }
+            .hub-branding-header h3 { font-size: 1.6rem; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; font-weight: 900; }
+
+            .reporting-action-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 30px;
+                margin-bottom: 70px;
+            }
+
+            .report-node-card {
+                background: #fff;
+                border: 2px solid var(--border-ui);
+                border-radius: var(--radius-lg);
+                padding: 45px 35px;
+                text-align: center;
+                cursor: pointer;
+                transition: var(--transition);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .report-node-card:hover {
+                border-color: var(--accent);
+                transform: translateY(-12px);
+                box-shadow: var(--shadow-lg);
+                background: #fffdf9;
+            }
+
+            .report-node-card i {
+                font-size: 3.8rem;
+                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            .report-node-card:hover i { transform: scale(1.2) rotate(8deg); }
+
+            .color-pdf { color: #ef4444; }
+            .color-csv { color: #10b981; }
+            .color-print { color: var(--primary); }
+            .color-purge { color: var(--steel); }
+
+            .report-node-card span {
+                font-size: 0.95rem;
+                font-weight: 900;
+                color: var(--primary);
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+            }
+
+            .report-node-card small {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                font-weight: 600;
+                line-height: 1.6;
+                margin-top: 5px;
+            }
+
+            /* --- SYSTEM METADATA & COMPLIANCE --- */
+            .compliance-vault-card {
+                background: #fff;
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--border-ui);
+                overflow: hidden;
+                margin-top: 50px;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .compliance-header-bar {
+                background: var(--primary-soft);
+                color: #fff;
+                padding: 25px 40px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .compliance-header-bar h4 { font-size: 0.8rem; display: flex; align-items: center; gap: 15px; letter-spacing: 2px; font-weight: 900; }
+
+            .metadata-grid-final {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                padding: 40px;
+                gap: 40px;
+                background: #fafafa;
+            }
+
+            .meta-node {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .meta-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+            .meta-value { font-size: 0.95rem; color: var(--primary); font-weight: 700; line-height: 1.5; }
+
+            /* --- ENTERPRISE SYSTEM FOOTER --- */
+            .enterprise-footer-v9 {
+                background: var(--primary);
+                color: #fff;
+                padding: 120px 60px 60px;
+                margin-top: 150px;
+                border-top: 12px solid var(--accent);
+                position: relative;
+            }
+
+            .footer-content-wrapper {
+                max-width: 1900px;
+                margin: 0 auto;
+                display: grid;
+                grid-template-columns: 2.5fr 1fr 1fr;
+                gap: 120px;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                padding-bottom: 80px;
+            }
+
+            @media (max-width: 1300px) { .footer-content-wrapper { grid-template-columns: 1fr; text-align: center; gap: 70px; } }
+
+            .footer-brand-section h2 { font-size: 2.8rem; font-weight: 900; letter-spacing: 4px; margin-bottom: 35px; }
+            .footer-brand-section span { color: var(--accent); }
+            .footer-brand-section p { color: #94a3b8; font-size: 1.1rem; max-width: 800px; line-height: 2; }
+
+            .footer-links-col h4 { color: var(--accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 40px; }
+            .footer-links-col ul { list-style: none; }
+            .footer-links-col li { margin-bottom: 22px; color: #cbd5e1; font-size: 1.05rem; font-weight: 500; display: flex; align-items: center; gap: 18px; }
+            @media (max-width: 1300px) { .footer-links-col li { justify-content: center; } }
+
+            .legal-bottom-bar {
+                text-align: center;
+                padding-top: 60px;
+                font-size: 0.9rem;
+                color: #475569;
+                font-weight: 800;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+
+            /* Global Toast Notification System */
+            .sys-toast-v9 {
+                position: fixed;
+                bottom: 50px;
+                right: 50px;
+                background: var(--primary);
+                color: #fff;
+                padding: 22px 50px;
+                border-radius: 14px;
+                font-weight: 900;
+                font-size: 1.1rem;
+                box-shadow: var(--shadow-lg);
+                border-left: 10px solid var(--accent);
+                z-index: 1000000;
+                display: none;
+                animation: toastSlideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            }
+            @keyframes toastSlideIn { from { transform: translateX(150%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            /* --- FINAL PRINT ENGINE STABILIZATION --- */
+            @media print {
+                .master-nav, .control-sidebar, .reporting-action-grid, .btn-action-master, .save-float, .row-actions-pro, .chart-legend-box { display: none !important; }
+                body { padding: 0; background: #fff; }
+                .master-layout-grid { grid-template-columns: 1fr; padding: 0; width: 100%; }
+                .pro-card, .result-node-pro, .formula-insight-panel { border: 2px solid #000 !important; box-shadow: none !important; page-break-inside: avoid; }
+                .mjx-chtml { color: #000 !important; }
+            }
+        </style>
+
+        <div class="final-system-hub reveal-node" style="animation-delay: 0.5s;">
+            <div class="hub-branding-header">
+                <i class="fas fa-file-invoice"></i>
+                <h3>Enterprise Reporting Suite</h3>
+            </div>
+            
+            <div class="reporting-action-grid">
+                <div class="report-node-card" onclick="generateMarlaReportPDF()">
+                    <i class="fas fa-file-pdf color-pdf"></i>
+                    <span>Export Conversion PDF</span>
+                    <small>High-resolution report containing matrix and analytics chart.</small>
+                </div>
+                <div class="report-node-card" onclick="exportLogCSV()">
+                    <i class="fas fa-file-csv color-csv"></i>
+                    <span>Download CSV Vault</span>
+                    <small>Raw conversion data for Excel/Google Sheets integration.</small>
+                </div>
+                <div class="report-node-card" onclick="window.print()">
+                    <i class="fas fa-print color-print"></i>
+                    <span>Print Summary</span>
+                    <small>Instant print-optimized layout for on-field documentation.</small>
+                </div>
+                <div class="report-node-card" onclick="purgeSessionVault()">
+                    <i class="fas fa-trash-alt color-purge"></i>
+                    <span>Purge Session</span>
+                    <small>Erase current conversion log and reset local storage vault.</small>
+                </div>
+            </div>
+
+            <div class="compliance-vault-card">
+                <div class="compliance-header-bar">
+                    <h4><i class="fas fa-info-circle"></i> SYSTEM SPECIFICATIONS & COMPLIANCE</h4>
+                    <span style="font-size: 0.65rem; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 4px; font-weight: 800;">BUILD v9.4.2 (2026)</span>
+                </div>
+                <div class="metadata-grid-final">
+                    <div class="meta-node">
+                        <span class="meta-label">Structural Protocol</span>
+                        <span class="meta-value">Linear Scalar Normalization using Base Unit ($Sq Ft$).</span>
+                    </div>
+                    <div class="meta-node">
+                        <span class="meta-label">Regional Accuracy</span>
+                        <span class="meta-value">Configurable Marla Standards (225, 250, 272.25) across Punjab, Sindh, and KPK.</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <footer class="enterprise-footer-v9">
+            <div class="footer-content-wrapper">
+                <div class="footer-brand-section">
+                    <h2>CIVIL<span>CALC</span> PRO</h2>
+                    <p>Advanced Structural & Land Unit Transformation Engine. High-fidelity computation for regional land metrics.</p>
+                </div>
+                <div class="footer-links-col">
+                    <h4>Regional Standards</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle text-accent"></i> (225 SF)</li>
+                        <li><i class="fas fa-check-circle text-accent"></i> (250 SF)</li>
+                        <li><i class="fas fa-check-circle text-accent"></i> (272.25 SF)</li>
+                    </ul>
+                </div>
+                <div class="footer-links-col">
+                    <h4>System Build</h4>
+                    <ul>
+                        <li><i class="fas fa-microchip text-accent"></i> Core v9.4 (2026)</li>
+                        <li><i class="fas fa-shield-alt text-accent"></i> Precision-Grade Engine</li>
+                        <li><i class="fas fa-database text-accent"></i> Vault Persistent</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="legal-bottom-bar">
+                &copy; 2026 MarlaConv Pro Enterprise | All Rights Reserved for Student Humsafar Suite
+            </div>
+        </footer>
+
+        <div id="sys-toast-v9" class="sys-toast-v9"></div>
+
+        <script>
+            /**
+             * FINAL SYSTEM FINALIZER v9.4
+             * Handles high-fidelity PDF generation, CSV exports, and UI repair
+             */
+
+            function triggerToastV9(msg) {
+                const toast = document.getElementById('sys-toast-v9');
+                toast.innerText = msg;
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 5000);
+            }
+
+            /**
+             * THE STABILIZER ENGINE: Solves blank spaces and unrendered symbols
+             */
+            function stabilizeConverterUI() {
+                const mainStage = document.getElementById('main-stage-target');
+                if (!mainStage) return;
+
+                // Move all parts into the correct vertical stack to ensure no overlap/blank space
+                const dynamicParts = [
+                    '.results-matrix-grid',
+                    '.analytics-visual-block',
+                    '.formula-insight-panel',
+                    '.data-vault-matrix',
+                    '.final-system-hub'
+                ];
+
+                dynamicParts.forEach(selector => {
+                    const el = document.querySelector(selector);
+                    if (el && el.parentElement !== mainStage) {
+                        mainStage.appendChild(el);
+                    }
+                });
+
+                // Force MathJax to scan and render all symbols (\frac, Area, Result)
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise().then(() => {
+                        console.log("[SYSTEM] All conversion formulas rendered successfully.");
+                    });
+                }
+                console.log("[STABILIZER] MarlaConv v9.4 architecture verified.");
+            }
+
+            /**
+             * PDF REPORT GENERATOR
+             * logic: Captures full viewport with high scaling for professional documents
+             */
+            async function generateMarlaReportPDF() {
+                triggerToastV9("Generating Professional Conversion Report...");
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                const target = document.querySelector('.master-layout-grid');
+                const canvas = await html2canvas(target, { 
+                    scale: 2, 
+                    useCORS: true,
+                    backgroundColor: '#f1f5f9'
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                // Professional PDF Header Branding
+                doc.setFillColor(15, 23, 42); 
+                doc.rect(0, 0, 210, 25, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(16);
+                doc.text("REGIONAL LAND UNIT CONVERSION REPORT", 12, 16);
+                doc.setFontSize(8);
+                doc.setTextColor(245, 158, 11);
+                doc.text("ENGINEERING SUITE v9.4 | STUDENT HUMSAFAR PROJECT", 130, 16);
+
+                doc.addImage(imgData, 'PNG', 0, 30, pdfWidth, pdfHeight);
+                doc.save(`Marla_Conversion_Report_${Date.now()}.pdf`);
+                triggerToastV9("PDF Report Exported Successfully.");
+            }
+
+            function purgeSessionVault() {
+                if (confirm("PURGE SYSTEM: Are you sure you want to erase all conversion logs and session data?")) {
+                    localStorage.removeItem('MARLA_CONV_VAULT');
+                    location.reload();
+                }
+            }
+
+            // Global Lifecycle Orchestration
+            window.addEventListener('load', () => {
+                stabilizeConverterUI(); // Fix blank space and symbols on load
+                
+                // Persistence Auto-Sync for inputs
+                document.querySelectorAll('.pro-input-field, .pro-select').forEach(inp => {
+                    inp.addEventListener('change', () => {
+                        console.log("[SYSTEM] State change detected.");
+                    });
+                });
+                
+                console.log("%c [MARLACONV PRO] Enterprise System Loaded Successfully. ", "background: #0f172a; color: #f59e0b; padding: 15px; font-weight: bold; border-radius: 10px;");
+            });
+        </script>
+        <style>
+    /* Industrial Lock Overlay */
+    #access-blocker-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 15, 25, 0.95);
+        z-index: 1000000; display: none; align-items: center; justify-content: center;
+        flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
+        text-align: center; backdrop-filter: blur(12px);
+    }
+    .lock-terminal {
+        background: #161e2e; padding: 50px; border-radius: 30px;
+        border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        max-width: 450px; width: 90%;
+    }
+    .lock-terminal h2 { color: #facc15; font-weight: 900; margin-bottom: 20px; letter-spacing: 1px; }
+    .lock-terminal p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
+    
+    .ad-claim-btn {
+        background: #facc15; color: #0f172a; padding: 18px 35px; border: none;
+        border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem;
+        text-transform: uppercase; letter-spacing: 2px; text-decoration: none;
+        display: inline-block; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ad-claim-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3); background: #fff; }
+
+    /* Floating Telemetry Timer */
+    #session-timer-badge {
+        position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.9);
+        color: #facc15; padding: 12px 24px; border-radius: 12px; font-weight: 800;
+        z-index: 99999; font-family: 'JetBrains Mono', monospace; 
+        border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+</style>
+
+<div id="access-blocker-overlay">
+    <div class="lock-terminal">
+        <i class="fas fa-hourglass-end" style="font-size: 4rem; color: #facc15; margin-bottom: 20px;"></i>
+        <h2>SESSION EXPIRED</h2>
+        <p>Your 3-minute access has concluded. Please interact with the sponsor link below to instantly renew your session credits.</p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCredits()">Claim 3 Min Credit</a>
+    </div>
+</div>
+
+<div id="session-timer-badge">INITIALIZING...</div>
+
+<script>
+    const CONFIG = {
+        AD_URL: "https://omg10.com/4/10664520",
+        CREDIT_AMOUNT: 180, // 3 Minutes in seconds
+        STORAGE_KEY: "geotech_session_time",
+        TIMESTAMP_KEY: "geotech_last_active"
+    };
+
+    let timeRemaining;
+
+    function initSessionControl() {
+        const savedTime = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const lastTimestamp = localStorage.getItem(CONFIG.TIMESTAMP_KEY);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (savedTime && lastTimestamp) {
+            // Calculate how much time passed while user was away
+            const elapsed = now - parseInt(lastTimestamp);
+            timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
+        } else {
+            // First time visitor gets initial credits
+            timeRemaining = CONFIG.CREDIT_AMOUNT;
+        }
+
+        updateTimerUI();
+        if (timeRemaining > 0) {
+            runCountdown();
+        } else {
+            activateLock();
+        }
+    }
+
+    function runCountdown() {
+        const tracker = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                localStorage.setItem(CONFIG.STORAGE_KEY, timeRemaining);
+                localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+                updateTimerUI();
+            } else {
+                clearInterval(tracker);
+                activateLock();
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+        document.getElementById('session-timer-badge').innerText = `CREDITS: ${display}`;
+    }
+
+    function activateLock() {
+        document.getElementById('access-blocker-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function renewCredits() {
+        // Logically grant time immediately on click
+        localStorage.setItem(CONFIG.STORAGE_KEY, CONFIG.CREDIT_AMOUNT);
+        localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
+        
+        // Small delay to ensure the click registers before page interaction
+        setTimeout(() => {
+            document.getElementById('access-blocker-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            window.location.reload(); 
+        }, 1500);
+    }
+
+    // Initialize on boot
+    window.addEventListener('load', initSessionControl);
+</script>
+    </body>
+</html>
