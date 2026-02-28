@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding M25 Concrete Mix: A Professional Guide | Civil Engineering</title>
+    <meta name="description" content="A comprehensive guide to M25 concrete mix design, including mix ratios, water-cement ratios, and step-by-step calculation for structural strength.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const openBtn = document.getElementById('openMenu');
+    const closeBtn = document.getElementById('closeMenu');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    if(openBtn) {
+        openBtn.onclick = function() {
+            console.log("Menu button clicked!"); // Check in F12 console
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        };
+    }
+
+    if(closeBtn) {
+        closeBtn.onclick = function() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+    }
+
+    if(overlay) {
+        overlay.onclick = function() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+    }
+});
+   </script>
+   
+   <style>
+    /* Reset basic margins */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #002b4e; /* Image ke mutabik deep blue */
+    --construction-gold: #ffcc00;
+    --sidebar-bg: #121e26; /* Dark sidebar from image 2 */
+    --white: #ffffff;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding-top: 70px; /* Header fixed hai isliye body ko thora neechay rakha hai */
+}
+
+/* --- Fixed Header --- */
+.blog-header {
+    background-color: var(--primary-blue);
+    width: 100%;
+    height: 70px;
+    position: fixed; /* Header ab gayab nahi hoga */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.header-top {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* --- Logo Section --- */
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu-btn {
+    display: none; /* Desktop par hidden */
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--white);
+    margin-right: 10px;
+}
+
+.logo-symbol {
+    background-color: var(--construction-gold);
+    color: var(--primary-blue);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    border-radius: 6px;
+}
+
+.logo-text h1 {
+    color: var(--white);
+    font-size: 1.4rem;
+    line-height: 1;
+    font-weight: bold;
+}
+
+.logo-text span {
+    color: var(--construction-gold);
+    font-size: 0.65rem;
+    display: block;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    margin-top: 2px;
+}
+
+/* --- Desktop Nav --- */
+.desktop-nav {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+/* --- Find Tools Button (Common) --- */
+.btn-find-tools {
+    color: var(--construction-gold) !important;
+    border: 2px solid var(--construction-gold);
+    padding: 6px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.btn-find-tools:hover {
+    background: var(--construction-gold);
+    color: var(--primary-blue) !important;
+}
+
+/* --- Sidebar Menu (Mobile) --- */
+.sidebar-menu {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Shuru mein bilkul bahar */
+    width: 280px;
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    z-index: 2000;
+    transition: 0.4s ease-in-out;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-menu.active {
+    left: 0; /* Click par andar aayega */
+}
+
+.close-btn {
+    align-self: flex-end;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.sidebar-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar-menu a:last-child {
+    margin-top: 20px;
+    text-align: center;
+    border-bottom: none;
+}
+
+/* --- Overlay --- */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    z-index: 1500;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* --- Responsive Layout --- */
+@media (max-width: 992px) {
+    .desktop-nav, .header-tools {
+        display: none;
+    }
+    .menu-btn {
+        display: block;
+    }
+    .blog-header {
+        padding: 0 15px;
+    }
+}
+        /* Base Styles */
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #f4f4f4;
+            --accent-color: #e67e22;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        /* Layout */
+        main {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        aside {
+            flex: 1;
+            min-width: 280px;
+            background: var(--secondary-color);
+            padding: 20px;
+            height: fit-content;
+            border-radius: 8px;
+        }
+
+        /* Typography */
+        h1 { font-size: 2.5rem; color: var(--primary-color); line-height: 1.2; margin-bottom: 10px; }
+        h2 { font-size: 1.8rem; color: var(--primary-color); border-left: 5px solid var(--accent-color); padding-left: 15px; margin-top: 40px; }
+        h3 { font-size: 1.4rem; color: #444; margin-top: 30px; }
+        p { margin-bottom: 20px; text-align: justify; }
+
+        /* Article Meta */
+        .meta {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Placeholder for Ads */
+        .ad-space {
+            background: #fafafa;
+            border: 1px dashed #ccc;
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            color: #999;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Content Elements */
+        .featured-image {
+            width: 100%;
+            height: 400px;
+            background: #ccc url('https://housing.com/news/wp-content/uploads/2023/03/m25-concrete-ratio-1200x700-compressed.jpg') no-repeat center/cover;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .highlight-box {
+            background: #eef7ff;
+            border-left: 6px solid var(--primary-color);
+            padding: 20px;
+            margin: 25px 0;
+            font-style: italic;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+
+        table th, table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* Sidebar Widgets */
+        .widget h4 { margin-top: 0; color: var(--primary-color); }
+        .widget ul { list-style: none; padding: 0; }
+        .widget ul li { margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .widget ul li a { text-decoration: none; color: #333; transition: 0.3s; }
+        .widget ul li a:hover { color: var(--accent-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .container { flex-direction: column; }
+            .featured-image { height: 250px; }
+        }
+        :root {
+    --primary-blue: #00305b; /* Deep blue background */
+    --construction-gold: #ffcc00; /* Bright yellow/gold */
+    --sidebar-bg: #1a2a36; /* Darker blue for sidebar */
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Container */
+.blog-header {
+    background-color: var(--primary-blue);
+    padding: 15px 5%;
+    color: var(--white);
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo Styling */
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-symbol {
+    background-color: var(--construction-gold);
+    color: var(--primary-blue);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.logo-text h1 {
+    margin: 0;
+    line-height: 1;
+    color: var(--white);
+    font-weight: 800;
+}
+
+/* Desktop Navigation */
+.desktop-nav {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--construction-gold);
+}
+
+/* Find Tools Button */
+.header-tools a, .sidebar-menu a:last-child {
+    color: var(--construction-gold) !important;
+    border: 2px solid var(--construction-gold) !important;
+    padding: 8px 20px !important;
+    border-radius: 6px !important;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* Mobile Menu Button */
+.menu-btn {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--white);
+}
+
+/* Sidebar Styling */
+.sidebar-menu {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Hidden by default */
+    width: 280px;
+    height: 100%;
+    background-color: var(--sidebar-bg);
+    z-index: 1000;
+    padding: 60px 20px;
+    transition: 0.4s ease;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+}
+
+.sidebar-menu.active {
+    left: 0;
+}
+
+.sidebar-menu a {
+    display: block;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+/* Overlay */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* Responsive Logic */
+@media (max-width: 992px) {
+    .desktop-nav, .header-tools {
+        display: none;
+    }
+    
+    .menu-btn {
+        display: block;
+    }
+}
+    </style>
+</head>
+<body>
+     <p></p><header class="blog-header">
+    <div class="header-top">
+        <div class="logo-area">
+            <div class="menu-btn" id="openMenu">☰</div>
+            
+            <div class="logo-symbol">Σ</div>
+            <div class="logo-text">
+                <h1>CivilCalc <span>PRO INSIGHTS</span></h1>
+            </div>
+        </div>
+
+        <nav class="desktop-nav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="blogs.html" class="nav-link">Engineering Blog</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+            <a href="privacy.html" class="nav-link">Privacy Policy</a>
+        </nav>
+        
+        <div class="header-tools">
+            <a href="find.html" class="btn-find-tools">Find Tools →</a>
+        </div>
+    </div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar-menu" id="sidebar">
+    <div class="close-btn" id="closeMenu">×</div>
+    
+    <a href="index.html">Home</a>
+    <a href="blogs.html">Engineering Blog</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="find.html" class="btn-find-tools">Find Tools →</a>
+</nav>
+    <div class="overlay" id="overlay"></div>
+    <nav class="sidebar-menu" id="sidebar">
+        <div class="close-btn" id="closeMenu">&times;</div>
+        
+        <a href="index.html">Home</a>
+        <a href="blogs.html">Engineering Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="find.html" style="color: var(--construction-gold); font-weight: bold; text-decoration: none; border: 2px solid var(--construction-gold); padding: 5px 15px; border-radius: 5px;">Find Tools →</a>
+    </nav>
+    <div class="container">
+        <main>
+            <nav style="margin-bottom: 15px; font-size: 0.85rem;">
+                <a href="#">Home</a> > <a href="#">Structural Design</a> > M25 Concrete Guide
+            </nav>
+
+            <h1>Understanding M25 Concrete Mix: A Professional Guide for Engineers</h1>
+            
+            <div class="meta">
+                Published on February 22, 2026 | By Technical Team | 8 Min Read
+            </div>
+
+            <div class="ad-space">-- AdSense Header Auto-Ad Placeholder --</div>
+
+            <div class="featured-image"></div>
+
+            <p>
+                In the world of civil engineering and construction, the strength of a structure is heavily dependent on the quality of the concrete mix used. One of the most frequently specified grades for residential and commercial buildings is <strong>M25 concrete</strong>. But what exactly does M25 mean, and how is it calculated in a real-world environment?
+            </p>
+
+            <p>
+                In this comprehensive guide, we will break down the technical specifications, the standard mix ratios, and the factors that influence the durability of M25 concrete. Whether you are a student or a site engineer, understanding these fundamentals is crucial for structural integrity.
+            </p>
+
+            <div class="highlight-box">
+                <strong>Did you know?</strong> In "M25", 'M' stands for Mix and '25' represents the characteristic compressive strength of a 150mm cube after 28 days of curing, measured in N/mm².
+            </div>
+
+            <h2>The Standard Mix Ratio for M25 Grade</h2>
+            <p>
+                To achieve a strength of 25 N/mm², the ingredients—Cement, Sand (Fine Aggregate), and Coarse Aggregate—must be mixed in a precise proportion. While nominal mixes are often used for small projects, larger structural elements usually require a <strong>Design Mix</strong> according to IS 10262 or equivalent standards.
+            </p>
+
+            <div class="ad-space">-- AdSense In-Article Ad Placeholder --</div>
+
+            <h3>Nominal Mix Proportions</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Ratio Part</th>
+                        <th>Measurement (Approx)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cement</td>
+                        <td>1</td>
+                        <td>50 kg (1 Bag)</td>
+                    </tr>
+                    <tr>
+                        <td>Sand (Fine Aggregate)</td>
+                        <td>1</td>
+                        <td>50 kg</td>
+                    </tr>
+                    <tr>
+                        <td>Coarse Aggregate</td>
+                        <td>2</td>
+                        <td>100 kg</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                The standard nominal ratio for M25 is <strong>1:1:2</strong>. However, modern construction prefers weight-batching over volume-batching to ensure higher accuracy and to account for moisture content in the sand (bulking of sand).
+            </p>
+
+            <h2>Critical Factors: Water-Cement Ratio</h2>
+            <p>
+                The performance of M25 concrete is highly sensitive to the amount of water used. A common mistake on construction sites is adding excess water to increase workability. This, however, significantly reduces the final compressive strength and leads to shrinkage cracks.
+            </p>
+
+            <p>
+                For M25 grade, the <strong>Water-Cement (W/C) ratio</strong> typically falls between <strong>0.40 to 0.50</strong>. Using a plasticizer can help maintain workability without compromising the W/C ratio, which is essential for "Green Concrete" practices and sustainable construction.
+            </p>
+
+            <h2>Step-by-Step Calculation for Mix Design</h2>
+            <p>
+                If you are calculating the material required for 1 cubic meter ($1m^3$) of wet concrete, you must account for the shrinkage factor (usually 1.54 to 1.57). 
+            </p>
+            
+            <ol>
+                <li><strong>Determine Dry Volume:</strong> $1m^3 \times 1.54 = 1.54m^3$</li>
+                <li><strong>Sum of Ratio:</strong> $1 + 1 + 2 = 4$</li>
+                <li><strong>Cement Required:</strong> $(1/4) \times 1.54 = 0.385m^3$</li>
+                <li><strong>Convert to Bags:</strong> $0.385 / 0.0347 \approx 11 \text{ bags}$</li>
+            </ol>
+
+            <div class="ad-space">-- AdSense Matched Content Ad Placeholder --</div>
+
+            <h2>Conclusion</h2>
+            <p>
+                M25 concrete provides the perfect balance between cost-effectiveness and structural safety for most medium-rise buildings. By adhering to the 1:1:2 ratio and maintaining a strict water-cement balance, engineers can ensure long-lasting, durable structures.
+            </p>
+
+            
+        </main>
+
+        <aside>
+            
+
+            <div class="ad-space" style="height: 250px;">-- Sidebar Ad --</div>
+        </aside>
+    </div>
+
+    <footer style="background: var(--primary-color); color: white; text-align: center; padding: 20px; margin-top: 50px;">
+        <p>&copy; 2026 Civil Engineering Portal </p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI in Construction: Predictive Modeling of Soil Properties | AI & Civil Engineering</title>
+    <meta name="description" content="Explore how Machine Learning is revolutionizing geotechnical engineering by predicting soil properties like shear strength and moisture content using Python.">
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ai-purple: #6c5ce7;
+            --tech-blue: #0984e3;
+            --dark-bg: #2d3436;
+            --light-bg: #f9f9f9;
+            --text-color: #2d3436;
+            --sidebar-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Navigation */
+        header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .breadcrumb a {
+            text-decoration: none;
+            color: var(--ai-purple);
+            font-weight: 500;
+        }
+
+        /* Article Layout */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Main Article Content */
+        article {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .category-tag {
+            background: var(--ai-purple);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.3;
+            color: var(--dark-bg);
+            margin-bottom: 15px;
+        }
+
+        .author-meta {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* AdSense Slots */
+        .adsense-box {
+            background: #fafafa;
+            border: 1px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+            color: #bbb;
+            font-size: 11px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Technical Elements */
+        p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+
+        h2 {
+            margin: 40px 0 20px 0;
+            color: var(--tech-blue);
+            font-size: 1.8rem;
+        }
+
+        .code-block {
+            background: #2d3436;
+            color: #fab1a0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .formula-card {
+            background: #f0f3f8;
+            border-left: 5px solid var(--ai-purple);
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        /* Sidebar Widgets */
+        .sidebar-widget {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-widget h4 {
+            border-bottom: 2px solid var(--ai-purple);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .sidebar-widget ul {
+            list-style: none;
+        }
+
+        .sidebar-widget li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-widget a {
+            text-decoration: none;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .sidebar-widget a:hover {
+            color: var(--ai-purple);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            background: var(--dark-bg);
+            color: #ccc;
+            padding: 50px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+   <style>
+    /* 1. Reset and Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@600&display=swap');
+    
+    :root {
+        --bg-color: #2c3e50;      /* Dark Grey/Blue from Image 1 */
+        --accent-color: #f39c12;  /* Orange/Gold for CALC and Button */
+        --text-white: #ffffff;
+    }
+
+    .cc-header-body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* 2. Main Header Styling */
+    .main-header {
+        background-color: var(--bg-color);
+        width: 100%;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 0 5%;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .header-container {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* 3. Logo Design (Dito Copy) */
+    .logo-box {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    .logo-text {
+        color: var(--text-white);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .logo-text span {
+        color: var(--accent-color);
+    }
+
+    /* 4. Desktop Navigation */
+    .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+    }
+
+    .nav-links a {
+        color: var(--text-white);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+        color: var(--accent-color);
+    }
+
+    /* 5. Find Tool Button */
+    .btn-tool {
+        background-color: var(--accent-color);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: 0.3s ease;
+    }
+
+    .btn-tool:hover {
+        background-color: #e67e22;
+        transform: scale(1.05);
+    }
+
+    /* 6. Mobile Menu Button */
+    .mobile-toggle {
+        display: none;
+        font-size: 30px;
+        color: white;
+        cursor: pointer;
+    }
+
+    /* 7. Sidebar (Mobile) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hidden by default */
+        width: 280px;
+        height: 100%;
+        background-color: #1a252f;
+        z-index: 1001;
+        transition: 0.4s;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .sidebar.active {
+        right: 0;
+    }
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+    }
+
+    .close-btn {
+        color: white;
+        font-size: 40px;
+        align-self: flex-end;
+        cursor: pointer;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        z-index: 1000;
+    }
+
+    /* 8. Responsive Rules */
+    @media (max-width: 1100px) {
+        .nav-links, .btn-tool-desktop {
+            display: none;
+        }
+        .mobile-toggle {
+            display: block;
+        }
+    }
+</style>
+
+<div class="cc-header-body">
+    <style>
+    /* 1. Base Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+        --cc-navy: #002b4e;      /* Image wala Deep Blue */
+        --cc-gold: #ffcc00;      /* Sigma aur Border wala Gold/Yellow */
+        --cc-sidebar: #0e1a25;   /* Dark Sidebar */
+    }
+
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; padding-top: 75px; }
+
+    /* 2. Header Main */
+    .cc-header {
+        background-color: var(--cc-navy);
+        width: 100%; height: 75px;
+        position: fixed; top: 0; left: 0;
+        z-index: 9999; display: flex; align-items: center;
+        padding: 0 3%; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .cc-container {
+        display: flex; width: 100%; align-items: center; justify-content: space-between;
+    }
+
+    /* 3. Logo Setup (Sigma Icon + Text) */
+    .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    
+    .sigma-box {
+        background-color: var(--cc-gold);
+        color: var(--cc-navy);
+        width: 38px; height: 38px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; font-weight: 900; border-radius: 8px;
+    }
+
+    .logo-text-area h1 {
+        color: white; font-size: 22px; line-height: 1; font-weight: 700; margin: 0;
+    }
+
+    .logo-text-area span {
+        color: var(--cc-gold); font-size: 10px; font-weight: 800;
+        letter-spacing: 1.5px; display: block; margin-top: 2px;
+    }
+
+    /* 4. Navigation & Buttons */
+    .desktop-nav { display: flex; gap: 20px; }
+    .nav-link { color: white; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .nav-link:hover { color: var(--cc-gold); }
+
+    .btn-gold-outline {
+        border: 2px solid var(--cc-gold);
+        color: var(--cc-gold) !important;
+        padding: 8px 18px; border-radius: 6px;
+        text-decoration: none; font-weight: 700; font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .btn-gold-outline:hover { background: var(--cc-gold); color: var(--cc-navy) !important; }
+
+    /* 5. Mobile Icons */
+    .mobile-icon { display: none; color: white; font-size: 26px; cursor: pointer; padding: 5px; }
+
+    /* 6. Sidebars (Left Nav & Right Filter) */
+    .side-drawer {
+        position: fixed; top: 0; width: 280px; height: 100vh;
+        background: var(--cc-sidebar); z-index: 10001;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 60px 20px;
+    }
+
+    .drawer-left { left: -300px; }
+    .drawer-right { right: -300px; }
+
+    .side-drawer.active { left: 0; }
+    .drawer-right.active { right: 0; }
+
+    .drawer-close { position: absolute; top: 15px; color: white; font-size: 35px; cursor: pointer; }
+    .drawer-left .drawer-close { right: 20px; }
+    .drawer-right .drawer-close { left: 20px; }
+
+    .side-drawer a {
+        display: block; color: white; text-decoration: none;
+        padding: 15px 0; font-size: 17px; font-weight: 600;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .cc-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); display: none; z-index: 10000;
+    }
+
+    /* 7. Filter Styles in Sidebar */
+    .filter-head { color: var(--cc-gold); font-size: 20px; margin-bottom: 20px; }
+    .filter-item { margin-bottom: 15px; color: #ccc; }
+    .filter-select { width: 100%; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 5px; }
+
+    /* 8. Responsive */
+    @media (max-width: 1024px) {
+        .desktop-nav, .desktop-only { display: none; }
+        .mobile-icon { display: block; }
+    }
+</style>
+
+<header class="cc-header">
+    <div class="cc-container">
+        <div class="mobile-icon" id="openNav">☰</div>
+
+        <a href="index.html" class="logo-wrap">
+            <div class="sigma-box">Σ</div>
+            <div class="logo-text-area">
+                <h1>CivilCalc</h1>
+                <span>PRO INSIGHTS</span>
+            </div>
+        </a>
+
+        <nav class="desktop-nav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="blogs.html" class="nav-link">Engineering Blog</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+            <a href="privacy.html" class="nav-link">Privacy Policy</a>
+        </nav>
+
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="find.html" class="btn-gold-outline desktop-only">Find Tools →</a>
+            
+        </div>
+    </div>
+</header>
+
+<div class="cc-overlay" id="ccOverlay"></div>
+
+<nav class="side-drawer drawer-left" id="sideNav">
+    <div class="drawer-close" id="closeNav">&times;</div>
+    <a href="index.html">Home</a>
+    <a href="blogs.html">Engineering Blog</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy Policy</a>
+</nav>
+
+<aside class="side-drawer drawer-right" id="sideFilter">
+    <div class="drawer-close" id="closeFilter">&times;</div>
+    <h3 class="filter-head">Filter Tools</h3>
+    
+    <div class="filter-item">
+        <p>Category</p>
+        <select class="filter-select">
+            <option>All Tools</option>
+            <option>Concrete</option>
+            <option>Steel</option>
+        </select>
+    </div>
+
+    <button class="btn-gold-outline" style="width:100%; border:none; background:var(--cc-gold); color:var(--cc-navy) !important; margin-top:20px;">Apply Filters</button>
+</aside>
+
+<script>
+    (function() {
+        const overlay = document.getElementById('ccOverlay');
+        const nav = document.getElementById('sideNav');
+        const filter = document.getElementById('sideFilter');
+
+        // Open
+        document.getElementById('openNav').onclick = () => {
+            nav.classList.add('active');
+            overlay.style.display = 'block';
+        };
+        document.getElementById('openFilter').onclick = () => {
+            filter.classList.add('active');
+            overlay.style.display = 'block';
+        };
+
+        // Close
+        function closeUI() {
+            nav.classList.remove('active');
+            filter.classList.remove('active');
+            overlay.style.display = 'none';
+        }
+
+        document.getElementById('closeNav').onclick = closeUI;
+        document.getElementById('closeFilter').onclick = closeUI;
+        overlay.onclick = closeUI;
+    })();
+</script>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" id="closeBtn">&times;</div>
+        <a href="index.html">Home</a>
+        <a href="blog.html">Engineering Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="tools.html" class="btn-tool" style="text-align: center; margin-top: 20px;">Find a Tool</a>
+    </div>
+</div>
+
+<script>
+    const openBtn = document.getElementById('openBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    openBtn.onclick = function() {
+        sidebar.classList.add('active');
+        overlay.style.display = 'block';
+    }
+
+    closeBtn.onclick = function() {
+        sidebar.classList.remove('active');
+        overlay.style.display = 'none';
+    }
+
+    overlay.onclick = function() {
+        sidebar.classList.remove('active');
+        overlay.style.display = 'none';
+    }
+</script>
+
+    <div class="overlay" id="overlay"></div>
+    <header>
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="#">Home</a> > <a href="#">AI in Construction</a> > Machine Learning in Soil
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <main>
+                <article>
+                    <span class="category-tag">AI in Construction</span>
+                    <h1>Predictive Modeling of Soil Properties using Machine Learning</h1>
+                    
+                    <div class="author-meta">
+                        <span>By AI Research Team</span>
+                        <span>|</span>
+                        <span>Updated: February 22, 2026</span>
+                    </div>
+
+                    <div class="adsense-box">-- AdSense Top Banner --</div>
+
+                    <p>
+                        Traditionally, geotechnical engineering relies on manual lab testing and empirical formulas to determine soil strength. However, as an <strong>Artificial Intelligence student at COMSATS University Islamabad, Wah Campus</strong>, I see a massive opportunity to replace these time-consuming processes with <strong>Machine Learning (ML)</strong> models.
+                    </p>
+
+                    <p>
+                        By training algorithms on historical geological data, we can predict critical parameters like the <strong>Compression Index ($C_c$)</strong> or <strong>Unconfined Compressive Strength (UCS)</strong> with over 95% accuracy without touching a single soil sample in the lab.
+                    </p>
+
+                    <div class="adsense-box">-- AdSense In-Article Ad --</div>
+
+                    <h2>The Mathematical Core: Regression Analysis</h2>
+                    <p>
+                        At its heart, predicting soil properties is a regression problem. We use independent variables like moisture content, void ratio, and plastic limit to predict the target strength. The basic linear relationship can be expressed as:
+                    </p>
+
+                    <div class="formula-card">
+                        $$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n + \epsilon$$
+                    </div>
+
+                    <p>
+                        However, soil behavior is non-linear. This is where advanced ML algorithms like <strong>Random Forest</strong> and <strong>Support Vector Machines (SVM)</strong> outperform traditional linear regression.
+                    </p>
+
+                    <h2>Key Machine Learning Algorithms</h2>
+                    <h3>1. Artificial Neural Networks (ANN)</h3>
+                    <p>
+                        ANNs mimic the human brain's neural structure to find complex patterns. In soil analysis, they are particularly useful for predicting the <strong>California Bearing Ratio (CBR)</strong>, which is vital for pavement design.
+                    </p>
+
+                    <h3>2. XGBoost and Random Forest</h3>
+                    <p>
+                        Decision-tree-based models are robust against outliers in geological data. They help engineers identify which soil feature (like clay content or liquid limit) is most influential in structural stability.
+                    </p>
+
+                    <div class="adsense-box">-- AdSense In-Article Ad (Native) --</div>
+
+                    <h2>Python Implementation for Engineers</h2>
+                    <p>
+                        Implementing these models is straightforward using libraries like <code>Scikit-Learn</code> or <code>TensorFlow</code>. Below is a conceptual snippet of how we train a model to predict soil stability:
+                    </p>
+
+                    <div class="code-block">
+# Simple Soil Prediction Model Concept
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+
+# Loading geotechnical dataset
+data = pd.read_csv('soil_data.csv')
+X = data[['moisture', 'void_ratio', 'plastic_limit']]
+y = data['shear_strength']
+
+# Training the AI model
+model = RandomForestRegressor(n_estimators=100)
+model.fit(X, y)
+
+print("AI Model Training Complete!")
+                    </div>
+
+                    <h2>Conclusion</h2>
+                    <p>
+                        The integration of AI in construction isn't just a trend; it's a necessity for safer and faster urban development. From my perspective at <strong>COMSATS Wah</strong>, the future of civil engineering lies in the hands of those who can bridge the gap between "Sand and Silicon."
+                    </p>
+
+                    <div class="adsense-box">-- AdSense Matched Content --</div>
+                </article>
+            </main>
+
+            <aside>
+                
+
+                <div class="adsense-box" style="min-height: 400px;">-- Sidebar Large Ad --</div>
+
+            
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Civil Calc Pro</p>
+            
+        </div>
+    </footer>
+
+</body>
+</html>

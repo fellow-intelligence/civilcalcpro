@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="CivilCalc Pro Blog - Expert insights into Civil Engineering, AI integration in construction, and technical structural analysis.">
+    <meta name="keywords" content="Civil Engineering, AI in Construction, Structural Analysis, COMSATS Wah, Engineering Formulas, LaTeX Math">
+    <meta name="author" content="Fellow Intelligence">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* --- CORE SYSTEM DESIGN VARIABLES --- */
+        :root {
+            --engineering-blue: #003366; /* Formal Navy */
+            --construction-gold: #ffcc00; /* Attention Gold */
+            --steel-gray: #f8f9fa;
+            --text-primary: #1a1a1b;
+            --text-secondary: #4a4a4b;
+            --white: #ffffff;
+            --border-soft: #ececec;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* --- GLOBAL RESET & TYPOGRAPHY --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--steel-gray);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- ADVANCED HEADER SYSTEM --- */
+        .blog-header {
+            background-color: var(--engineering-blue);
+            color: var(--white);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-top {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-symbol {
+            background: var(--construction-gold);
+            color: var(--engineering-blue);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            transform: rotate(-5deg);
+        }
+
+        .logo-text h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .logo-text span {
+            color: var(--construction-gold);
+            font-size: 0.8rem;
+            display: block;
+            margin-top: -5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- NAVIGATION SYSTEM --- */
+        .main-nav {
+            margin-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px;
+        }
+
+        .nav-list {
+            max-width: 1200px;
+            margin: 0 auto;
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--construction-gold);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--construction-gold);
+        }
+
+        /* --- HERO SECTION FOR BLOG --- */
+        .blog-hero {
+            background: var(--white);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .hero-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            background: #eef2ff;
+            color: var(--engineering-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .hero-inner h2 {
+            font-size: 2.5rem;
+            color: var(--engineering-blue);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .hero-inner p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- SEARCH BAR IN HERO --- */
+        .hero-search {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 2px solid var(--border-soft);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--engineering-blue);
+            outline: none;
+            box-shadow: 0 0 15px rgba(0,51,102,0.1);
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <nav class="sidebar-menu" id="sidebar">
+        <div class="close-btn" id="closeMenu">&times;</div>
+        
+        <a href="index.html">Home</a>
+        <a href="blogs.html">Engineering Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="find.html" style="color: var(--construction-gold); font-weight: bold; text-decoration: none; border: 2px solid var(--construction-gold); padding: 5px 15px; border-radius: 5px;">Find Tools →</a>
+    </nav>
+    
+   <style>
+        /* --- CORE VARIABLES --- */
+        :root {
+            --engineering-blue: #003366;
+            --construction-gold: #ffcc00;
+            --steel-gray: #f8f9fa;
+            --white: #ffffff;
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--steel-gray);
+            line-height: 1.7;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        .blog-header {
+            background-color: var(--engineering-blue);
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-top {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-symbol {
+            background: var(--construction-gold);
+            color: var(--engineering-blue);
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; border-radius: 8px; transform: rotate(-5deg);
+        }
+
+        /* Desktop Nav */
+        .desktop-nav { display: flex; gap: 20px; align-items: center; }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        .nav-link:hover { color: var(--construction-gold); }
+
+        /* Hamburger Menu Icon */
+        .menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--construction-gold);
+        }
+
+        /* --- MOBILE SIDEBAR --- */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -280px; /* Hidden by default */
+            width: 280px;
+            height: 100%;
+            background: #1a252f; /* Dark theme matching your image */
+            z-index: 3000;
+            transition: 0.4s;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-menu.active { left: 0; }
+
+        .sidebar-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .close-btn {
+            align-self: flex-end;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 2500;
+        }
+        .overlay.active { display: block; }
+
+        /* --- RESPONSIVE LOGIC --- */
+        @media (max-width: 850px) {
+            .desktop-nav, .header-tools { display: none; }
+            .menu-btn { display: block; }
+        }
+
+        /* Layout Grid */
+        .blog-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 40px;
+        }
+        @media (max-width: 992px) { .blog-container { grid-template-columns: 1fr; } }
+
+        /* Placeholder Card Style */
+        .article-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #ececec; margin-bottom: 20px;}
+        .card-body { padding: 20px; }
+    </style>
+</head>
+<body>
+
+    
+
+    <header class="blog-header">
+    
+        <div class="header-top">
+            
+            <div class="logo-area">
+                <div class="menu-btn" id="openMenu">☰</div>
+                <div class="logo-symbol">Σ</div>
+                <div class="logo-text">
+                    <h1 style="font-size: 1.4rem;">CivilCalc <span style="color:var(--construction-gold); font-size: 0.7rem; display: block; letter-spacing: 2px;">PRO INSIGHTS</span></h1>
+                </div>
+            </div>
+
+            <nav class="desktop-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="blogs.html" class="nav-link">Engineering Blog</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="privacy.html" class="nav-link">Privacy Policy</a>
+            </nav>
+            
+            <div class="header-tools">
+                <a href="find.html" style="color: var(--construction-gold); font-weight: bold; text-decoration: none; border: 2px solid var(--construction-gold); padding: 5px 15px; border-radius: 5px;">Find Tools →</a>
+            </div>
+
+            
+        </div>
+    </header>
+
+    
+    </main>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const openBtn = document.getElementById('openMenu');
+        const closeBtn = document.getElementById('closeMenu');
+
+        openBtn.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    </script>
+    
+  
+    <style>
+   
+        /* --- MAIN LAYOUT CONTAINER --- */
+        .blog-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 3fr 1fr; /* Sidebar ready for Part 3 */
+            gap: 40px;
+        }
+
+        /* --- POSTS GRID SYSTEM --- */
+        .posts-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- CARD DESIGN (MONETIZATION OPTIMIZED) --- */
+        .article-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--border-soft);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--construction-gold);
+        }
+
+        /* Image Placeholder with Overlay */
+        .card-thumbnail {
+            position: relative;
+            height: 200px;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
+
+        .card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .article-card:hover .card-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .category-label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--engineering-blue);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        /* Card Content Styling */
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-body h3 {
+            font-size: 1.4rem;
+            color: var(--engineering-blue);
+            margin-bottom: 15px;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .card-body p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Read More Button */
+        .read-more-link {
+            margin-top: auto;
+            color: var(--engineering-blue);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .read-more-link:hover {
+            color: var(--construction-gold);
+        }
+
+        .read-more-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Responsive Fix for Part 2 */
+        @media (max-width: 992px) {
+            .blog-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    
+
+    <main class="blog-container">
+        <div class="posts-wrapper">
+            
+            <article class="article-card">
+                <div class="card-thumbnail">
+                    <span class="category-label">Structural Design</span>
+                    <img src="https://housing.com/news/wp-content/uploads/2023/03/m25-concrete-ratio-1200x700-compressed.jpg" alt="Concrete Mix Design">
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span>Feb 22, 2026</span>
+                        <span>•</span>
+                        <span>8 Min Read</span>
+                    </div>
+                    <h3>Understanding M25 Concrete Mix: A Professional Guide</h3>
+                    <p>M25 grade of concrete is a popular mix used in structural elements. In this post, we break down the exact ratio and water-cement requirements using ACI standards.</p>
+                    <a href="m25_concrete.html" class="read-more-link">
+                        Read Full article
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </article>
+
+            <article class="article-card animate-in" style="animation-delay: 0.4s;">
+    <div class="card-thumbnail">
+        <span class="category-label">LAND SURVEYING</span>
+        <img src="https://onlinecalculator.ae/wp-content/uploads/2026/01/plot-area-calculator.webp" alt="Land Surveying Equipment">
+    </div>
+    
+    <div class="card-body">
+        <div class="card-meta">
+            <span>Feb 22, 2026</span>
+            <span>•</span>
+            <span>9 Min Read</span>
+        </div>
+        
+        <h3>Digital Plot Area Calculation: From Heron's Formula to GPS Mapping</h3>
+        
+        <p>As a student at COMSATS University Islamabad, Wah Campus, I analyze how traditional surveying math like Heron's Formula can be optimized using modern GPS coordinate systems for irregular plots in Pakistan...</p>
+        
+        <a href="plot_area.html" class="read-more-link">
+            Read Full article
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+</article>
+
+            <article class="article-card">
+                <div class="card-thumbnail">
+                    <span class="category-label">AI in Construction</span>
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80" alt="AI Neural Networks">
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span>Feb 21, 2026</span>
+                        <span>•</span>
+                        <span>12 Min Read</span>
+                    </div>
+                    <h3>Machine Learning in Predicting Soil Bearing Capacity</h3>
+                    <p>As a BS AI student at COMSATS Wah, I explore how neural networks can predict the bearing capacity of soil faster than traditional Terzaghi methods.</p>
+                    <a href="ml_soil.html" class="read-more-link">
+                        Read full article
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </article>
+
+            </div>
+
+        <aside class="sidebar-right">
+            </aside>
+    </main>
+
+    <script>
+        document.querySelectorAll('.article-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                console.log("User interest detected on: " + card.querySelector('h3').innerText);
+            });
+        });
+    </script>
+
+    <style>
+        
+        /* --- SIDEBAR COMPONENTS --- */
+        .sidebar-right {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .widget {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-soft);
+        }
+
+        .widget-title {
+            font-size: 1.1rem;
+            color: var(--engineering-blue);
+            font-weight: 800;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--construction-gold);
+            display: inline-block;
+        }
+
+        /* --- AUTHOR WIDGET (E-E-A-T Booster) --- */
+        .author-widget {
+            text-align: center;
+        }
+
+        .author-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #eee;
+            margin: 0 auto 15px;
+            border: 3px solid var(--construction-gold);
+            object-fit: cover;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: var(--engineering-blue);
+            margin-bottom: 5px;
+        }
+
+        .author-bio {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        /* --- CATEGORY LIST --- */
+        .category-list {
+            list-style: none;
+        }
+
+        .category-list li {
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 8px;
+        }
+
+        .category-list a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            transition: color 0.3s;
+        }
+
+        .category-list a:hover {
+            color: var(--engineering-blue);
+            font-weight: 600;
+        }
+
+        .cat-count {
+            background: var(--steel-gray);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- NEWSLETTER BOX --- */
+        .newsletter-widget {
+            background: var(--engineering-blue);
+            color: white;
+            border: none;
+        }
+
+        .newsletter-widget .widget-title {
+            color: var(--construction-gold);
+            border-bottom-color: white;
+        }
+
+        .newsletter-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .newsletter-btn {
+            width: 100%;
+            background: var(--construction-gold);
+            color: var(--engineering-blue);
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .newsletter-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* --- STICKY AD SPACE --- */
+        .sticky-ad-placeholder {
+            position: sticky;
+            top: 100px;
+            height: 400px;
+            background: #fdfdfd;
+            border: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.8rem;
+            border-radius: 12px;
+        }
+    </style>
+
+    <aside class="sidebar-right">
+        
+    
+
+        
+
+        <div class="widget newsletter-widget">
+            <h4 class="widget-title">Engineers' Digest</h4>
+            <p style="font-size: 0.8rem; margin-bottom: 15px; opacity: 0.9;">Join 2,000+ engineers receiving weekly technical updates.</p>
+            <form id="blog-newsletter">
+                <input type="email" class="newsletter-input" placeholder="Your Work Email" required>
+                <button type="submit" class="newsletter-btn">Subscribe Free</button>
+            </form>
+        </div>
+
+    </aside>
+
+    <script>
+        // Part 3 Logic: Sticky Sidebar & Interaction
+        window.addEventListener('scroll', () => {
+            const ad = document.querySelector('.sticky-ad-placeholder');
+            if (window.scrollY > 500) {
+                console.log("Ad Unit Viewable: Logged for CPC optimization.");
+            }
+        });
+
+        document.getElementById('blog-newsletter').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Thanks for joining! Verification sent to fellowintelligence@gmail.com");
+        });
+    </script>
+    </body>
+</html>

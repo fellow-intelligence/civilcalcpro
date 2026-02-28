@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        /* --- CIVILCALC PRO: ADVANCED CONTACT THEME --- */
+        :root {
+            --primary-color: #e67e22; /* Safety Orange - Civil Engineering Standard */
+            --secondary-color: #2c3e50; /* Midnight Blue */
+            --accent-color: #f1c40f;
+            --bg-light: #f4f7f6;
+            --text-dark: #333;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* --- HEADER STYLING --- */
+        header {
+            background-color: var(--secondary-color);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo-text span {
+            color: var(--primary-color);
+        }
+
+        /* --- NAVIGATION MENU --- */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hover underline effect */
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* --- MOBILE MENU ICON --- */
+        .mobile-toggle {
+            display: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- BUTTON STYLES (Used throughout the site) --- */
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #d35400;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(230, 126, 34, 0.3);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none; /* Will be toggled with JS in later parts */
+            }
+            .mobile-toggle {
+                display: block;
+            }
+        }
+
+        /* --- SECTION PADDING --- */
+        .section-container {
+            padding: 4rem 10%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+         header {
+            background-color: var(--secondary-color);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        :root {
+            --primary: #1a2a6c;
+            --accent: #e67e22;
+            --bg-shade: #f0f2f5;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-shade);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        /* --- HERO HEADER --- */
+        .contact-hero {
+            background: linear-gradient(135deg, var(--primary), #203a43, #2c5364);
+            color: var(--white);
+            padding: 80px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .contact-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- CONTACT CARDS GRID --- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            transition: var(--transition);
+            border-bottom: 4px solid transparent;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-bottom-color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .card h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        /* --- PRIMARY ACTION BUTTON --- */
+        .mail-btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            transition: var(--transition);
+            border: 2px solid var(--primary);
+        }
+
+        .mail-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+        }
+
+        /* --- COPY EMAIL BOX --- */
+        .copy-box {
+            margin-top: 15px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+            cursor: pointer;
+            font-family: monospace;
+            color: var(--primary);
+            transition: 0.2s;
+        }
+
+        .copy-box:hover { background: #eef2f7; }
+
+        /* --- MAP & LOCATION SECTION --- */
+        .location-section {
+            margin-top: 50px;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow);
+        }
+
+        .map-info {
+            flex: 1;
+            padding: 50px;
+            min-width: 300px;
+        }
+
+        .map-info h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .map-frame {
+            flex: 1.5;
+            min-width: 350px;
+            height: 400px;
+            background: #eee;
+        }
+
+        /* --- FOOTER STUFF --- */
+        .contact-footer {
+            text-align: center;
+            padding: 50px 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Animations (Adding Lines & Professionalism) */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal { animation: fadeInUp 0.8s ease-out forwards; }
+
+        @media (max-width: 768px) {
+            .contact-hero h1 { font-size: 2.2rem; }
+            .location-section { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+        <style>
+    /* Reset & Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+        --header-bg: #2d3e50; /* Exact dark slate blue from image */
+        --accent-orange: #e67e22; /* Orange for CALC and Button */
+        --text-white: #ffffff;
+    }
+
+    body { font-family: 'Inter', sans-serif; padding-top: 70px; }
+
+    /* Header Main Container */
+    .cc-header {
+        background-color: var(--header-bg);
+        width: 100%;
+        height: 75px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        padding: 0 4%;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .cc-container {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Logo Styling: CIVILCALC PRO */
+    .cc-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Burger Menu for Mobile */
+    .cc-menu-trigger {
+        display: none;
+        font-size: 28px;
+        color: white;
+        margin-right: 15px;
+        cursor: pointer;
+    }
+
+    .cc-logo h1 {
+        color: var(--text-white);
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .cc-logo h1 span {
+        color: var(--accent-orange);
+    }
+
+    /* Desktop Navigation */
+    .cc-nav {
+        display: flex;
+        gap: 25px;
+    }
+
+    .cc-nav-link {
+        color: var(--text-white);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+
+    .cc-nav-link:hover {
+        color: var(--accent-orange);
+    }
+
+    /* Orange Find a Tool Button */
+    .cc-btn {
+        background-color: var(--accent-orange);
+        color: white !important;
+        padding: 10px 22px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .cc-btn:hover {
+        background-color: #d35400;
+        transform: translateY(-2px);
+    }
+
+    /* --- Sidebar Mobile --- */
+    .cc-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background-color: #1a252f;
+        z-index: 10001;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 60px 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cc-sidebar.active { left: 0; }
+
+    .cc-close {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        color: white;
+        font-size: 35px;
+        cursor: pointer;
+    }
+
+    .cc-sidebar a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 700;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .cc-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        z-index: 10000;
+    }
+
+    .cc-overlay.active { display: block; }
+
+    /* Responsive Logic */
+    @media (max-width: 1024px) {
+        .cc-nav, .cc-header .cc-btn { display: none; }
+        .cc-menu-trigger { display: block; }
+    }
+</style>
+
+<header class="cc-header">
+    <div class="cc-container">
+        <div style="display: flex; align-items: center;">
+            <div class="cc-menu-trigger" id="openCC">☰</div>
+            <a href="index.html" class="cc-logo">
+                <h1>CIVIL<span>CALC</span> PRO</h1>
+            </a>
+        </div>
+
+        <nav class="cc-nav">
+            <a href="index.html" class="cc-nav-link">Home</a>
+            <a href="blogs.html" class="cc-nav-link">Engineering Blog</a>
+            <a href="about.html" class="cc-nav-link">About</a>
+            <a href="contact.html" class="cc-nav-link">Contact</a>
+            <a href="privacy.html" class="cc-nav-link">Privacy Policy</a>
+        </nav>
+
+        <a href="tools.html" class="cc-btn">Find a Tool</a>
+    </div>
+</header>
+
+<div class="cc-overlay" id="overlayCC"></div>
+
+<nav class="cc-sidebar" id="sidebarCC">
+    <div class="cc-close" id="closeCC">&times;</div>
+    <a href="index.html">Home</a>
+    <a href="blogs.html">Engineering Blog</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <div style="margin-top: 20px;">
+        <a href="find.html" class="cc-btn" style="display: block; text-align: center;">Find a Tool</a>
+    </div>
+</nav>
+
+<script>
+    (function() {
+        const open = document.getElementById('openCC');
+        const close = document.getElementById('closeCC');
+        const sidebar = document.getElementById('sidebarCC');
+        const overlay = document.getElementById('overlayCC');
+
+        function toggle(status) {
+            if(status) {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+
+        open.onclick = () => toggle(true);
+        close.onclick = () => toggle(false);
+        overlay.onclick = () => toggle(false);
+    })();
+</script>
+   
+    <div class="container">
+        <section class="contact-hero reveal">
+            <h1>Contact us</h1>
+            <p>I am always open to discussing new tools, engineering formulas, or AI collaborations. Just a click away from your inbox.</p>
+        </section>
+
+        <div class="contact-grid">
+            
+            <div class="card reveal" style="animation-delay: 0.2s;">
+                <span class="card-icon">✉️</span>
+                <h3>Email Me Directly</h3>
+                <p>Have a technical query or a suggestion for CivilCalc Pro? Send me an email and I'll get back to you.</p>
+                <a href="mailto:fellowintelligence@gmail.com?subject=Query from CivilCalc User" class="mail-btn">
+                    Compose Gmail
+                </a>
+                <div class="copy-box" onclick="copyEmail()" id="emailDisplay">
+                    fellowintelligence@gmail.com
+                </div>
+                <small id="copyStatus" style="color: var(--accent); display: none;">Email Copied!</small>
+            </div>
+
+            <div class="card reveal" style="animation-delay: 0.4s;">
+                <span class="card-icon">📍</span>
+                <h3>Campus Location</h3>
+                <p>Currently studying at <strong>COMSATS University Islamabad, Wah Campus</strong>. Let's meet if you are around!</p>
+                <p style="font-weight: 600; color: var(--primary);">G.T. Road, Wah Cantt, Pakistan</p>
+                <a href="https://www.google.com/maps?q=COMSATS+Wah+Campus" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: bold;">
+                    Open in Google Maps →
+                </a>
+            </div>
+
+        </div>
+
+        <div class="location-section reveal" style="animation-delay: 0.6s;">
+            <div class="map-info">
+                <h2>Visit My Base</h2>
+                <p>As a BS AI student, you'll mostly find me in the computer labs or the main library working on projects like CivilCalc and Student Humsafar.</p>
+                <ul style="padding-left: 20px; color: var(--text-light);">
+                    <li>Official Academic Support</li>
+                    <li>Collaborative Research</li>
+                    <li>Tool Bug Reporting</li>
+                </ul>
+                <div style="margin-top: 30px; padding: 15px; background: var(--bg-shade); border-radius: 10px;">
+                    <strong>Fellow Intelligence</strong><br>
+                    <small>AI Development & Engineering Tools</small>
+                </div>
+            </div>
+            <div class="map-frame">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3319.1418386377!2d72.78440317531776!3d33.75704153328471!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38dfa60000000001%3A0x6b699c26915f06f7!2sCOMSATS+University+Islamabad+-+Wah+Campus!5e0!3m2!1sen!2spk!4v1700000000000" 
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <footer class="contact-footer">
+            <p>Designed with passion by an AI Enthusiast. &copy; 2026 CivilCalc Pro.</p>
+            <p>COMSATS University Islamabad, Wah Campus | Fellow Intelligence</p>
+        </footer>
+
+    </div>
+
+    <script>
+        /**
+         * CivilCalc Pro - Contact Management Logic
+         * Developer: fellowintelligence@gmail.com
+         */
+        
+        // Function to copy email to clipboard (Utility for users)
+        function copyEmail() {
+            const emailText = "fellowintelligence@gmail.com";
+            const status = document.getElementById('copyStatus');
+            
+            navigator.clipboard.writeText(emailText).then(() => {
+                status.style.display = 'block';
+                console.log("Email address copied to clipboard for: " + emailText);
+                
+                // Hide status after 2 seconds
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy email: ', err);
+                // Fallback for older browsers
+                alert("Email: fellowintelligence@gmail.com");
+            });
+        }
+
+        // Initialize Page Components
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Fellow Intelligence Contact Page: Active");
+            
+            // Log local context for debugging
+            const pageData = {
+                owner: "BS AI Student",
+                campus: "COMSATS Wah",
+                contactMethod: "Mailto/Direct",
+                version: "2.1.0 (2026)"
+            };
+            
+            console.table(pageData);
+        });
+
+        // Tracking click on Compose button (Internal log)
+        const mailBtn = document.querySelector('.mail-btn');
+        mailBtn.addEventListener('click', () => {
+            console.log("User initiated Gmail composition.");
+        });
+    </script>
+
+</body>
+</html>
