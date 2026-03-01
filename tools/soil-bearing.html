@@ -2161,123 +2161,115 @@
         </div>
     </footer>
     <style>
-    /* Industrial Lock Overlay */
     #access-blocker-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(10, 15, 25, 0.95);
+        background: rgba(10, 15, 25, 0.97);
         z-index: 1000000; display: none; align-items: center; justify-content: center;
         flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
-        text-align: center; backdrop-filter: blur(12px);
+        text-align: center; backdrop-filter: blur(15px);
     }
     .lock-terminal {
         background: #161e2e; padding: 50px; border-radius: 30px;
         border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-        max-width: 450px; width: 90%;
+        max-width: 450px; width: 90%; pointer-events: auto;
     }
-    .lock-terminal h2 { color: #facc15; font-weight: 900; margin-bottom: 20px; letter-spacing: 1px; }
-    .lock-terminal p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
-    
     .ad-claim-btn {
         background: #facc15; color: #0f172a; padding: 18px 35px; border: none;
         border-radius: 15px; font-weight: 800; cursor: pointer; font-size: 1rem;
         text-transform: uppercase; letter-spacing: 2px; text-decoration: none;
-        display: inline-block; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: inline-block; transition: 0.3s;
     }
-    .ad-claim-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(250, 204, 21, 0.3); background: #fff; }
-
-    /* Floating Telemetry Timer */
     #session-timer-badge {
         position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.9);
         color: #facc15; padding: 12px 24px; border-radius: 12px; font-weight: 800;
-        z-index: 99999; font-family: 'JetBrains Mono', monospace; 
-        border: 1px solid rgba(250, 204, 21, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        z-index: 99999; font-family: monospace; border: 1px solid rgba(250, 204, 21, 0.4);
     }
 </style>
 
 <div id="access-blocker-overlay">
     <div class="lock-terminal">
-        <i class="fas fa-hourglass-end" style="font-size: 4rem; color: #facc15; margin-bottom: 20px;"></i>
-        <h2>SESSION EXPIRED</h2>
-        <p>Your 3-minute access has concluded. Please interact with the sponsor link below to instantly renew your session credits.</p>
-        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCredits()">Claim 3 Min Credit</a>
+        <h2 style="color:#facc15; margin-bottom:15px;">PAGE LIMIT REACHED</h2>
+        <p style="color:#94a3b8; margin-bottom:25px;">This specific page requires a credit top-up. Watch a quick ad to continue your work here for another 3 minutes.</p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="renewCreditsDirectly()">Get 3 Mins for this Page</a>
     </div>
 </div>
 
-<div id="session-timer-badge">INITIALIZING...</div>
+<div id="session-timer-badge">SYNCING...</div>
 
 <script>
-    const CONFIG = {
-        AD_URL: "https://omg10.com/4/10664520",
-        CREDIT_AMOUNT: 180, // 3 Minutes in seconds
-        STORAGE_KEY: "geotech_session_time",
-        TIMESTAMP_KEY: "geotech_last_active"
-    };
+    // UNIQUE IDENTIFIER FOR THIS SPECIFIC PAGE
+    const PAGE_PATH = window.location.pathname; 
+    const UNIQUE_TIME_KEY = "time_rem_" + PAGE_PATH;
+    const UNIQUE_TS_KEY = "last_ts_" + PAGE_PATH;
 
+    const CREDIT_DURATION = 180; // 3 minutes
     let timeRemaining;
+    let timerLoop;
 
-    function initSessionControl() {
-        const savedTime = localStorage.getItem(CONFIG.STORAGE_KEY);
-        const lastTimestamp = localStorage.getItem(CONFIG.TIMESTAMP_KEY);
+    function initPageTimer() {
+        const savedTime = localStorage.getItem(UNIQUE_TIME_KEY);
+        const lastTS = localStorage.getItem(UNIQUE_TS_KEY);
         const now = Math.floor(Date.now() / 1000);
 
-        if (savedTime && lastTimestamp) {
-            // Calculate how much time passed while user was away
-            const elapsed = now - parseInt(lastTimestamp);
+        if (savedTime && lastTS) {
+            const elapsed = now - parseInt(lastTS);
             timeRemaining = Math.max(0, parseInt(savedTime) - elapsed);
         } else {
-            // First time visitor gets initial credits
-            timeRemaining = CONFIG.CREDIT_AMOUNT;
+            timeRemaining = CREDIT_DURATION;
         }
 
-        updateTimerUI();
+        refreshUI();
         if (timeRemaining > 0) {
-            runCountdown();
+            startTimerLogic();
         } else {
-            activateLock();
+            showLockScreen();
         }
     }
 
-    function runCountdown() {
-        const tracker = setInterval(() => {
+    function startTimerLogic() {
+        if(timerLoop) clearInterval(timerLoop);
+        
+        timerLoop = setInterval(() => {
             if (timeRemaining > 0) {
                 timeRemaining--;
-                localStorage.setItem(CONFIG.STORAGE_KEY, timeRemaining);
-                localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
-                updateTimerUI();
+                localStorage.setItem(UNIQUE_TIME_KEY, timeRemaining);
+                localStorage.setItem(UNIQUE_TS_KEY, Math.floor(Date.now() / 1000));
+                refreshUI();
             } else {
-                clearInterval(tracker);
-                activateLock();
+                clearInterval(timerLoop);
+                showLockScreen();
             }
         }, 1000);
     }
 
-    function updateTimerUI() {
-        const mins = Math.floor(timeRemaining / 60);
-        const secs = timeRemaining % 60;
-        const display = `${mins}:${secs.toString().padStart(2, '0')}`;
-        document.getElementById('session-timer-badge').innerText = `CREDITS: ${display}`;
+    function refreshUI() {
+        const m = Math.floor(timeRemaining / 60);
+        const s = (timeRemaining % 60).toString().padStart(2, '0');
+        document.getElementById('session-timer-badge').innerText = `PAGE TIME: ${m}:${s}`;
     }
 
-    function activateLock() {
+    function showLockScreen() {
         document.getElementById('access-blocker-overlay').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; 
+        // Block interaction with the background page but keep data visible
+        document.body.style.pointerEvents = "none";
+        document.getElementById('access-blocker-overlay').style.pointerEvents = "auto";
     }
 
-    function renewCredits() {
-        // Logically grant time immediately on click
-        localStorage.setItem(CONFIG.STORAGE_KEY, CONFIG.CREDIT_AMOUNT);
-        localStorage.setItem(CONFIG.TIMESTAMP_KEY, Math.floor(Date.now() / 1000));
-        
-        // Small delay to ensure the click registers before page interaction
-        setTimeout(() => {
-            document.getElementById('access-blocker-overlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            window.location.reload(); 
-        }, 1500);
+    function renewCreditsDirectly() {
+        // Reset time for THIS page only
+        timeRemaining = CREDIT_DURATION;
+        localStorage.setItem(UNIQUE_TIME_KEY, timeRemaining);
+        localStorage.setItem(UNIQUE_TS_KEY, Math.floor(Date.now() / 1000));
+
+        // Unlock visually
+        document.getElementById('access-blocker-overlay').style.display = 'none';
+        document.body.style.pointerEvents = "auto";
+
+        // Resume timer without refreshing
+        startTimerLogic();
     }
 
-    // Initialize on boot
-    window.addEventListener('load', initSessionControl);
+    window.addEventListener('load', initPageTimer);
 </script>
 </body>
 </html>
