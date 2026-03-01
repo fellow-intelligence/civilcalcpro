@@ -1007,5 +1007,87 @@
            typically used on construction sites in Pakistan.
         */
     </script>
+    <script>
+    // Master Fix for Category Filtering
+    performFiltering = function() {
+        // Search query and Category ko normalize karna (Small letters mein)
+        const query = mainSearchInput.value.toLowerCase().trim();
+        const selectedCat = currentCategory.toLowerCase();
+
+        console.log("System Filtering: ", { selectedCat, query });
+
+        const filtered = globalMasterTools.filter(tool => {
+            const toolCat = tool.category.toLowerCase();
+            
+            // 1. Smart Category Logic
+            let matchesCategory = false;
+
+            if (selectedCat === 'all') {
+                matchesCategory = true;
+            } 
+            else if (selectedCat === 'concrete') {
+                // Agar 'Concrete' select ho to 'Masonry' wale tools bhi dikhao
+                matchesCategory = (toolCat === 'concrete' || toolCat === 'masonry');
+            } 
+            else if (selectedCat === 'steel') {
+                // Steel mein Structural tools bhi include honge
+                matchesCategory = (toolCat === 'steel' || toolCat === 'structural');
+            } 
+            else if (selectedCat === 'highway') {
+                // Highway mein Soil/Geotechnical include honge
+                matchesCategory = (toolCat === 'highway' || toolCat === 'geotechnical');
+            } 
+            else if (selectedCat === 'math') {
+                // Unit converters aur baqi utilities
+                matchesCategory = (toolCat === 'utilities' || toolCat === 'finishing' || toolCat === 'hydraulics');
+            } 
+            else {
+                // Direct match for others
+                matchesCategory = (toolCat === selectedCat);
+            }
+
+            // 2. Search Logic
+            const matchesSearch = tool.name.toLowerCase().includes(query) || 
+                                 tool.desc.toLowerCase().includes(query) ||
+                                 tool.category.toLowerCase().includes(query);
+
+            return matchesCategory && matchesSearch;
+        });
+
+        // Sorting Logic (Jo pehle se thi)
+        const sortCriteria = document.getElementById('sortSelect').value;
+        if (sortCriteria === 'az') filtered.sort((a, b) => a.name.localeCompare(b.name));
+        else if (sortCriteria === 'za') filtered.sort((a, b) => b.name.localeCompare(a.name));
+        else if (sortCriteria === 'newest') filtered.sort((a, b) => b.id - a.id);
+
+        // Render Results
+        updateResultCount(filtered.length);
+        renderResults(filtered);
+    };
+
+    // Sidebar UI Fix (Active class handle karne ke liye)
+    function filterCategory(cat) {
+        currentCategory = cat;
+        
+        // Remove active class from all
+        document.querySelectorAll('.filter-item').forEach(item => {
+            item.classList.remove('active', 'active-category');
+        });
+
+        // Add active class to clicked item
+        const clickedItem = event.currentTarget;
+        clickedItem.classList.add('active', 'active-category');
+
+        performFiltering();
+        
+        // Mobile sidebar close on click
+        if (window.innerWidth < 992) {
+            toggleSidebar();
+        }
+    }
+
+    // Initial Refresh to apply fixes
+    performFiltering();
+</script>
 </body>
 </html>
