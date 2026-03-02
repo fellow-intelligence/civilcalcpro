@@ -2360,7 +2360,11 @@
                 text-transform: uppercase; text-decoration: none; display: inline-block;
                 transition: 0.3s; margin-top: 15px; font-family: sans-serif;
             }
-            .ad-unlock-btn:hover { background: #eab308; transform: scale(1.05); }
+            #session-timer-badge {
+                position: fixed; bottom: 20px; right: 20px; background: rgba(15, 23, 42, 0.9);
+                color: #facc15; padding: 10px 20px; border-radius: 10px; font-weight: 800;
+                z-index: 99999; font-family: monospace; border: 1px solid #facc15; display: none;
+            }
         `;
         document.head.appendChild(style);
 
@@ -2370,41 +2374,85 @@
         overlay.innerHTML = `
             <div class="lock-terminal">
                 <h2 style="color:#facc15; margin-bottom:10px;">ACTION REQUIRED</h2>
-                <p style="color:#cbd5e1; margin-bottom:20px; font-size: 0.95rem;">Please click the button below to unlock this tool for full access.</p>
+                <p style="color:#cbd5e1; margin-bottom:20px; font-size: 0.95rem;">Please click the button below to unlock the page for 3 minutes.</p>
                 <a href="https://omg10.com/4/10664520" target="_blank" class="ad-unlock-btn" id="unlockBtn">Click to Unlock Page</a>
             </div>
         `;
         document.body.appendChild(overlay);
 
+        const badge = document.createElement('div');
+        badge.id = 'session-timer-badge';
+        document.body.appendChild(badge);
+
         // --- 3. Logic ---
-        const PAGE_ID = window.location.pathname;
-        const UNLOCK_KEY = "tool_unlocked_" + PAGE_ID;
+        const PAGE_KEY = "timer_" + window.location.pathname;
+        const TS_KEY = "ts_" + window.location.pathname;
+        const DURATION = 180; // 3 Minutes
+        let timeLeft = 0;
+        let timerLoop;
 
-        function checkAccess() {
-            const isUnlocked = localStorage.getItem(UNLOCK_KEY);
-
-            if (!isUnlocked) {
-                // Agar pehle unlock nahi kiya to foran lock show karo
-                overlay.style.display = 'flex';
-                document.body.style.overflow = "hidden";
-                document.body.style.pointerEvents = "none";
-                overlay.style.pointerEvents = "auto";
-            }
+        function showLock() {
+            overlay.style.display = 'flex';
+            badge.style.display = 'none';
+            document.body.style.overflow = "hidden";
+            document.body.style.pointerEvents = "none";
+            overlay.style.pointerEvents = "auto";
         }
 
-        // Button Click Event
-        document.getElementById('unlockBtn').onclick = function() {
-            // Lifetime access save karlo
-            localStorage.setItem(UNLOCK_KEY, "true");
-            
-            // Unlock UI
+        function hideLock() {
             overlay.style.display = 'none';
+            badge.style.display = 'block';
             document.body.style.overflow = "auto";
             document.body.style.pointerEvents = "auto";
-        };
+        }
 
-        // Initialize on load
-        checkAccess();
+        function updateUI() {
+            const m = Math.floor(timeLeft / 60);
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            badge.innerText = `TIME: ${m}:${s}`;
+        }
+
+        function startTimer() {
+            if(timerLoop) clearInterval(timerLoop);
+            hideLock();
+            timerLoop = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    localStorage.setItem(PAGE_KEY, timeLeft);
+                    localStorage.setItem(TS_KEY, Math.floor(Date.now() / 1000));
+                    updateUI();
+                } else {
+                    clearInterval(timerLoop);
+                    showLock();
+                }
+            }, 1000);
+        }
+
+        // Initialize
+        const savedTime = localStorage.getItem(PAGE_KEY);
+        const lastTS = localStorage.getItem(TS_KEY);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (savedTime && lastTS) {
+            const elapsed = now - parseInt(lastTS);
+            timeLeft = Math.max(0, parseInt(savedTime) - elapsed);
+        } else {
+            timeLeft = 0; // First time user
+        }
+
+        if (timeLeft > 0) {
+            startTimer();
+        } else {
+            showLock();
+        }
+
+        // Button Event
+        document.getElementById('unlockBtn').onclick = function() {
+            timeLeft = DURATION;
+            localStorage.setItem(PAGE_KEY, timeLeft);
+            localStorage.setItem(TS_KEY, Math.floor(Date.now() / 1000));
+            startTimer();
+        };
     })();
 </script>
 </body>
