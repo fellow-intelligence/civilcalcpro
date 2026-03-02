@@ -1925,5 +1925,108 @@
 
     window.addEventListener('load', initPageTimer);
 </script>
+<script>
+    (function() {
+        // --- 1. CSS Styles ---
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #access-blocker-overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(10, 15, 25, 0.98); z-index: 2147483647;
+                display: flex; align-items: center; justify-content: center;
+                flex-direction: column; color: #fff; font-family: 'Segoe UI', Roboto, sans-serif;
+                text-align: center; backdrop-filter: blur(20px);
+            }
+            .lock-terminal {
+                background: #161e2e; padding: 40px; border-radius: 25px;
+                border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+                max-width: 400px; width: 85%; pointer-events: auto;
+            }
+            .ad-unlock-btn {
+                background: #facc15; color: #0f172a; padding: 15px 30px; border: none;
+                border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem;
+                text-transform: uppercase; text-decoration: none; display: inline-block;
+                transition: 0.3s; margin-top: 15px; font-family: inherit;
+            }
+            .ad-unlock-btn:hover { background: #eab308; transform: scale(1.05); }
+            
+            #session-timer-badge {
+                position: fixed; bottom: 20px; right: 20px; background: rgba(15, 23, 42, 0.9);
+                color: #facc15; padding: 10px 20px; border-radius: 10px; font-weight: 800;
+                z-index: 99999; font-family: monospace; border: 1px solid #facc15; display: none;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // --- 2. HTML Elements ---
+        const overlay = document.createElement('div');
+        overlay.id = 'access-blocker-overlay';
+        overlay.innerHTML = `
+            <div class="lock-terminal">
+                <h2 style="color:#facc15; margin-bottom:10px;">ACTION REQUIRED</h2>
+                <p style="color:#cbd5e1; margin-bottom:20px; font-size: 0.95rem; line-height:1.6;">
+                    To use this tool, please click the button below and view the sponsored ad to unlock your session for 3 minutes.
+                </p>
+                <a href="https://omg10.com/4/10664520" target="_blank" class="ad-unlock-btn" id="unlockBtn">Click to Unlock Page</a>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const badge = document.createElement('div');
+        badge.id = 'session-timer-badge';
+        document.body.appendChild(badge);
+
+        // --- 3. Logic ---
+        let timeLeft = 0;
+        let timerLoop;
+        const DURATION = 180; // 3 Minutes
+
+        // Page load hote hi FORAN lock apply karna
+        function applyInstantLock() {
+            overlay.style.display = 'flex';
+            badge.style.display = 'none';
+            document.body.style.overflow = "hidden"; // Scroll band
+            document.body.style.pointerEvents = "none"; // Interactions band
+            overlay.style.pointerEvents = "auto"; // Sirf popup click ho sakay
+        }
+
+        function updateUI() {
+            const m = Math.floor(timeLeft / 60);
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            badge.innerText = `SESSION: ${m}:${s}`;
+        }
+
+        function startSession() {
+            // Unlock UI
+            overlay.style.display = 'none';
+            badge.style.display = 'block';
+            document.body.style.overflow = "auto";
+            document.body.style.pointerEvents = "auto";
+            
+            if(timerLoop) clearInterval(timerLoop);
+            
+            timerLoop = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateUI();
+                } else {
+                    clearInterval(timerLoop);
+                    applyInstantLock();
+                }
+            }, 1000);
+        }
+
+        // Button Event Click
+        document.getElementById('unlockBtn').onclick = function() {
+            timeLeft = DURATION;
+            updateUI();
+            startSession();
+        };
+
+        // Initialize: Page load hote hi lock show karein
+        applyInstantLock();
+
+    })();
+</script>
 </body>
 </html>
