@@ -1089,5 +1089,73 @@
     // Initial Refresh to apply fixes
     performFiltering();
 </script>
+<style>
+    #access-blocker-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 15, 25, 0.98);
+        z-index: 1000000; display: none; align-items: center; justify-content: center;
+        flex-direction: column; color: #fff; font-family: 'Inter', sans-serif;
+        text-align: center; backdrop-filter: blur(20px);
+    }
+    .lock-terminal {
+        background: #161e2e; padding: 40px; border-radius: 25px;
+        border: 2px solid #facc15; box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+        max-width: 400px; width: 85%; pointer-events: auto;
+    }
+    .ad-claim-btn {
+        background: #facc15; color: #0f172a; padding: 15px 30px; border: none;
+        border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem;
+        text-transform: uppercase; letter-spacing: 1px; text-decoration: none;
+        display: inline-block; transition: 0.3s; margin-top: 15px;
+    }
+    .ad-claim-btn:hover { background: #eab308; transform: scale(1.05); }
+</style>
+
+<div id="access-blocker-overlay">
+    <div class="lock-terminal">
+        <h2 style="color:#facc15; margin-bottom:10px;">ACTION REQUIRED</h2>
+        <p style="color:#cbd5e1; margin-bottom:20px; font-size: 0.95rem; line-height: 1.5;">
+            Please click the button below to unlock the page content.
+        </p>
+        <a href="https://omg10.com/4/10664520" target="_blank" class="ad-claim-btn" onclick="unlockPage()">Click to Unlock Page</a>
+    </div>
+</div>
+
+<script>
+    const PAGE_PATH = window.location.pathname;
+    const LOCK_KEY = "page_unlocked_" + PAGE_PATH;
+    const DELAY = 5000; // Updated to 5 Seconds
+
+    function checkAccess() {
+        const isUnlocked = localStorage.getItem(LOCK_KEY);
+
+        if (!isUnlocked) {
+            // Lock the page after 5 seconds
+            setTimeout(() => {
+                const overlay = document.getElementById('access-blocker-overlay');
+                // Final check before showing popup to prevent flickering
+                if(!localStorage.getItem(LOCK_KEY)) {
+                    overlay.style.display = 'flex';
+                    document.body.style.overflow = "hidden";
+                    document.body.style.pointerEvents = "none";
+                    overlay.style.pointerEvents = "auto";
+                }
+            }, DELAY);
+        }
+    }
+
+    function unlockPage() {
+        // Save unlock state in local storage
+        localStorage.setItem(LOCK_KEY, "true");
+
+        // Hide overlay and restore page access
+        document.getElementById('access-blocker-overlay').style.display = 'none';
+        document.body.style.overflow = "auto";
+        document.body.style.pointerEvents = "auto";
+    }
+
+    // Run on page load
+    window.onload = checkAccess;
+</script>
 </body>
 </html>
